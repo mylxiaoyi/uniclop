@@ -1,24 +1,41 @@
 <?xml version="1.0"?>
 <?xml-stylesheet type="text/xsl" href="styleguide.xsl"?>
-<GUIDE title="Google C++ Style Guide">
+<GUIDE title="Uniclop C++ Style Guide">
 
 <p align="right">
 
-Revision 3.133
+Revision 2009_05_07
 </p>
 
 
 
 <address>
-Benjy Weinberger<br/>
-Craig Silverstein<br/>
-Gregory Eitzmann<br/>
-Mark Mentovai<br/>
-Tashana Landray
+Rodrigo Benenson<br/>
+based on the <a href="http://code.google.com/p/google-styleguide/">Google C++ style guide</a>
 </address>
 
 <OVERVIEW>
 <CATEGORY title="Important Note">
+
+  <STYLEPOINT title="Uniclop has its own style">
+	<SUMMARY>
+	The Uniclop C++ style is not Google's style.
+	The Uniclop C++ style is based on the C++ styles of Boost and Google.
+	</SUMMARY>
+
+	<BODY>
+	<p>
+	This style guide is based on the <a href="http://code.google.com/p/google-styleguide/">Google C++ style guide</a>.
+	On a first look read they may seem very similar, but there are some important differences specially on:
+	<ul>
+	<li><a href="#File_Names">File name conventions</a></li>
+	<li><a href="#Exceptions">Exceptions usage</a></li>
+	<li><a href="#Boost">Boost usage</a></li>
+	</ul>
+	</p>
+	</BODY>
+  </STYLEPOINT>
+
   <STYLEPOINT title="Displaying Hidden Details in this Guide">
      <SUMMARY>
        This style guide contains many details that are initially
@@ -36,6 +53,7 @@ Tashana Landray
   </STYLEPOINT>
 </CATEGORY>
 <CATEGORY title="Background">
+
   <p>
     C++ is the main development language
     
@@ -101,11 +119,11 @@ Tashana Landray
 
 <CATEGORY title="Header Files">
   <p>
-    In general, every <code>.cc</code> file should have an associated
-    <code>.h</code> file. There are some common exceptions, such as
+    In general, every <code>.cpp</code> file should have an associated
+    <code>.hpp</code> file. There are some common exceptions, such as
     
     unittests
-    and small <code>.cc</code> files containing just a <code>main()</code>
+    and small <code>.cpp</code> files containing just a <code>main()</code>
     function.
   </p>
   <p>
@@ -129,7 +147,7 @@ Tashana Landray
       <p>
         To guarantee uniqueness, they should be based on the full path
         in a project's source tree.  For example, the file
-        <code>foo/src/bar/baz.h</code> in project <code>foo</code> should
+        <code>foo/src/bar/baz.hpp</code> in project <code>foo</code> should
         have the following guard:
       </p>
       <CODE_SNIPPET>
@@ -166,7 +184,7 @@ Tashana Landray
         <code>File</code> class in ways that do not require access to
         the declaration of the <code>File</code> class, your header
         file can just forward declare <code>class File;</code> instead
-        of having to <code>#include "file/base/file.h"</code>.
+        of having to <code>#include "file/base/file.hpp"</code>.
       </p>
       <p>
         How can we use a class <code>Foo</code> in a header file
@@ -198,7 +216,7 @@ Tashana Landray
         in header files.
       </p>
       <p>
-        Of course, <code>.cc</code> files typically do require the
+        Of course, <code>.cpp</code> files typically do require the
         definitions of the classes they use, and usually have to
         include several header files.
       </p>
@@ -258,9 +276,9 @@ Tashana Landray
     </BODY>
   </STYLEPOINT>
 
-  <STYLEPOINT title="The -inl.h Files">
+  <STYLEPOINT title="The -inl.hpp Files">
     <SUMMARY>
-      You may use file names with a <code>-inl.h</code> suffix to define
+      You may use file names with a <code>-inl.hpp</code> suffix to define
       complex inline functions when needed.
     </SUMMARY>
     <BODY>
@@ -268,30 +286,30 @@ Tashana Landray
         The definition of an inline function needs to be in a header
         file, so that the compiler has the definition available for
         inlining at the call sites.  However, implementation code
-        properly belongs in <code>.cc</code> files, and we do not like
-        to have much actual code in <code>.h</code> files unless there
+        properly belongs in <code>.cpp</code> files, and we do not like
+        to have much actual code in <code>.hpp</code> files unless there
         is a readability or performance advantage.
       </p>
       <p>
         If an inline function definition is short, with very little,
         if any, logic in it, you should put the code in your
-        <code>.h</code> file.  For example, accessors and mutators
+        <code>.hpp</code> file.  For example, accessors and mutators
         should certainly be inside a class definition.  More complex
-        inline functions may also be put in a <code>.h</code> file for
+        inline functions may also be put in a <code>.hpp</code> file for
         the convenience of the implementer and callers, though if this
-        makes the <code>.h</code> file too unwieldy you can instead
-        put that code in a separate <code>-inl.h</code> file.
+        makes the <code>.hpp</code> file too unwieldy you can instead
+        put that code in a separate <code>-inl.hpp</code> file.
         This separates the implementation from the class definition,
         while still allowing the implementation to be included where
         necessary.
       </p>
       <p>
-        Another use of <code>-inl.h</code> files is for definitions of
+        Another use of <code>-inl.hpp</code> files is for definitions of
         function templates.  This can be used to keep your template
         definitions easy to read.
       </p>
       <p>
-        Do not forget that a <code>-inl.h</code> file requires a
+        Do not forget that a <code>-inl.hpp</code> file requires a
         <a href="#The__define_Guard"><code>#define</code> guard</a> just
         like any other header file.
       </p>
@@ -330,9 +348,9 @@ Tashana Landray
       Use standard order for readability and to avoid hidden
       dependencies: C library, C++ library,
       
-      other libraries' <code>.h</code>, your
+      other libraries' <code>.hpp</code>, your
       project's
-      <code>.h</code>.
+      <code>.hpp</code>.
     </SUMMARY>
     <BODY>
       <p>
@@ -343,40 +361,40 @@ Tashana Landray
         directory) or <code>..</code> (the parent directory).  For
         example,
         
-        <code>google-awesome-project/src/base/logging.h</code>
+        <code>google-awesome-project/src/base/logging.hpp</code>
         should be included as
       </p>
       <CODE_SNIPPET>
-        #include "base/logging.h"
+        #include "base/logging.hpp"
       </CODE_SNIPPET>
       <p>
-        In <code><var>dir/foo</var>.cc</code>, whose main purpose is
+        In <code><var>dir/foo</var>.cpp</code>, whose main purpose is
         to implement or test the stuff in
-        <code><var>dir2/foo2</var>.h</code>, order your includes as
+        <code><var>dir2/foo2</var>.hpp</code>, order your includes as
         follows:
       </p>
       <ol>
-        <li> <code><var>dir2/foo2</var>.h</code> (preferred location
+        <li> <code><var>dir2/foo2</var>.hpp</code> (preferred location
           &#8212; see details below).</li>
         <li> C system files.</li>
         <li> C++ system files.</li>
-        <li> Other libraries' <code>.h</code> files.</li>
+        <li> Other libraries' <code>.hpp</code> files.</li>
         <li> 
              Your project's
-             <code>.h</code> files.</li>
+             <code>.hpp</code> files.</li>
       </ol>
       <p>
         The preferred ordering reduces hidden dependencies.  We want
         every header file to be compilable on its own.  The easiest
         way to achieve this is to make sure that every one of them is
-        the first <code>.h</code> file <code>#include</code>d in some
-        <code>.cc</code>.  
+        the first <code>.hpp</code> file <code>#include</code>d in some
+        <code>.cpp</code>.  
       </p>
       <p>
-        <code><var>dir/foo</var>.cc</code> and
-        <code><var>dir2/foo2</var>.h</code> are often in the same
-        directory (e.g. <code>base/basictypes_unittest.cc</code> and
-        <code>base/basictypes.h</code>), but can be in different
+        <code><var>dir/foo</var>.cpp</code> and
+        <code><var>dir2/foo2</var>.hpp</code> are often in the same
+        directory (e.g. <code>base/basictypes_unittest.cpp</code> and
+        <code>base/basictypes.hpp</code>), but can be in different
         directories too.
       </p>
       
@@ -387,11 +405,11 @@ Tashana Landray
       <p>
         For example, the includes in
         
-        <code>google-awesome-project/src/foo/internal/fooserver.cc</code>
+        <code>google-awesome-project/src/foo/internal/fooserver.cpp</code>
         might look like this:
       </p>
       <CODE_SNIPPET>
-        #include "foo/public/fooserver.h"  // Preferred location.
+        #include "foo/public/fooserver.hpp"  // Preferred location.
 
         #include &lt;sys/types.h&gt;
         #include &lt;unistd.h&gt;
@@ -399,9 +417,9 @@ Tashana Landray
         #include &lt;hash_map&gt;
         #include &lt;vector&gt;
 
-        #include "base/basictypes.h"
-        #include "base/commandlineflags.h"
-        #include "foo/public/bar.h"
+        #include "base/basictypes.hpp"
+        #include "base/commandlineflags.hpp"
+        #include "foo/public/bar.hpp"
       </CODE_SNIPPET>
     </BODY>
   </STYLEPOINT>
@@ -410,7 +428,7 @@ Tashana Landray
 <CATEGORY title="Scoping">
   <STYLEPOINT title="Namespaces">
     <SUMMARY>
-      Unnamed namespaces in <code>.cc</code> files are encouraged.  With
+      Unnamed namespaces in <code>.cpp</code> files are encouraged.  With
       named namespaces, choose the name based on the
       
       project, and possibly its path.
@@ -456,10 +474,10 @@ Tashana Landray
         <SUBSECTION title="Unnamed Namespaces">
           <ul>
             <li> Unnamed namespaces are allowed and even encouraged in
-                 <code>.cc</code> files, to avoid runtime naming
+                 <code>.cpp</code> files, to avoid runtime naming
                  conflicts:
                  <CODE_SNIPPET>
-                   namespace {                           // This is in a .cc file.
+                   namespace {                           // This is in a .cpp file.
 
                    // The content of a namespace is not indented
                    enum { kUnused, kEOF, kError };       // Commonly used tokens.
@@ -478,7 +496,7 @@ Tashana Landray
                    namespace</code>.
                  </p>
                  </li>
-            <li> Do not use unnamed namespaces in <code>.h</code>
+            <li> Do not use unnamed namespaces in <code>.hpp</code>
                  files.
                  </li>
           </ul>
@@ -495,7 +513,7 @@ Tashana Landray
                  definitions/declarations, and forward declarations of classes
                  from other namespaces:
                  <CODE_SNIPPET>
-                   // In the .h file
+                   // In the .hpp file
                    namespace mynamespace {
 
                    // All declarations are within the namespace scope.
@@ -509,7 +527,7 @@ Tashana Landray
                    }  // namespace mynamespace
                  </CODE_SNIPPET>
                  <CODE_SNIPPET>
-                   // In the .cc file
+                   // In the .cpp file
                    namespace mynamespace {
 
                    // Definition of functions is within scope of the namespace.
@@ -520,12 +538,12 @@ Tashana Landray
                    }  // namespace mynamespace
                  </CODE_SNIPPET>
                  <p>
-                   The typical <code>.cc</code> file might have more
+                   The typical <code>.cpp</code> file might have more
                    complex detail, including the need to reference classes
                    in other namespaces.
                  </p>
                  <CODE_SNIPPET>
-                   #include "a.h"
+                   #include "a.hpp"
 
                    DEFINE_bool(someflag, false, "dummy flag");
 
@@ -560,21 +578,21 @@ Tashana Landray
                  </li>
 
             <li> You may use a <SYNTAX>using-declaration</SYNTAX>
-                 anywhere in a <code>.cc</code> file, and in functions,
-                 methods or classes in <code>.h</code> files.
+                 anywhere in a <code>.cpp</code> file, and in functions,
+                 methods or classes in <code>.hpp</code> files.
                  <CODE_SNIPPET>
-                   // OK in .cc files.
-                   // Must be in a function, method or class in .h files.
+                   // OK in .cpp files.
+                   // Must be in a function, method or class in .hpp files.
                    using ::foo::bar;
                  </CODE_SNIPPET>
                  </li>
 
             <li> Namespace aliases are allowed anywhere in a
-                 <code>.cc</code> file, and in functions and methods in
-                 <code>.h</code> files.
+                 <code>.cpp</code> file, and in functions and methods in
+                 <code>.hpp</code> files.
                  <CODE_SNIPPET>
-                   // OK in .cc files.
-                   // Must be in a function or method in .h files.
+                   // OK in .cpp files.
+                   // Must be in a function or method in .hpp files.
                    namespace fbz = ::foo::bar::baz;
                  </CODE_SNIPPET>
                  </li>
@@ -618,7 +636,7 @@ Tashana Landray
         enclosing class scope rather than polluting the outer scope
         with the class name.  Nested classes can be forward declared
         within the enclosing class and then defined in the
-        <code>.cc</code> file to avoid including the nested class
+        <code>.cpp</code> file to avoid including the nested class
         definition in the enclosing class declaration, since the
         nested class definition is usually only relevant to the
         implementation.
@@ -676,7 +694,7 @@ Tashana Landray
         </p>
         <p>
           If you must define a nonmember function and it is only
-          needed in its <code>.cc</code> file, use an unnamed
+          needed in its <code>.cpp</code> file, use an unnamed
           <a HREF="#Namespaces">namespace</a> or <code>static</code>
           linkage (eg <code>static int Foo() {...}</code>) to limit
           its scope.
@@ -1343,7 +1361,7 @@ Tashana Landray
         should be the last thing in the class. See <a HREF="#Copy_Constructors">Copy Constructors</a>.
       </p>
       <p>
-        Method definitions in the corresponding <code>.cc</code> file
+        Method definitions in the corresponding <code>.cpp</code> file
         should be the same as the declaration order, as much as possible.
       </p>
       <p>
@@ -2381,7 +2399,7 @@ Tashana Landray
         macros; if you use macros, follow it whenever possible:
       </p>
       <ul>
-        <li> Don't define macros in a <code>.h</code> file.
+        <li> Don't define macros in a <code>.hpp</code> file.
              </li>
         <li> <code>#define</code> macros right before you use them,
              and <code>#undef</code> them right after.
@@ -2611,42 +2629,42 @@ Tashana Landray
       </p>
       <p>
         <code>
-          my_useful_class.cc<br/>
-          my-useful-class.cc<br/>
-          myusefulclass.cc<br/>
+          my_useful_class.cpp<br/>
+          my-useful-class.cpp<br/>
+          myusefulclass.cpp<br/>
         </code>
       </p>
       <p>
-        C++ files should end in <code>.cc</code> and header files
-        should end in <code>.h</code>.
+        C++ files should end in <code>.cpp</code> and header files
+        should end in <code>.hpp</code>.
       </p>
       <p>
         Do not use filenames that already exist
-        in <code>/usr/include</code>, such as <code>db.h</code>.
+        in <code>/usr/include</code>, such as <code>db.hpp</code>.
       </p>
       <p>
         In general, make your filenames very specific.  For example,
-        use <code>http_server_logs.h</code> rather
-        than <code>logs.h</code>.  A very common case is to have a
-        pair of files called, e.g., <code>foo_bar.h</code>
-        and <code>foo_bar.cc</code>, defining a class
+        use <code>http_server_logs.hpp</code> rather
+        than <code>logs.hpp</code>.  A very common case is to have a
+        pair of files called, e.g., <code>foo_bar.hpp</code>
+        and <code>foo_bar.cpp</code>, defining a class
         called <code>FooBar</code>.
       </p>
       <p>
-        Inline functions must be in a <code>.h</code> file. If your
+        Inline functions must be in a <code>.hpp</code> file. If your
         inline functions are very short, they should go directly into your
-        <code>.h</code> file. However, if your inline functions
+        <code>.hpp</code> file. However, if your inline functions
         include a lot of code, they may go into a third file that
-        ends in <code>-inl.h</code>.  In a class with a lot of inline
+        ends in <code>-inl.hpp</code>.  In a class with a lot of inline
         code, your class could have three files:
       </p>
       <CODE_SNIPPET>
-        url_table.h      // The class declaration.
-        url_table.cc     // The class definition.
-        url_table-inl.h  // Inline functions that include lots of code.
+        url_table.hpp      // The class declaration.
+        url_table.cpp     // The class definition.
+        url_table-inl.hpp  // Inline functions that include lots of code.
       </CODE_SNIPPET>
       <p>
-        See also the section <a href="#The_-inl.h_Files">-inl.h Files</a>
+        See also the section <a href="#The_-inl.hpp_Files">-inl.hpp Files</a>
       </p>
     </BODY>
   </STYLEPOINT>
@@ -2982,20 +3000,20 @@ Tashana Landray
           and author line, that describes the contents of the file.
         </p>
         <p>
-          Generally a <code>.h</code> file will describe the classes
+          Generally a <code>.hpp</code> file will describe the classes
           that are declared in the file with an overview of what they
-          are for and how they are used. A <code>.cc</code> file
+          are for and how they are used. A <code>.cpp</code> file
           should contain more information about implementation details
           or discussions of tricky algorithms. If you feel the
           implementation details or a discussion of the algorithms
-          would be useful for someone reading the <code>.h</code>,
+          would be useful for someone reading the <code>.hpp</code>,
           feel free to put it there instead, but mention in the
-          <code>.cc</code> that the documentation is in the
-          <code>.h</code> file.
+          <code>.cpp</code> that the documentation is in the
+          <code>.hpp</code> file.
         </p>
         <p>
-          Do not duplicate comments in both the <code>.h</code> and
-          the <code>.cc</code>. Duplicated comments diverge.
+          Do not duplicate comments in both the <code>.hpp</code> and
+          the <code>.cpp</code>. Duplicated comments diverge.
         </p>
       </SUBSECTION>
     </BODY>
@@ -3129,7 +3147,7 @@ Tashana Landray
         </p>
         <p>
           Note you should <em>not</em> just repeat the comments given
-          with the function declaration, in the <code>.h</code> file or
+          with the function declaration, in the <code>.hpp</code> file or
           wherever.  It's okay to recapitulate briefly what the function
           does, but the focus of the comments should be on how it does it.
         </p>
@@ -4253,7 +4271,7 @@ Tashana Landray
       <ul>
         <li> Do not use Hungarian notation (for example, naming an
              integer <code>iNum</code>). Use the Google naming conventions,
-             including the <code>.cc</code> extension for source files.
+             including the <code>.cpp</code> extension for source files.
              </li>
         <li> Windows defines many of its own synonyms for primitive
              types, such as <code>DWORD</code>, <code>HANDLE</code>, etc.
@@ -4303,15 +4321,15 @@ Tashana Landray
              </li>
         <li> The usual way of working with precompiled headers is to
              include a header file at the top of each source file,
-             typically with a name like <code>StdAfx.h</code> or
-             <code>precompile.h</code>. To make your code easier to share
+             typically with a name like <code>StdAfx.hpp</code> or
+             <code>precompile.hpp</code>. To make your code easier to share
              with other projects, avoid including this file explicitly
-             (except in <code>precompile.cc</code>), and use the
+             (except in <code>precompile.cpp</code>), and use the
              <code>/FI</code> compiler option to include the file
              automatically.
              </li>
         <li> Resource headers, which are usually named
-             <code>resource.h</code> and contain only macros, do not need
+             <code>resource.hpp</code> and contain only macros, do not need
              to conform to these style guidelines.
              </li>
       </ul>
