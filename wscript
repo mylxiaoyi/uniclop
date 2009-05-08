@@ -1,3 +1,5 @@
+VERSION='0.1'
+APPNAME='uniclop'
 srcdir = '.'
 blddir = 'output'
 
