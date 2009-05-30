@@ -3,11 +3,14 @@
  *
  */
 
-#include "applications/video_input/VideoInputApplication.hpp"
+#include "VideoInputApplication.hpp"
 #include <boost/scoped_ptr.hpp>
 
 int main(int argc, char *argv[])
 {
+	using namespace uniclop::applications;
+	using namespace uniclop::applications::video_input;
+
 	boost::scoped_ptr<AbstractApplication> application_p(new VideoInputApplication());
 	return application_p->main(argc, argv);
 }

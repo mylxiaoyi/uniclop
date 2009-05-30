@@ -1,3 +1,6 @@
+#! /usr/bin/env python
+# encoding: utf-8
+
 VERSION='0.1'
 APPNAME='uniclop'
 srcdir = '.'
@@ -14,6 +17,8 @@ def configure(conf):
     conf.check_tool('boost')
     conf.check_boost(lib=["filesystem", "program_options"])
 
+    conf.env["CXXFLAGS"] = "-O3"
+    #conf.env["INCLUDE"] = "./src"
 
 def build(bld):
     print '  building the project'

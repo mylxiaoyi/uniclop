@@ -1,8 +1,4 @@
 
-#ifndef VIDEOINPUTAPPLICATION_HPP_
-#define VIDEOINPUTAPPLICATION_HPP_
-
-
 #include "VideoInputApplication.hpp"
 
 #include <cstdio>
@@ -33,7 +29,7 @@ int VideoInputApplication::main_loop(args::variables_map &options) {
 	//init_gui(options);
 	//run_gui();
 
-	printf("Hello world !");
+	printf("Hello world !\n");
 
 	return 0;
 }
@@ -43,5 +39,3 @@ int VideoInputApplication::main_loop(args::variables_map &options) {
 }
 }
 }
-
-#endif /* VIDEOINPUTAPPLICATION_HPP_ */
