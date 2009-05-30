@@ -8,8 +8,8 @@
 
 int main(int argc, char *argv[])
 {
-	using namespace uniclop::applications;
-	using namespace uniclop::applications::video_input;
+	using uniclop::applications::AbstractApplication;
+	using uniclop::applications::video_input::VideoInputApplication;
 
 	boost::scoped_ptr<AbstractApplication> application_p(new VideoInputApplication());
 	return application_p->main(argc, argv);

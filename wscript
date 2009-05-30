@@ -16,6 +16,8 @@ def configure(conf):
 
     conf.check_tool('boost')
     conf.check_boost(lib=["filesystem", "program_options"])
+    #conf.check_boost(lib=["gil",])
+
 
     conf.env["CXXFLAGS"] = "-O3"
     #conf.env["INCLUDE"] = "./src"

@@ -41,20 +41,19 @@ def build(bld):
 
         print("\t" + application_name)
         source_files = abstract_application_files + bld.glob( application_name + "/*.cpp")
-        print("\tSource files: " + str(source_files))
-        print("\tFiles: " + str(bld.path.files()))
-        print("\tDirs: " + str(bld.path.dirs()))
+        #print("\tSource files: " + str(source_files))
+        #print("\tFiles: " + str(bld.path.files()))
+        #print("\tDirs: " + str(bld.path.dirs()))
 
-        bld.add_subdirs(application_name)
+        if True:
+            bld.add_subdirs(application_name)
+        else:
+            task = bld.new_task_gen(
+                features = 'cxx cprogram',
+                source = source_files,
+                target = application_name,
+                lib= libs)
 
-        #task = bld.new_task_gen(
-        #    features = 'cxx cprogram',
-        #    source = source_files,
-        #    target = application_name,
-        #    lib= libs)
-            
-            
-        #print(task.find_sources_in_dirs([".",]))
-        #print(task.find_sources_in_dirs([".", "./src/applications/" + application_name + "/"]))
-        #print(task)
+            #print(task)
+            print("task.source: "+ str(task.source))
       
