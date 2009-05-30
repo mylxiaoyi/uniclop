@@ -1,0 +1,7 @@
+
+def set_options(opt):
+    print '  setting the algorithms options'
+def configure(conf):
+    print '  executing the algorithms configuration'
+def build(bld):
+    print '  building the algorithms'

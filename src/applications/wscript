@@ -1,0 +1,32 @@
+
+import os, os.path, glob
+
+def set_options(opt):
+    print '  setting the applications options'
+def configure(conf):
+    print '  executing the applications configuration'
+def build(bld):
+    print '  building the applications'
+    
+    # local files
+    abstract_application_files = bld.glob("*.cpp")
+    #print(abstract_application_files)
+   
+    # find subdirectories
+    path = bld.path.abspath()   
+    applications = [file for file in os.listdir(path) if os.path.isdir(path + "/" + file)]
+    print("Found applications:")
+
+    libs = ["boost_program_options",]
+
+    # for each subdirectory 
+    for application_name in applications:
+        print("\t" + application_name)
+        task = bld.new_task_gen(
+            features = 'cxx cprogram',
+            source = abstract_application_files + glob.glob(application_name + "/*.cpp"),
+            target = application_name,
+            lib= libs
+            )
+        #print(task)
+      
