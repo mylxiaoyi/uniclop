@@ -2,26 +2,32 @@
 
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 // Headers
-#include "images_input.hpp"
+#include "ImagesInput.hpp"
 
-// extra implementation specific headers
 // Cimg http://cimg.sf.net
 #include <CImg/CImg.h>
 using namespace cimg_library;
 
 // OpenCv http://opencvlibrary.sf.net
-#include <cv.h>
-#include <highgui.h>
+#include <opencv/cv.h>
+#include <opencv/highgui.h>
 
 // Boost http://boost.org
 #include <boost/cstdint.hpp>
-using boost::uint8_t;
+//#include <boost/gil/gil_all.hpp>
 
 // C++ std
 #include <vector>
 #include <iostream>
-using namespace std;
 
+
+namespace uniclop {
+namespace devices {
+namespace video {
+
+using namespace std;
+using boost::uint8_t;
+using namespace boost;
 
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 
@@ -320,7 +326,7 @@ CImg<T> & ImagesInput<T>::get_new_image()
 
 	// check if we reached the last image or not
   	_reached_last_image = (input_images_it == input_images.end());
-        
+
     }
 
     // post process the acquired image --
@@ -348,3 +354,6 @@ template class ImagesInput<uint8_t>;
 
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 
+}
+}
+}

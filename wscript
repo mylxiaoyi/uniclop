@@ -15,7 +15,7 @@ def configure(conf):
     conf.check_tool('compiler_cxx')
 
     conf.check_tool('boost')
-    conf.check_boost(lib=["filesystem", "program_options"])
+    conf.check_boost(lib=["filesystem", "program_options", "thread"])
     #conf.check_boost(lib=["gil",])
 
 
@@ -24,5 +24,5 @@ def configure(conf):
 
 def build(bld):
     print '  building the project'
-    bld.add_subdirs(["src/algorithms", "src/applications"])
+    bld.add_subdirs(["src/algorithms", "src/applications", "src/devices"])
 

@@ -1,8 +1,7 @@
 #! /usr/bin/env python
 # encoding: utf-8
 
-# waf buid file
-# bld BuildContext is a global variable
+# waf build file
 
 def set_options(opt):
     pass
@@ -20,7 +19,7 @@ def build(bld):
     print(source_files)
 
     #libs = ["BOOST_PROGRAM_OPTIONS",]
-    libs = ["boost_program_options",]
+    libs = ["boost_program_options", ]
 
     task = bld.new_task_gen(
         features = 'cxx cprogram',
@@ -28,5 +27,5 @@ def build(bld):
         target = application_name,
         lib = libs,
         includes = "../../",
-        uselib_local=["AbstractApplication"]
+        uselib_local=["AbstractApplication", "uniclop_devices"]
         )

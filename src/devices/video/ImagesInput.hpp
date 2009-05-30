@@ -2,6 +2,14 @@
 #if !defined(IMAGES_INPUT_HEADER_INCLUDED)
 #define IMAGES_INPUT_HEADER_INCLUDED
 
+#include <string>
+#include <vector>
+using namespace std;
+
+// Boost http://boost.org
+#include <boost/program_options.hpp>
+namespace args = boost::program_options;
+
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 // Headers
 
@@ -10,17 +18,16 @@ namespace cimg_library
 {
 template<typename T> struct CImg;
 }
-using namespace cimg_library;
 
 struct CvCapture; // forward declaration to avoid including all of OpenCv
 
-#include <string>
-#include <vector>
-using namespace std;
+namespace uniclop {
+namespace devices {
+namespace video {
 
-// Boost http://boost.org
-#include <boost/program_options.hpp>
-namespace args = boost::program_options;
+
+using namespace cimg_library;
+
 
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 // Video input
@@ -36,7 +43,7 @@ class ImagesInput
     bool _reached_last_image;
 
     int desired_width, desired_height;
-    
+
     double blur_sigma; // apply blurring to input images (-1 to disable)
     bool grayscale; // transform image to grayscale or not
 
@@ -59,5 +66,10 @@ private:
     bool grab_frame();
 
 };
+
+}
+}
+}
+
 
 #endif // #if !defined(IMAGES_INPUT_HEADER_INCLUDED)
