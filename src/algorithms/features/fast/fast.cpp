@@ -27,10 +27,8 @@ typedef struct
 }
 xy;
 
-void FAST::corner_detect(const CImg<uint8_t>& image, const int barrier, std::vector<FASTFeature>& corners)
+void FAST::corner_detect(const gray8c_view_t& image, const int barrier, std::vector<FASTFeature>& corners)
 {
-    if(image.dimz() != 1 && image.dimv() != 1)
-        throw runtime_error("Input image does not match the expected dimensions");
 
     const int xsize = image.dimx();
     const int ysize = image.dimy();
@@ -39,7 +37,8 @@ void FAST::corner_detect(const CImg<uint8_t>& image, const int barrier, std::vec
     corners.clear();
 
     FASTFeature success_xy; // helper variable
-    int boundary = 3, y, cb, c_b;
+    const int boundary = 3;
+    int y, cb, c_b;
     const byte  *line_max, *line_min;
     const byte* cache_0;
     const byte* cache_1;
@@ -2685,13 +2684,13 @@ int corner_score(const byte*  imp, const int *pointer_dir, const int barrier, FA
     /*The score for a positive feature is sum of the difference between the pixels
       and the barrier if the difference is positive. Negative is similar.
       The score is the max of those two.
-      
+
        B = {x | x = points on the Bresenham circle around c}
        Sp = { I(x) - t | x E B , I(x) - t > 0 }
        Sn = { t - I(x) | x E B, t - I(x) > 0}
-      
+
        Score = max sum(Sp), sum(Sn)
-       
+
        Will also fill the feature.circle_intensities vector (used to match or not two features)
        */
 
