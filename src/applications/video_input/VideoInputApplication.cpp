@@ -43,18 +43,28 @@ args::options_description VideoInputApplication::get_command_line_options(void) 
 	return desc;
 }
 
-int picture_requested = 0;
-static gboolean cb_have_data(GstElement *element, GstBuffer * buffer, GstPad* pad, gpointer user_data)
-{
-	//unsigned char *data_photo = (unsigned char *) GST_BUFFER_DATA(buffer);
-	if (picture_requested)
-	{
-		picture_requested = 0;
-		//create_jpeg(data_photo);
-		// create view and start processing
-	}
-	return TRUE;
+void VideoInputApplication::on_new_frame_callback(GstElement *element, GstBuffer * buffer, GstPad* pad, gpointer self_p){
+	
+	((VideoInputApplication *) self_p)->on_new_frame(element, buffer, pad);
+	
+	return;
 }
+
+void VideoInputApplication::on_new_frame(GstElement *element, GstBuffer * buffer, GstPad* pad){
+	
+	// here goes the video processing
+	
+	// unsigned char *data_photo = (unsigned char *) GST_BUFFER_DATA(buffer);
+	
+	
+	if (true)
+	{
+		g_debug("on_new_frame was called");
+	}
+	
+	return;
+}
+
 
 void VideoInputApplication::init_video_input()
 {
@@ -99,15 +109,15 @@ void VideoInputApplication::init_video_input()
 
 	gst_bin_add_many(GST_BIN(pipeline), camera_source, tee, videosink_queue, fakesink_queue, videosink, fakesink, NULL);
 
-	filter = gst_caps_new_simple("video/x-raw-yuv", "width", G_TYPE_INT, 640, "height", G_TYPE_INT, 480, /*"framerate",
-	 GST_TYPE_FRACTION, 15, 1,*/"bpp", G_TYPE_INT, 24, "depth", G_TYPE_INT, 24, NULL);
+	filter = gst_caps_new_simple("video/x-raw-yuv", "width", G_TYPE_INT, width, "height", G_TYPE_INT, height, /*"framerate",
+	 GST_TYPE_FRACTION, 15, 1,*/"bpp", G_TYPE_INT, depth, "depth", G_TYPE_INT, depth, NULL);
 
 	// Camera -> Tee
 	link_ok = gst_element_link_filtered(camera_source, tee, filter);
 	if (!link_ok)
 	{
 		g_warning("Failed to link elements !");
-		throw std::runtime_error("VideoInputApplication::init_video_input failed to link the Gstreamer elements");
+		throw std::runtime_error("VideoInputApplication::init_video_input failed to link the tee element");
 	}
 
 
@@ -117,7 +127,7 @@ void VideoInputApplication::init_video_input()
 	if (!link_ok)
 	{
 		g_warning("Failed to link elements!");
-		throw std::runtime_error("VideoInputApplication::init_video_input failed to link the Gstreamer elements");
+		throw std::runtime_error("VideoInputApplication::init_video_input failed to link the videosink element");
 	}
 
 	// Tee -> Queue2 -> Fakesink
@@ -126,14 +136,14 @@ void VideoInputApplication::init_video_input()
 	if (!link_ok)
 	{
 		g_warning("Failed to link elements!");
-		throw std::runtime_error("VideoInputApplication::init_video_input failed to link the Gstreamer elements");
+		throw std::runtime_error("VideoInputApplication::init_video_input failed to link the fakesink element");
 	}
 
 	// As soon as screen is exposed, window ID will be advised to the sink
 	//g_signal_connect(screen, "expose-event", G_CALLBACK(expose_cb), videosink);
 
 	g_object_set(G_OBJECT(fakesink), "signal-handoffs", TRUE, NULL);
-	g_signal_connect(fakesink, "handoff", G_CALLBACK(cb_have_data), NULL);
+	g_signal_connect(fakesink, "handoff", G_CALLBACK(VideoInputApplication::on_new_frame_callback), this);
 
 	const GstStateChangeReturn ret = gst_element_set_state(GST_ELEMENT(pipeline), GST_STATE_PLAYING);
 	if (ret == GST_STATE_CHANGE_FAILURE)
@@ -166,6 +176,10 @@ int VideoInputApplication::main_loop(args::variables_map &options)
 {
 	printf("VideoInputApplication::main_loop says hello world !\n");
 
+ 	width = 640;
+ 	 height = 480;
+ 	  depth = 24;
+ 
 	//init_gui(options);
 	//run_gui();
 
