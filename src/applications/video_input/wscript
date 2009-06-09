@@ -7,8 +7,12 @@ def set_options(opt):
     pass
 
 def configure(conf):
-    pass
+    
+    conf.check_cfg(package='gtk+-2.0', uselib_store='GTK', atleast_version='2.14.0', mandatory=True)
+    conf.check_cfg(package='gstreamer-0.10', uselib_store='GSTREAMER', atleast_version='0.10.20', mandatory=True)
 
+    return
+    
 def build(bld):
     application_name = "video_input"
 
@@ -26,6 +30,7 @@ def build(bld):
         source = source_files,
         target = application_name,
         lib = libs,
-        includes = "../../",
+        include = "../../",
+        #uselib="GTK GSTREAMER",
         uselib_local=["AbstractApplication", "uniclop_devices"]
         )

@@ -11,9 +11,12 @@ using namespace cimg_library;
 
 #include <cstdio>
 #include <iostream>
-
+#include <stdexcept>
 
 // using C code because gstreamermm was too much paint to install
+#include <gtk/gtk.h>
+#include <gst/gst.h>
+#include <gst/interfaces/xoverlay.h>
 
 namespace uniclop
 {
@@ -40,55 +43,135 @@ args::options_description VideoInputApplication::get_command_line_options(void) 
 	return desc;
 }
 
-void VideoInputApplication::init_video_input() {
+int picture_requested = 0;
+static gboolean cb_have_data(GstElement *element, GstBuffer * buffer, GstPad* pad, gpointer user_data)
+{
+	//unsigned char *data_photo = (unsigned char *) GST_BUFFER_DATA(buffer);
+	if (picture_requested)
+	{
+		picture_requested = 0;
+		//create_jpeg(data_photo);
+		// create view and start processing
+	}
+	return TRUE;
+}
 
-	  Glib::RefPtr<Gst::Pipeline> pipeline;
-	  Glib::RefPtr<Gst::Element> element_source, element_filter, element_sink;
+void VideoInputApplication::init_video_input()
+{
 
-	  // Initialize Gstreamermm:
-	  Gst::init(argc, argv);
+	GstElement  *src, *csp, *csp2, *tee, *queue1, *queue2, *videosink, *fakesink;
+	//GstPad *pad;
+	GstCaps *filter;
 
-	  // Create pipeline:
-	  pipeline = Gst::Pipeline::create("my-pipeline");
+	GstPipeline *pipeline;
 
-	  // Create elements:
-	  element_source = Gst::ElementFactory::create_element("v4l2src");
-	  element_filter = Gst::ElementFactory::create_element("identity");
-	  element_sink = Gst::ElementFactory::create_element("fakesink");
+	gboolean link_ok;
 
-	  // We must add the elements to the pipeline before linking them:
-	  try
-	  {
-	    pipeline->add(element_source)->add(element_filter)->add(element_sink);
-	  }
-	  catch (std::runtime_error& ex)
-	  {
-	    std::cerr << "Exception while adding: " << ex.what() << std::endl;
-	    return 1;
-	  }
+	GMainLoop * loop;
+	loop = g_main_loop_new(NULL, FALSE);
 
-	  // Link the elements together:
-	  try
-	  {
-	    element_source->link(element_filter)->link(element_sink);
-	  }
-	  catch(const std::runtime_error& error)
-	  {
-	    std::cerr << "Exception while linking: " << error.what() << std::endl;
-	  }
+	int argc = 0;
+	gst_init(&argc, NULL);
 
+	// Pipeline elements
+	pipeline = GST_PIPELINE(gst_pipeline_new("test-camera"));
+
+	// The camera
+	src = gst_element_factory_make("v4l2src", "src");
+
+	// Filters
+	csp = gst_element_factory_make("ffmpegcolorspace", "csp");
+	csp2 = gst_element_factory_make("ffmpegcolorspace", "csp2");
+
+	// Tee
+	tee = gst_element_factory_make("tee", "tee");
+
+	// Queue 1 for video sink
+	queue1 = gst_element_factory_make("queue", "queue1");
+
+	// Queue 2 for video sink
+	queue2 = gst_element_factory_make("queue", "queue2");
+
+	// The screen sink
+	videosink = gst_element_factory_make("xvimagesink", "videosink");
+
+	// Fake sink to capture buffer
+	fakesink = gst_element_factory_make("fakesink", "fakesink");
+
+	gst_bin_add_many(GST_BIN(pipeline), src, csp, csp2, tee, queue1, queue2, videosink, fakesink, NULL);
+
+	filter = gst_caps_new_simple("video/x-raw-rgb", "width", G_TYPE_INT, 640, "height", G_TYPE_INT, 480, "framerate",
+			GST_TYPE_FRACTION, 15, 1, "bpp", G_TYPE_INT, 24, "depth", G_TYPE_INT, 24, NULL);
+
+	// Camera -> Colorspace Filter -> Tee
+	gst_element_link(src, csp);
+	link_ok = gst_element_link_filtered(csp, tee, filter);
+
+	if (!link_ok)
+	{
+		g_warning("Failed to link elements !");
+		throw std::runtime_error("VideoInputApplication::init_video_input failed to link the Gstreamer elements");
+	}
+
+	filter = gst_caps_new_simple("video/x-raw-yuv", NULL);
+
+	// Tee -> Queue1 -> Colorspace Filter -> Videosink
+	gst_element_link(tee, queue1);
+	gst_element_link(queue1, csp2);
+	link_ok = gst_element_link_filtered(csp2, videosink, filter);
+
+	if (!link_ok)
+	{
+		g_warning("Failed to link elements!");
+		throw std::runtime_error("VideoInputApplication::init_video_input failed to link the Gstreamer elements");
+	}
+
+	// Tee -> Queue2 -> Fakesink
+	gst_element_link(tee, queue2);
+	gst_element_link(queue2, fakesink);
+
+	// As soon as screen is exposed, window ID will be advised to the sink
+	//g_signal_connect(screen, "expose-event", G_CALLBACK(expose_cb), videosink);
+
+	g_object_set(G_OBJECT(fakesink), "signal-handoffs", TRUE, NULL);
+	g_signal_connect(fakesink, "handoff", G_CALLBACK(cb_have_data), NULL);
+
+	const GstStateChangeReturn ret = gst_element_set_state(GST_ELEMENT(pipeline), GST_STATE_PLAYING);
+
+	if (ret == GST_STATE_CHANGE_FAILURE)
+	{
+
+		GstMessage * msg;
+		g_print("Failed to start up pipeline!\n");
+		msg = gst_bus_poll(gst_pipeline_get_bus(pipeline), GST_MESSAGE_ERROR, 0);
+		if (msg)
+		{
+			GError * err = NULL;
+			gst_message_parse_error(msg, &err, NULL);
+			g_print("ERROR: %s\n", err->message);
+			g_error_free(err);
+			gst_message_unref(msg);
+		}
+		throw std::runtime_error("VideoInputApplication::init_video_input failed to start up pipeline!");
+	}
+
+	g_main_loop_run(loop);
+
+	g_main_loop_unref(loop);
+	gst_element_set_state(GST_ELEMENT(pipeline), GST_STATE_NULL);
+	gst_object_unref(pipeline);
 
 	return;
 }
 
-
 int VideoInputApplication::main_loop(args::variables_map &options)
 {
+	printf("VideoInputApplication::main_loop says hello world !\n");
 
 	//init_gui(options);
 	//run_gui();
 
-	printf("Hello world !\n");
+	init_video_input();
 
 	// FIXME should port ImagesInput to Gil
 	ImagesInput<uint8_t> images_input(options);

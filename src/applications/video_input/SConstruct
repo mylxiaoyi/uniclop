@@ -1,0 +1,24 @@
+#! /usr/bin/env python
+# encoding: utf-8
+
+env = Environment()
+
+env.ParseConfig("pkg-config --cflags --libs gstreamer-0.10")
+env.ParseConfig("pkg-config --cflags --libs gtk+-2.0")
+
+source_files =  Glob("*.cpp")
+source_files +=  Glob("../../devices/video/*.cpp")
+source_files +=  Glob("../*.cpp")
+
+print(source_files)
+
+env.Append(CPPPATH = Dir("../../") )
+env.Append(LIBSPATH = Dir("/usr/X11R6/lib") )
+
+libs = ["boost_program_options", "boost_filesystem", "boost_thread", 
+"Xext", "Xrandr", "jpeg", "png", "avcodec", "avformat", "cv", "cvaux", "highgui", "cxcore",
+]
+
+env.Append(LIBS = libs)
+
+env.Program("video_input", source_files)
