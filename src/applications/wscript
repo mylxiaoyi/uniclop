@@ -31,7 +31,7 @@ def build(bld):
     applications = [file for file in os.listdir(path) if os.path.isdir(path + "/" + file)]
     print("Found %i applications:" % len(applications))
 
-    libs = ["BOOST_PROGRAM_OPTIONS",]
+    libs = ["BOOST_PROGRAM_OPTIONS", "sdl"]
 
     # for each subdirectory 
     for application_name in applications:

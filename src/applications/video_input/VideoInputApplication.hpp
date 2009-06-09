@@ -21,6 +21,8 @@ public:
 	args::options_description get_command_line_options(void) const;
 	int main_loop(args::variables_map &options);
 
+private:
+	void init_video_input();
 };
 
 }

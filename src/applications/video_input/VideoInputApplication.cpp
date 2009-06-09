@@ -10,6 +10,10 @@ using namespace cimg_library;
 #include <boost/thread/thread.hpp>
 
 #include <cstdio>
+#include <iostream>
+
+
+// using C code because gstreamermm was too much paint to install
 
 namespace uniclop
 {
@@ -35,6 +39,48 @@ args::options_description VideoInputApplication::get_command_line_options(void) 
 
 	return desc;
 }
+
+void VideoInputApplication::init_video_input() {
+
+	  Glib::RefPtr<Gst::Pipeline> pipeline;
+	  Glib::RefPtr<Gst::Element> element_source, element_filter, element_sink;
+
+	  // Initialize Gstreamermm:
+	  Gst::init(argc, argv);
+
+	  // Create pipeline:
+	  pipeline = Gst::Pipeline::create("my-pipeline");
+
+	  // Create elements:
+	  element_source = Gst::ElementFactory::create_element("v4l2src");
+	  element_filter = Gst::ElementFactory::create_element("identity");
+	  element_sink = Gst::ElementFactory::create_element("fakesink");
+
+	  // We must add the elements to the pipeline before linking them:
+	  try
+	  {
+	    pipeline->add(element_source)->add(element_filter)->add(element_sink);
+	  }
+	  catch (std::runtime_error& ex)
+	  {
+	    std::cerr << "Exception while adding: " << ex.what() << std::endl;
+	    return 1;
+	  }
+
+	  // Link the elements together:
+	  try
+	  {
+	    element_source->link(element_filter)->link(element_sink);
+	  }
+	  catch(const std::runtime_error& error)
+	  {
+	    std::cerr << "Exception while linking: " << error.what() << std::endl;
+	  }
+
+
+	return;
+}
+
 
 int VideoInputApplication::main_loop(args::variables_map &options)
 {

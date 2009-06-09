@@ -27,12 +27,14 @@ typedef struct
 }
 xy;
 
-void FAST::corner_detect(const gray8c_view_t& image, const int barrier, std::vector<FASTFeature>& corners)
+void FAST::corner_detect(const gray8c_view_t& view, const int barrier, std::vector<FASTFeature>& corners)
 {
+	// This looks like generated code
 
-    const int xsize = image.dimx();
-    const int ysize = image.dimy();
-    const byte* im = image.ptr();
+	// FIXME this code should work on a view ? but instead it works directly on the image
+    const int xsize = view.dimensions()[0];
+    const int ysize = view.dimensions()[1];
+    const byte* im = &view.begin()[0];
 
     corners.clear();
 
