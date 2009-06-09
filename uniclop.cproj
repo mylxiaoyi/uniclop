@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{268920A3-842A-405F-8593-8DAFD7E355C8}</ProjectGuid>
+    <Compiler>
+      <Compiler ctype="GppCompiler" />
+    </Compiler>
+    <Language>CPP</Language>
+    <Target>Bin</Target>
+    <Packages>
+      <Packages>
+        <Package file="/usr/lib/pkgconfig/gstreamer-0.10.pc" name="GStreamer" IsProject="false" />
+        <Package file="/usr/lib/pkgconfig/gtk+-2.0.pc" name="GTK+" IsProject="false" />
+        <Package file="/usr/lib/pkgconfig/opencv.pc" name="OpenCV" IsProject="false" />
+        <Package file="/usr/lib/pkgconfig/x11.pc" name="X11" IsProject="false" />
+        <Package file="/usr/lib/pkgconfig/xext.pc" name="Xext" IsProject="false" />
+        <Package file="/usr/lib/pkgconfig/xrandr.pc" name="Xrandr" IsProject="false" />
+        <Package file="/usr/lib/pkgconfig/libavcodec.pc" name="libavcodec" IsProject="false" />
+        <Package file="/usr/lib/pkgconfig/libavformat.pc" name="libavformat" IsProject="false" />
+        <Package file="/usr/lib/pkgconfig/libpng.pc" name="libpng" IsProject="false" />
+      </Packages>
+    </Packages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineSymbols>DEBUG MONODEVELOP</DefineSymbols>
+    <SourceDirectory>.</SourceDirectory>
+    <OutputName>uniclop</OutputName>
+    <CompileTarget>Bin</CompileTarget>
+    <Includes>
+      <Includes>
+        <Include>${ProjectDir}/src</Include>
+      </Includes>
+    </Includes>
+    <Libs>
+      <Libs>
+        <Lib>boost_program_options</Lib>
+        <Lib>boost_thread</Lib>
+        <Lib>boost_filesystem</Lib>
+      </Libs>
+    </Libs>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release</OutputPath>
+    <DefineSymbols>MONODEVELOP</DefineSymbols>
+    <SourceDirectory>.</SourceDirectory>
+    <OptimizationLevel>3</OptimizationLevel>
+    <OutputName>uniclop</OutputName>
+    <CompileTarget>Bin</CompileTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="src\applications\video_input\video_input.cpp" />
+    <Compile Include="src\applications\video_input\VideoInputApplication.cpp" />
+    <Compile Include="src\applications\AbstractApplication.cpp" />
+    <Compile Include="src\devices\video\ImagesInput.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\applications\video_input\VideoInputApplication.hpp" />
+    <None Include="src\applications\AbstractApplication.hpp" />
+    <None Include="src\devices\video\ImagesInput.hpp" />
+  </ItemGroup>
+</Project>

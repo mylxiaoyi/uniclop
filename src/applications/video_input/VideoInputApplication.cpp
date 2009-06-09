@@ -59,7 +59,10 @@ static gboolean cb_have_data(GstElement *element, GstBuffer * buffer, GstPad* pa
 void VideoInputApplication::init_video_input()
 {
 
-	GstElement  *src, *csp, *csp2, *tee, *queue1, *queue2, *videosink, *fakesink;
+	// the following pipeline works on my laptop
+	// gst-launch-0.10 v4l2src ! video/x-raw-yuv, width=640,height=480 ! xvimagesink
+
+	GstElement *camera_source, *tee, *videosink_queue, *fakesink_queue, *videosink, *fakesink;
 	//GstPad *pad;
 	GstCaps *filter;
 
@@ -73,53 +76,44 @@ void VideoInputApplication::init_video_input()
 	int argc = 0;
 	gst_init(&argc, NULL);
 
-	// Pipeline elements
+	// pipeline element
 	pipeline = GST_PIPELINE(gst_pipeline_new("test-camera"));
 
-	// The camera
-	src = gst_element_factory_make("v4l2src", "src");
+	// the camera
+	camera_source = gst_element_factory_make("v4l2src", "camera_source");
 
-	// Filters
-	csp = gst_element_factory_make("ffmpegcolorspace", "csp");
-	csp2 = gst_element_factory_make("ffmpegcolorspace", "csp2");
-
-	// Tee
+	// tee
 	tee = gst_element_factory_make("tee", "tee");
 
-	// Queue 1 for video sink
-	queue1 = gst_element_factory_make("queue", "queue1");
+	// queue for video sink
+	videosink_queue = gst_element_factory_make("queue", "videosink_queue");
 
-	// Queue 2 for video sink
-	queue2 = gst_element_factory_make("queue", "queue2");
+	// queue  for fake sink
+	fakesink_queue = gst_element_factory_make("queue", "fakesink_queue");
 
-	// The screen sink
+	// the screen sink
 	videosink = gst_element_factory_make("xvimagesink", "videosink");
 
-	// Fake sink to capture buffer
+	// fake sink to capture buffer
 	fakesink = gst_element_factory_make("fakesink", "fakesink");
 
-	gst_bin_add_many(GST_BIN(pipeline), src, csp, csp2, tee, queue1, queue2, videosink, fakesink, NULL);
+	gst_bin_add_many(GST_BIN(pipeline), camera_source, tee, videosink_queue, fakesink_queue, videosink, fakesink, NULL);
 
-	filter = gst_caps_new_simple("video/x-raw-rgb", "width", G_TYPE_INT, 640, "height", G_TYPE_INT, 480, "framerate",
-			GST_TYPE_FRACTION, 15, 1, "bpp", G_TYPE_INT, 24, "depth", G_TYPE_INT, 24, NULL);
+	filter = gst_caps_new_simple("video/x-raw-yuv", "width", G_TYPE_INT, 640, "height", G_TYPE_INT, 480, /*"framerate",
+	 GST_TYPE_FRACTION, 15, 1,*/"bpp", G_TYPE_INT, 24, "depth", G_TYPE_INT, 24, NULL);
 
-	// Camera -> Colorspace Filter -> Tee
-	gst_element_link(src, csp);
-	link_ok = gst_element_link_filtered(csp, tee, filter);
-
+	// Camera -> Tee
+	link_ok = gst_element_link_filtered(camera_source, tee, filter);
 	if (!link_ok)
 	{
 		g_warning("Failed to link elements !");
 		throw std::runtime_error("VideoInputApplication::init_video_input failed to link the Gstreamer elements");
 	}
 
-	filter = gst_caps_new_simple("video/x-raw-yuv", NULL);
 
-	// Tee -> Queue1 -> Colorspace Filter -> Videosink
-	gst_element_link(tee, queue1);
-	gst_element_link(queue1, csp2);
-	link_ok = gst_element_link_filtered(csp2, videosink, filter);
-
+	// Tee -> Queue1 -> Videosink
+	link_ok = gst_element_link(tee, videosink_queue);
+	link_ok = link_ok && gst_element_link(videosink_queue, videosink);
 	if (!link_ok)
 	{
 		g_warning("Failed to link elements!");
@@ -127,8 +121,13 @@ void VideoInputApplication::init_video_input()
 	}
 
 	// Tee -> Queue2 -> Fakesink
-	gst_element_link(tee, queue2);
-	gst_element_link(queue2, fakesink);
+	link_ok = gst_element_link(tee, fakesink_queue);
+	link_ok = link_ok && gst_element_link(fakesink_queue, fakesink);
+	if (!link_ok)
+	{
+		g_warning("Failed to link elements!");
+		throw std::runtime_error("VideoInputApplication::init_video_input failed to link the Gstreamer elements");
+	}
 
 	// As soon as screen is exposed, window ID will be advised to the sink
 	//g_signal_connect(screen, "expose-event", G_CALLBACK(expose_cb), videosink);
@@ -137,7 +136,6 @@ void VideoInputApplication::init_video_input()
 	g_signal_connect(fakesink, "handoff", G_CALLBACK(cb_have_data), NULL);
 
 	const GstStateChangeReturn ret = gst_element_set_state(GST_ELEMENT(pipeline), GST_STATE_PLAYING);
-
 	if (ret == GST_STATE_CHANGE_FAILURE)
 	{
 
