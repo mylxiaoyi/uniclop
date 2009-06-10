@@ -35,6 +35,7 @@
     <Includes>
       <Includes>
         <Include>${ProjectDir}/src</Include>
+        <Include>${CombineDir}/src</Include>
       </Includes>
     </Includes>
     <Libs>
