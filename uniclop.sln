@@ -1,7 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
-Project("{2857B73E-F847-4B02-9238-064979017E93}") = "uniclop", "uniclop.cproj", "{268920A3-842A-405F-8593-8DAFD7E355C8}"
+Project("{2857B73E-F847-4B02-9238-064979017E93}") = "uniclop_base", "uniclop_base.cproj", "{268920A3-842A-405F-8593-8DAFD7E355C8}"
+EndProject
+Project("{2857B73E-F847-4B02-9238-064979017E93}") = "video_input", "src\applications\video_input\video_input.cproj", "{C35F52B7-2214-4A65-8129-390FE0248E49}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,9 +15,14 @@ Global
 		{268920A3-842A-405F-8593-8DAFD7E355C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{268920A3-842A-405F-8593-8DAFD7E355C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{268920A3-842A-405F-8593-8DAFD7E355C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C35F52B7-2214-4A65-8129-390FE0248E49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C35F52B7-2214-4A65-8129-390FE0248E49}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C35F52B7-2214-4A65-8129-390FE0248E49}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C35F52B7-2214-4A65-8129-390FE0248E49}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		name = uniclop
-		StartupItem = uniclop.cproj
+		version = 0.1
+		StartupItem = uniclop_base.cproj
 	EndGlobalSection
 EndGlobal
