@@ -21,7 +21,7 @@ using uniclop::devices::video::GstVideoInput;
 class VideoInputApplication : public AbstractApplication
 {
 
-	boost::scoped_ptr<GstVideoInput> gst_video_input_p;	
+    boost::scoped_ptr<GstVideoInput> gst_video_input_p;
 
 public:
     string get_application_title() const;

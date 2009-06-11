@@ -2,6 +2,7 @@
 
 #include "devices/video/ImagesInput.hpp"
 
+#include "algorithms/features/features_detection.hpp"
 
 #include <boost/thread/xtime.hpp>
 #include <boost/thread/thread.hpp>
@@ -9,8 +10,6 @@
 #include <cstdio>
 #include <iostream>
 #include <stdexcept>
-
-
 
 namespace uniclop
 {
@@ -45,6 +44,15 @@ int FeaturesDetectionApplication::main_loop(args::variables_map &options)
 
     //init_gui(options);
     //run_gui();
+
+
+    //gst_video_input_p.reset(new GstVideoInput(options));
+    //features_detector_p.reset(new SimpleFAST(options));
+
+    // color_image_view =gst_video_input_p -> get_new_image
+    // color to gray_image
+    // features_detector_p -> detect_features(grey_image)
+    // plot features on output image
 
     return 0;
 }

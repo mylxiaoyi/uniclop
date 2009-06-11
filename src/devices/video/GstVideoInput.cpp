@@ -69,6 +69,11 @@ void GstVideoInput::parse_options(program_options::variables_map &options)
     }
 
 
+    // FIXME how to get the depth from the image type ?
+    //GstVideoInput::image_t::point_t
+    //GstVideoInput::image_t::value_t
+    depth = 24; // 8 bits RGB
+
     return;
 }
 
@@ -80,6 +85,7 @@ GstVideoInput::GstVideoInput(program_options::variables_map &options)
     current_image_p.reset(new GstVideoInput::image_t(width, height));
     current_image_view = boost::gil::const_view(*current_image_p);
 
+    pipeline = NULL;
     init_gstreamer(video_sink_name);
 
     return;
@@ -89,6 +95,10 @@ GstVideoInput::GstVideoInput(program_options::variables_map &options)
 GstVideoInput::~GstVideoInput()
 {
     // nothing to do here
+
+    gst_element_set_state(GST_ELEMENT(pipeline), GST_STATE_NULL);
+    gst_object_unref(pipeline);
+
     return;
 }
 
@@ -99,11 +109,9 @@ void GstVideoInput::init_gstreamer(const string &video_sink_name)
     // the following pipeline works on my laptop
     // gst-launch-0.10 v4l2src ! video/x-raw-yuv, width=640,height=480 ! xvimagesink
 
-    GstElement *camera_source, *tee, *videosink_queue, *fakesink_queue, *videosink, *fakesink;
+    GstElement *camera_source, *tee, *videosink_queue, *fakesink_queue, *color_space, *videosink, *fakesink;
     //GstPad *pad;
-    GstCaps *filter;
-
-    GstPipeline *pipeline;
+    GstCaps *videosink_caps, *color_space_caps;
 
     gboolean link_ok;
 
@@ -126,7 +134,11 @@ void GstVideoInput::init_gstreamer(const string &video_sink_name)
     videosink_queue = gst_element_factory_make("queue", "videosink_queue");
 
     // queue  for fake sink
+//    fakesink_queue = gst_element_factory_make("queue ! ffmpegcolorspace ! video/x-raw-rgb !", "fakesink_queue");
     fakesink_queue = gst_element_factory_make("queue", "fakesink_queue");
+
+    // color space transform
+    color_space = gst_element_factory_make("ffmpegcolorspace", "color_space");
 
     // the screen sink
     videosink = gst_element_factory_make("xvimagesink", "videosink");
@@ -134,17 +146,14 @@ void GstVideoInput::init_gstreamer(const string &video_sink_name)
     // fake sink to capture buffer
     fakesink = gst_element_factory_make("fakesink", "fakesink");
 
-    gst_bin_add_many(GST_BIN(pipeline), camera_source, tee, videosink_queue, fakesink_queue, videosink, fakesink, NULL);
+    gst_bin_add_many(GST_BIN(pipeline), camera_source, tee, videosink_queue, fakesink_queue, color_space, videosink, fakesink, NULL);
 
-	// FIXME how to get the depth from the image type ?
-	//GstVideoInput::image_t::point_t
-	//GstVideoInput::image_t::value_t
-	const int depth = 24; // 8 bits RGB
-    filter = gst_caps_new_simple("video/x-raw-yuv", "width", G_TYPE_INT, width, "height", G_TYPE_INT, height, /*"framerate",
+
+    videosink_caps = gst_caps_new_simple("video/x-raw-yuv", "width", G_TYPE_INT, width, "height", G_TYPE_INT, height, /*"framerate",
 	 GST_TYPE_FRACTION, 15, 1,*/"bpp", G_TYPE_INT, depth, "depth", G_TYPE_INT, depth, NULL);
 
     // Camera -> Tee
-    link_ok = gst_element_link_filtered(camera_source, tee, filter);
+    link_ok = gst_element_link_filtered(camera_source, tee, videosink_caps);
     if (!link_ok)
     {
         g_warning("Failed to link elements !");
@@ -152,7 +161,7 @@ void GstVideoInput::init_gstreamer(const string &video_sink_name)
     }
 
 
-    // Tee -> Queue1 -> Videosink
+    // Tee -> Queue > Videosink
     link_ok = gst_element_link(tee, videosink_queue);
     link_ok = link_ok && gst_element_link(videosink_queue, videosink);
     if (!link_ok)
@@ -161,9 +170,14 @@ void GstVideoInput::init_gstreamer(const string &video_sink_name)
         throw std::runtime_error("VideoInputApplication::init_video_input failed to link the videosink element");
     }
 
-    // Tee -> Queue2 -> Fakesink
+
+    //color_space_caps = gst_caps_new_simple("video/x-raw-rgb", NULL);
+
+    // Tee -> Queue -> ColorSpace -> Fakesink
     link_ok = gst_element_link(tee, fakesink_queue);
     link_ok = link_ok && gst_element_link(fakesink_queue, fakesink);
+    //link_ok = link_ok && gst_element_link(fakesink_queue, color_space);
+    //link_ok = link_ok && gst_element_link_filtered(color_space, fakesink, color_space_caps);
     if (!link_ok)
     {
         g_warning("Failed to link elements!");
@@ -195,10 +209,7 @@ void GstVideoInput::init_gstreamer(const string &video_sink_name)
     }
 
     g_main_loop_run(loop);
-
     g_main_loop_unref(loop);
-    gst_element_set_state(GST_ELEMENT(pipeline), GST_STATE_NULL);
-    gst_object_unref(pipeline);
 
     return;
 }
@@ -219,7 +230,12 @@ void GstVideoInput::on_new_frame(GstElement *element, GstBuffer * buffer, GstPad
     // here goes the video processing
 
     // unsigned char *data_photo = (unsigned char *) GST_BUFFER_DATA(buffer);
+    // create buffer img_view
+    // assert rgb8_image_t
 
+
+
+    // copy into *current_image_p
 
     if (true)
     {

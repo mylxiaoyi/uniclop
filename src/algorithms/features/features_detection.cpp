@@ -11,6 +11,16 @@
 
 // Cimg http://cimg.sf.net
 #include <CImg/CImg.h>
+
+
+namespace uniclop
+{
+namespace algorithms
+{
+namespace features
+{
+
+
 using namespace cimg_library;
 
 
@@ -113,6 +123,8 @@ const vector<FASTFeature> & SimpleFAST::detect_features(const gray8c_view_t& vie
     return best_features;
 }
 
-
+}
+}
+}
 
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=

@@ -25,6 +25,13 @@ using namespace cimg_library;
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 // Function prototypes declaration
 
+namespace uniclop
+{
+namespace algorithms
+{
+namespace features
+{
+
 namespace FAST
 {
 
@@ -67,7 +74,9 @@ FAST::nonmax(image, 30, corners, good_corners);
 */
 
 } // end of namespace FAST
-
+}
+}
+}
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 
 #endif // #if !defined(FAST_HEADER_INCLUDED)

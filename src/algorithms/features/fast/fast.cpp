@@ -8,14 +8,20 @@
 // Headers
 
 #include "fast.hpp"
-using namespace FAST;
-
 #include <boost/gil/gil_all.hpp>
 
-
-// implementation specific headers
-// Cimg http://cimg.sf.net
 #include <CImg/CImg.h>
+
+namespace uniclop
+{
+namespace algorithms
+{
+namespace features
+{
+namespace FAST
+{
+
+
 using namespace cimg_library;
 
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
@@ -28,7 +34,7 @@ typedef struct
 }
 xy;
 
-void FAST::corner_detect(const gray8c_view_t& view, const int barrier, std::vector<FASTFeature>& corners)
+void corner_detect(const gray8c_view_t& view, const int barrier, std::vector<FASTFeature>& corners)
 {
     // This looks like generated code
 
@@ -2724,8 +2730,8 @@ int corner_score(const byte*  imp, const int *pointer_dir, const int barrier, FA
 }
 
 
-void FAST::nonmax(const gray8c_view_t& view,  const int barrier, std::vector<FASTFeature>& corners,
-                  std::vector<FASTFeature>& nonmax_corners)
+void nonmax(const gray8c_view_t& view,  const int barrier, std::vector<FASTFeature>& corners,
+            std::vector<FASTFeature>& nonmax_corners)
 // void fast_nonmax(const BasicImage<byte>& im, const vector<ImageRef>& corners, int barrier, vector<ReturnType>& nonmax_corners)
 //xy*  fast_nonmax(const byte* im, int xsize, int ysize, xy* corners, int numcorners, int barrier, int* numnx)
 {
@@ -2879,4 +2885,8 @@ cont:
     return;
 }
 
+}
+}
+}
+}
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=

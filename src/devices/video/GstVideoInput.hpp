@@ -39,11 +39,13 @@ public:
     typedef image_t::const_view_t const_view_t;
 
 private:
+    GstPipeline *pipeline;
+
     scoped_ptr<image_t> current_image_p;
     const_view_t current_image_view;
 
     string video_sink_name;
-    int width, height;
+    int width, height, depth;
 
 public:
     static program_options::options_description get_options_description();

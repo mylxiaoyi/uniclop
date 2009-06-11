@@ -29,6 +29,14 @@ namespace args = boost::program_options;
 #include <boost/gil/typedefs.hpp>
 using boost::gil::gray8c_view_t;
 
+
+namespace uniclop
+{
+namespace algorithms
+{
+namespace features
+{
+
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 // Interfaces definition
 
@@ -114,5 +122,9 @@ public:
     const vector<FASTFeature> &detect_features(const gray8c_view_t& view);
 };
 
+
+}
+}
+}
 
 #endif // #if !defined(FEATURES_DETECTION_HEADER_INCLUDED)
