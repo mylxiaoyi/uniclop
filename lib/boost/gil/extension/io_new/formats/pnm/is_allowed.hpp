@@ -19,35 +19,40 @@
 ///
 ////////////////////////////////////////////////////////////////////////////////////////
 
-namespace boost { namespace gil { namespace detail {
+namespace boost
+{
+namespace gil
+{
+namespace detail
+{
 
 template< typename View >
 bool is_allowed( const image_read_info< pnm_tag >& info
-               , mpl::true_   // is read_and_no_convert
+                 , mpl::true_   // is read_and_no_convert
                )
 {
     pnm_image_type::type asc_type = is_read_supported< get_pixel_type< View >::type
-                                                     , pnm_tag
-                                                     >::_asc_type;
+                                    , pnm_tag
+                                    >::_asc_type;
 
     pnm_image_type::type bin_type = is_read_supported< get_pixel_type< View >::type
-                                                     , pnm_tag
-                                                     >::_bin_type;
-    if( info._type == pnm_type_mono_asc )
+                                    , pnm_tag
+                                    >::_bin_type;
+    if ( info._type == pnm_type_mono_asc )
     {
         // ascii mono images are read gray8_image_t
         return (  asc_type == pnm_type_gray_asc );
     }
 
 
-    return (  asc_type == info._type 
-           || bin_type == info._type
+    return (  asc_type == info._type
+              || bin_type == info._type
            );
 }
 
 template< typename View >
 bool is_allowed( const image_read_info< pnm_tag >& info
-               , mpl::false_  // is read_and_convert
+                 , mpl::false_  // is read_and_convert
                )
 {
     return true;

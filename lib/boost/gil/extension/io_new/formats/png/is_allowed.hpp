@@ -21,9 +21,15 @@
 
 #include <boost/mpl/for_each.hpp>
 
-namespace boost { namespace gil { namespace detail {
+namespace boost
+{
+namespace gil
+{
+namespace detail
+{
 
-namespace png {
+namespace png
+{
 
 typedef std::vector< png_bitdepth::type > channel_sizes_t;
 
@@ -31,13 +37,13 @@ typedef std::vector< png_bitdepth::type > channel_sizes_t;
 // a pixel_t as template parameter whereas the other is using reference_t.
 template< typename View >
 bool compare_channel_sizes( const channel_sizes_t& channel_sizes // in bits
-                          , mpl::false_                          // is_bit_aligned
-                          , mpl::true_                           // is_homogeneous
+                            , mpl::false_                          // is_bit_aligned
+                            , mpl::true_                           // is_homogeneous
                           )
 {
     typedef typename View::value_type pixel_t;
     typedef typename channel_traits<
-                typename element_type< pixel_t >::type >::value_type channel_t;
+    typename element_type< pixel_t >::type >::value_type channel_t;
 
     unsigned int s = detail::unsigned_integral_num_bits< channel_t >::value;
 
@@ -47,8 +53,8 @@ bool compare_channel_sizes( const channel_sizes_t& channel_sizes // in bits
 
 template< typename View >
 bool compare_channel_sizes( const channel_sizes_t& channel_sizes // in bits
-                          , mpl::true_                           // is_bit_aligned
-                          , mpl::true_                           // is_homogeneous
+                            , mpl::true_                           // is_bit_aligned
+                            , mpl::true_                           // is_homogeneous
                           )
 {
     typedef typename View::reference ref_t;
@@ -64,14 +70,14 @@ bool compare_channel_sizes( const channel_sizes_t& channel_sizes // in bits
 struct compare_channel_sizes_fn
 {
     compare_channel_sizes_fn( png_bitdepth::type* a )
-    : _a( a )
-    , _b( true )
+            : _a( a )
+            , _b( true )
     {}
 
     template< typename ChannelSize >
     void operator()( ChannelSize x)
     {
-        if( x != *_a++ )
+        if ( x != *_a++ )
         {
             _b = false;
         }
@@ -85,15 +91,21 @@ template< typename T >
 struct channel_sizes_type {};
 
 template< typename B, typename C, typename L, bool M >
-struct channel_sizes_type< bit_aligned_pixel_reference< B, C, L, M > > { typedef C type; };
+struct channel_sizes_type< bit_aligned_pixel_reference< B, C, L, M > >
+{
+    typedef C type;
+};
 
 template< typename B, typename C, typename L, bool M >
-struct channel_sizes_type< const bit_aligned_pixel_reference< B, C, L, M > > { typedef C type; };
+struct channel_sizes_type< const bit_aligned_pixel_reference< B, C, L, M > >
+{
+    typedef C type;
+};
 
 template< typename View >
 bool compare_channel_sizes( const channel_sizes_t& channel_sizes // in bits
-                          , mpl::true_                           // is_bit_aligned
-                          , mpl::false_                          // is_homogeneous
+                            , mpl::true_                           // is_bit_aligned
+                            , mpl::false_                          // is_homogeneous
                           )
 {
     // loop through all channels and compare
@@ -112,16 +124,16 @@ bool compare_channel_sizes( const channel_sizes_t& channel_sizes // in bits
 
 template< typename View >
 bool is_allowed( const image_read_info< png_tag >& info
-               , mpl::true_   // is read_and_no_convert
+                 , mpl::true_   // is read_and_no_convert
                )
 {
-    if( info._color_type == PNG_COLOR_TYPE_PALETTE )
+    if ( info._color_type == PNG_COLOR_TYPE_PALETTE )
     {
         return false;
     }
 
     png::channel_sizes_t channel_sizes( info._num_channels
-                                      , info._bit_depth
+                                        , info._bit_depth
                                       );
 
     typedef typename View::value_type pixel_t;
@@ -131,16 +143,16 @@ bool is_allowed( const image_read_info< png_tag >& info
     const num_channel_t dst_n = num_channels< pixel_t >::value;
 
     return (  static_cast< unsigned int >( dst_n ) == info._num_channels
-           && png::compare_channel_sizes< View >( channel_sizes
-                                                , typename is_bit_aligned< ref_t >::type()
-                                                , typename is_homogeneous< ref_t >::type()
-                                                )
+              && png::compare_channel_sizes< View >( channel_sizes
+                                                     , typename is_bit_aligned< ref_t >::type()
+                                                     , typename is_homogeneous< ref_t >::type()
+                                                   )
            );
 }
 
 template< typename View >
 bool is_allowed( const image_read_info< png_tag >& info
-               , mpl::false_  // is read_and_convert
+                 , mpl::false_  // is read_and_convert
                )
 {
     return true;

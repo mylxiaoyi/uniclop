@@ -30,10 +30,25 @@
 #include <boost/gil/extension/toolbox/gray_alpha.hpp>
 #endif // BOOST_GIL_IO_ENABLE_GRAY_ALPHA
 
-namespace boost { namespace gil { 
+namespace boost
+{
+namespace gil
+{
 
-struct double_zero { static double apply() { return 0.0; } };
-struct double_one  { static double apply() { return 1.0; } };
+struct double_zero
+{
+    static double apply()
+    {
+        return 0.0;
+    }
+};
+struct double_one
+{
+    static double apply()
+    {
+        return 1.0;
+    }
+};
 
 typedef scoped_channel_value< double, double_zero, double_one > bits64f;
 
@@ -45,14 +60,20 @@ typedef point2< std::ptrdiff_t > point_t;
 } // namespace gil
 } // namespace boost
 
-namespace boost { 
+namespace boost
+{
 
 template<> struct is_floating_point< gil::bits32f > : mpl::true_ {};
 template<> struct is_floating_point< gil::bits64f > : mpl::true_ {};
 
 } // namespace boost
 
-namespace boost { namespace gil { namespace detail {
+namespace boost
+{
+namespace gil
+{
+namespace detail
+{
 
 ///@todo We should use boost::preprocessor here.
 

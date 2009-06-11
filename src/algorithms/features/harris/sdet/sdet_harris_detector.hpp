@@ -6,9 +6,9 @@
 // \file
 // \brief a processor for extracting Harris corners
 //
-//  The Harris Corner is defined as a local maximum of 
+//  The Harris Corner is defined as a local maximum of
 //   Det(A)-k*Trace^2(A)
-//  where 
+//  where
 // \verbatim
 //                        _                           _
 //                       | (dI/dx)^2    (dI/dx)(dI/dy) |
@@ -43,36 +43,39 @@
 
 class sdet_harris_detector : public sdet_harris_detector_params
 {
- public:
-  //Constructors/destructor
-  sdet_harris_detector(sdet_harris_detector_params& rpp);
+public:
+    //Constructors/destructor
+    sdet_harris_detector(sdet_harris_detector_params& rpp);
 
-  ~sdet_harris_detector();
-  //Accessors
-  void set_image(vil1_image const& image);
-  void set_image_resource(vil_image_resource_sptr const& image);
+    ~sdet_harris_detector();
+    //Accessors
+    void set_image(vil1_image const& image);
+    void set_image_resource(vil_image_resource_sptr const& image);
 
-  vcl_vector<vsol_point_2d_sptr>& get_points(){return points_;}
+    vcl_vector<vsol_point_2d_sptr>& get_points()
+    {
+        return points_;
+    }
 
-  //Utility Methods
-  void extract_corners();
-  void clear();
+    //Utility Methods
+    void extract_corners();
+    void clear();
 
- protected:
-  //protected methods
-  bool extract_corners_vil1(vcl_vector<float>& x_pos,
-                            vcl_vector<float>& y_pos,
-                            vcl_vector<float>& val);
+protected:
+    //protected methods
+    bool extract_corners_vil1(vcl_vector<float>& x_pos,
+                              vcl_vector<float>& y_pos,
+                              vcl_vector<float>& val);
 
-  bool extract_corners_vil(vcl_vector<float>& x_pos,
-                           vcl_vector<float>& y_pos,
-                           vcl_vector<float>& val);
-  //members
-  bool points_valid_;      //process state flag
-  bool use_vil_image_;
-  vil1_image image_;  //input image
-  vil_image_resource_sptr vimage_;  //input image
-  vcl_vector<vsol_point_2d_sptr> points_; //resulting corners
+    bool extract_corners_vil(vcl_vector<float>& x_pos,
+                             vcl_vector<float>& y_pos,
+                             vcl_vector<float>& val);
+    //members
+    bool points_valid_;      //process state flag
+    bool use_vil_image_;
+    vil1_image image_;  //input image
+    vil_image_resource_sptr vimage_;  //input image
+    vcl_vector<vsol_point_2d_sptr> points_; //resulting corners
 };
 
 #endif // sdet_harris_detector_h_

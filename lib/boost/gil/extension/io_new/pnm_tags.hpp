@@ -11,17 +11,20 @@
 #define BOOST_GIL_EXTENSION_IO_PNM_TAGS_HPP_INCLUDED
 
 ////////////////////////////////////////////////////////////////////////////////////////
-/// \file               
-/// \brief 
+/// \file
+/// \brief
 /// \author Christian Henning \n
-///         
+///
 /// \date 2008 \n
 ///
 ////////////////////////////////////////////////////////////////////////////////////////
 
 #include "detail/base.hpp"
 
-namespace boost { namespace gil {
+namespace boost
+{
+namespace gil
+{
 
 struct pnm_tag : format_tag {};
 
@@ -54,15 +57,15 @@ template<>
 struct image_read_settings< pnm_tag > : public image_read_settings_base
 {
     image_read_settings< pnm_tag >()
-    : image_read_settings_base()
+            : image_read_settings_base()
     {}
 
     image_read_settings( const point_t& top_left
-                       , const point_t& dim
+                         , const point_t& dim
                        )
-    : image_read_settings_base( top_left
-                              , dim
-                              )
+            : image_read_settings_base( top_left
+                                        , dim
+                                      )
     {}
 };
 

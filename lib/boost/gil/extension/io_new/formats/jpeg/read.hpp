@@ -30,13 +30,18 @@
 
 #include "is_allowed.hpp"
 
-namespace boost { namespace gil { namespace detail {
+namespace boost
+{
+namespace gil
+{
+namespace detail
+{
 
 template<typename Device>
 struct jpeg_decompress_mgr
 {
     jpeg_decompress_mgr( Device & file )
-        : in(file)
+            : in(file)
     {
         _cinfo.err = jpeg_std_error( &_jerr );
 
@@ -55,7 +60,7 @@ struct jpeg_decompress_mgr
         _cinfo.src = &_src._jsrc;
 
         jpeg_read_header( &_cinfo
-                        , TRUE    );
+                          , TRUE    );
 
         io_error_if( _cinfo.data_precision != 8, "Image file is not supported." );
     }
@@ -79,7 +84,7 @@ protected:
 
     void start_decompress()
     {
-        if( jpeg_start_decompress( &_cinfo ) == false )
+        if ( jpeg_start_decompress( &_cinfo ) == false )
         {
             io_error( "Cannot start decompression." );
         }
@@ -102,9 +107,9 @@ private:
     {
         gil_jpeg_source_mgr * src = reinterpret_cast<gil_jpeg_source_mgr*>(cinfo->src);
         size_t count= src->_this->in.read(src->_this->buffer, sizeof(src->_this->buffer) );
-        if( count <= 0 ) 
+        if ( count <= 0 )
         {
-            // libjpeg does that: adding an EOF marker 
+            // libjpeg does that: adding an EOF marker
             src->_this->buffer[0] = (JOCTET) 0xFF;
             src->_this->buffer[1] = (JOCTET) JPEG_EOI;
             count = 2;
@@ -119,9 +124,9 @@ private:
     {
         gil_jpeg_source_mgr * src = reinterpret_cast<gil_jpeg_source_mgr*>(cinfo->src);
 
-        if (num_bytes > 0) 
+        if (num_bytes > 0)
         {
-            if( num_bytes > long(src->_jsrc.bytes_in_buffer) )
+            if ( num_bytes > long(src->_jsrc.bytes_in_buffer) )
             {
                 src->_jsrc.bytes_in_buffer = 0;
                 src->_this->in.seek( num_bytes, SEEK_CUR);
@@ -154,27 +159,27 @@ private:
 };
 
 template< typename Device
-        , typename ConversionPolicy
-        >
+, typename ConversionPolicy
+>
 class reader< Device
             , jpeg_tag
             , ConversionPolicy
-            > 
-    : public jpeg_decompress_mgr< Device >
-    , public reader_base< jpeg_tag
-                        , ConversionPolicy >
+            >
+            : public jpeg_decompress_mgr< Device >
+            , public reader_base< jpeg_tag
+            , ConversionPolicy >
 {
 public:
     reader( Device& device )
-    : jpeg_decompress_mgr<Device>( device )
+            : jpeg_decompress_mgr<Device>( device )
     {}
 
     reader( Device& device
-          , const typename ConversionPolicy::color_converter_type& cc
+            , const typename ConversionPolicy::color_converter_type& cc
           )
-    : jpeg_decompress_mgr< Device >( device )
-    , reader_base< jpeg_tag
-                 , ConversionPolicy >( cc )
+            : jpeg_decompress_mgr< Device >( device )
+            , reader_base< jpeg_tag
+            , ConversionPolicy >( cc )
     {}
 
     image_read_info<jpeg_tag> get_info()
@@ -196,18 +201,18 @@ public:
         cinfo.dct_method = this->_settings._dct_method;
 
         typedef typename is_same< ConversionPolicy
-                                , read_and_no_convert
-                                >::type is_read_and_convert_t;
+        , read_and_no_convert
+        >::type is_read_and_convert_t;
 
         io_error_if( !is_allowed< View >( this->_info
-                                        , is_read_and_convert_t()
+                                          , is_read_and_convert_t()
                                         )
-                   , "Image types aren't compatible."
+                     , "Image types aren't compatible."
                    );
 
         this->start_decompress();
 
-        switch( this->_info._color_space )
+        switch ( this->_info._color_space )
         {
         case JCS_GRAYSCALE:
             io_error_if(this->_info._num_components!=1,"reader<jpeg>: error in image data");
@@ -242,8 +247,8 @@ public:
 private:
 
     template< typename ImagePixel
-            , typename View
-            >
+    , typename View
+    >
     void read_rows( const View& view )
     {
         typedef std::vector<ImagePixel> buffer_t;
@@ -253,43 +258,43 @@ private:
         JSAMPLE *row_adr = reinterpret_cast< JSAMPLE* >( &buffer[0] );
 
         //Skip scanlines if necessary.
-        for( int y = 0; y <  this->_settings._top_left.y; ++y )
+        for ( int y = 0; y <  this->_settings._top_left.y; ++y )
         {
             io_error_if( jpeg_read_scanlines( &this->_cinfo
-                                         , &row_adr
-                                         , 1
-                                         ) !=1
-                       , "jpeg_read_scanlines: fail to read JPEG file"
+                                              , &row_adr
+                                              , 1
+                                            ) !=1
+                         , "jpeg_read_scanlines: fail to read JPEG file"
                        );
         }
 
         // Read data.
-        for( int y = 0; y < view.height(); ++y )
+        for ( int y = 0; y < view.height(); ++y )
         {
             io_error_if( jpeg_read_scanlines( &this->_cinfo
-                                         , &row_adr
-                                         , 1
-                                         ) !=1
-                       , "jpeg_read_scanlines: fail to read JPEG file"
+                                              , &row_adr
+                                              , 1
+                                            ) !=1
+                         , "jpeg_read_scanlines: fail to read JPEG file"
                        );
 
             typename buffer_t::iterator beg = buffer.begin() + this->_settings._top_left.x;
             typename buffer_t::iterator end = beg + this->_settings._dim.x;
 
             this->_cc_policy.read( beg
-                                 , end
-                                 , view.row_begin( y )
+                                   , end
+                                   , view.row_begin( y )
                                  );
         }
 
         //@todo: Finish up. There might be a better way to do that.
-        while( this->_cinfo.output_scanline <  this->_cinfo.image_height )
+        while ( this->_cinfo.output_scanline <  this->_cinfo.image_height )
         {
             io_error_if( jpeg_read_scanlines( &this->_cinfo
-                                            , &row_adr
-                                            , 1
+                                              , &row_adr
+                                              , 1
                                             ) !=1
-                       , "jpeg_read_scanlines: fail to read JPEG file"
+                         , "jpeg_read_scanlines: fail to read JPEG file"
                        );
         }
 
@@ -299,15 +304,15 @@ private:
 struct jpeg_type_format_checker
 {
     jpeg_type_format_checker( jpeg_color_space::type color_space )
-    : _color_space( color_space )
+            : _color_space( color_space )
     {}
 
     template< typename Image >
     bool apply()
     {
         return is_read_supported< typename get_pixel_type< Image::view_t >::type
-                                , jpeg_tag
-                                >::_color_space == _color_space;
+               , jpeg_tag
+               >::_color_space == _color_space;
     }
 
 private:
@@ -317,61 +322,61 @@ private:
 
 struct jpeg_read_is_supported
 {
-    template< typename View > 
+    template< typename View >
     struct apply : public is_read_supported< typename get_pixel_type< View >::type
-                                           , jpeg_tag
-                                           >
-    {};
+                , jpeg_tag
+                >
+        {};
 };
 
 template< typename Device
-        >
+>
 class dynamic_image_reader< Device
-                          , jpeg_tag
-                          > 
-    : public reader< Device
-                   , jpeg_tag
-                   , detail::read_and_no_convert
-                   >
+            , jpeg_tag
+            >
+            : public reader< Device
+            , jpeg_tag
+            , detail::read_and_no_convert
+            >
 {
     typedef reader< Device
-                  , jpeg_tag
-                  , detail::read_and_no_convert
-                  > parent_t;
+    , jpeg_tag
+    , detail::read_and_no_convert
+    > parent_t;
 
 public:
 
     dynamic_image_reader( Device& device )
-    : reader( device )
-    {}    
+            : reader( device )
+    {}
 
     template< typename Images >
     void apply( any_image< Images >& images )
     {
-        jpeg_type_format_checker format_checker( _info._color_space != JCS_YCbCr 
-                                               ? _info._color_space
-                                               : JCS_RGB
+        jpeg_type_format_checker format_checker( _info._color_space != JCS_YCbCr
+                ? _info._color_space
+                : JCS_RGB
                                                );
 
-        if( !construct_matched( images
-                              , format_checker
-                              ))
+        if ( !construct_matched( images
+                                 , format_checker
+                               ))
         {
             io_error( "No matching image type between those of the given any_image and that of the file" );
         }
         else
         {
             init_image( images
-                      , _settings
-                      , _info
+                        , _settings
+                        , _info
                       );
 
             dynamic_io_fnobj< jpeg_read_is_supported
-                            , parent_t
-                            > op( this );
+            , parent_t
+            > op( this );
 
             apply_operation( view( images )
-                           , op
+                             , op
                            );
         }
     }

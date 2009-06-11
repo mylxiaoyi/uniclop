@@ -14,7 +14,8 @@ using namespace surf;
 
 int main( int argc, char** argv )
 {
-    if (argc == 1) {
+    if (argc == 1)
+    {
         std::cerr << "Usage: ./surf_detect -i image.pgm -o image.key "
                   << "[-t warp.xfm -i2 warped.pgm -o2 warped.key] [options]\n"
                   << "  number of points to take: -p 800\n"
@@ -22,15 +23,16 @@ int main( int argc, char** argv )
                   << "  subsampling step:         -ss 2\n";
         return 0;
     }
-    
+
     char *image_file = NULL, *warped_file = NULL, *transform_file = NULL;
     int num_points = 800;
     std::string key_file = "source.key", warped_key_file = "warped.key";
     bool doubled_image = false;
     int subsampling = 2;
-    
+
     int arg = 0;
-    while (++arg < argc) {
+    while (++arg < argc)
+    {
         if (! strcmp(argv[arg], "-i"))
             image_file = argv[++arg];
         if (! strcmp(argv[arg], "-i2"))
@@ -60,7 +62,8 @@ int main( int argc, char** argv )
 
     Image* warped = NULL;
     CvMat *transform = NULL, *inv = NULL;
-    if (warped_file) {
+    if (warped_file)
+    {
         warped = ImageLoader.readImage(warped_file);
 
         // Get inverse transform (warped -> source)
@@ -69,27 +72,32 @@ int main( int argc, char** argv )
         inv = cvCreateMat(3, 3, CV_32FC1);
         cvInvert(transform, inv);
     }
-    
+
     // Find keypoints in source image
     std::vector<KeypointFl> keypts;
     {
         Timer t("SURF detector");
         keypts = DetectSurfPoints(im, doubled_image, subsampling);
     }
-    if (warped_file) {
+    if (warped_file)
+    {
         keypts.erase(std::remove_if(keypts.begin(), keypts.end(),
                                     OutsideSource(warped->getWidth(), warped->getHeight(), transform)),
                      keypts.end());
     }
-    if ((int)keypts.size() < num_points) {
+    if ((int)keypts.size() < num_points)
+    {
         num_points = keypts.size();
         printf("WARNING: Only taking %d points!\n", num_points);
         std::sort(keypts.begin(), keypts.end());
-    } else {
+    }
+    else
+    {
         std::partial_sort(keypts.begin(), keypts.begin()+ num_points, keypts.end());
     }
-    
-    if (warped_file) {
+
+    if (warped_file)
+    {
         // Find keypoints in warped image
         std::vector<KeypointFl> warp_keypts;
         {
@@ -99,11 +107,14 @@ int main( int argc, char** argv )
         warp_keypts.erase(std::remove_if(warp_keypts.begin(), warp_keypts.end(),
                                          OutsideSource(W, H, inv)),
                           warp_keypts.end());
-        if ((int)warp_keypts.size() < num_points) {
+        if ((int)warp_keypts.size() < num_points)
+        {
             num_points = warp_keypts.size();
             printf("WARNING: Only taking %d points!\n", num_points);
             std::sort(warp_keypts.begin(), warp_keypts.end());
-        } else {
+        }
+        else
+        {
             std::partial_sort(warp_keypts.begin(), warp_keypts.begin() + num_points,
                               warp_keypts.end());
             warp_keypts.erase(warp_keypts.begin() + num_points, warp_keypts.end());
@@ -114,11 +125,11 @@ int main( int argc, char** argv )
 
     keypts.erase(keypts.begin() + num_points, keypts.end());
     WriteKeypointsFl(key_file, keypts);
-    
+
     cvReleaseMat(&inv);
     cvReleaseMat(&transform);
     delete warped;
     delete im;
-    
+
     return 0;
 }

@@ -7,21 +7,24 @@
 
 /*************************************************************************************************/
 
-#ifndef BOOST_GIL_EXTENSION_IO_BMP_TAGS_HPP_INCLUDED 
+#ifndef BOOST_GIL_EXTENSION_IO_BMP_TAGS_HPP_INCLUDED
 #define BOOST_GIL_EXTENSION_IO_BMP_TAGS_HPP_INCLUDED
 
 ////////////////////////////////////////////////////////////////////////////////////////
-/// \file               
-/// \brief 
+/// \file
+/// \brief
 /// \author Christian Henning \n
-///         
+///
 /// \date 2008 \n
 ///
 ////////////////////////////////////////////////////////////////////////////////////////
 
 #include "detail/base.hpp"
 
-namespace boost { namespace gil {
+namespace boost
+{
+namespace gil
+{
 
 struct bmp_tag : format_tag {};
 
@@ -51,7 +54,7 @@ static const uint32_t ct_bitfield = 3; // 16 or 32 bit fields without compressio
 
 struct bmp_compression : property_base< uint32_t > {};
 
-// The image size. This is the size of the raw bitmap data (see below), 
+// The image size. This is the size of the raw bitmap data (see below),
 // and should not be confused with the file size.
 struct bmp_image_size : property_base< uint32_t > {};
 
@@ -65,7 +68,7 @@ struct bmp_vertical_resolution : property_base< int32_t > {};
 struct bmp_num_colors : property_base< uint32_t > {};
 
 
-// The number of important colors used, or 0 when every color is important; 
+// The number of important colors used, or 0 when every color is important;
 // generally ignored.
 struct bmp_num_important_colors : property_base< uint32_t > {};
 
@@ -74,7 +77,7 @@ template<>
 struct image_read_info< bmp_tag >
 {
     image_read_info< bmp_tag >()
-    : _valid( false )
+            : _valid( false )
     {}
 
     bmp_offset::type _offset;
@@ -104,15 +107,15 @@ template<>
 struct image_read_settings< bmp_tag > : public image_read_settings_base
 {
     image_read_settings< bmp_tag >()
-    : image_read_settings_base()
+            : image_read_settings_base()
     {}
 
     image_read_settings( const point_t& top_left
-                       , const point_t& dim
+                         , const point_t& dim
                        )
-    : image_read_settings_base( top_left
-                              , dim
-                              )
+            : image_read_settings_base( top_left
+                                        , dim
+                                      )
     {}
 };
 

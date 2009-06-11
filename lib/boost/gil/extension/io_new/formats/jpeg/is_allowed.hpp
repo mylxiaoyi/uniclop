@@ -19,29 +19,34 @@
 ///
 ////////////////////////////////////////////////////////////////////////////////////////
 
-namespace boost { namespace gil { namespace detail {
+namespace boost
+{
+namespace gil
+{
+namespace detail
+{
 
 template< typename View >
 bool is_allowed( const image_read_info< jpeg_tag >& info
-               , mpl::true_   // is read_and_no_convert
+                 , mpl::true_   // is read_and_no_convert
                )
 {
-    if( info._color_space == JCS_YCbCr )
+    if ( info._color_space == JCS_YCbCr )
     {
         // We read JCS_YCbCr files as rgb.
         return ( is_read_supported< typename View::value_type
-                                  , jpeg_tag
-                                  >::_color_space == JCS_RGB );
+                 , jpeg_tag
+                 >::_color_space == JCS_RGB );
     }
 
     return ( is_read_supported< typename View::value_type
-                              , jpeg_tag
-                              >::_color_space == info._color_space );
+             , jpeg_tag
+             >::_color_space == info._color_space );
 }
 
 template< typename View >
 bool is_allowed( const image_read_info< jpeg_tag >& info
-               , mpl::false_  // is read_and_convert
+                 , mpl::false_  // is read_and_convert
                )
 {
     return true;

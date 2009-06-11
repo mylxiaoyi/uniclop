@@ -25,36 +25,40 @@
 #include <boost/gil/channel.hpp>
 #include <boost/gil/color_base.hpp>
 
-namespace boost{ namespace gil {
+namespace boost
+{
+namespace gil
+{
 
-namespace detail {
+namespace detail
+{
 
 // Read support
 
-// TIFF virtually supports everything 
+// TIFF virtually supports everything
 struct tiff_read_support : read_support_true
-{};
+    {};
 
 
 // Write support
 
 struct tiff_write_support : write_support_true
-{};
+    {};
 
 } // namespace detail
 
 template< typename Pixel >
 struct is_read_supported< Pixel
-                        , tiff_tag
-                        > 
-    : mpl::bool_< detail::tiff_read_support::is_supported > {};
+            , tiff_tag
+            >
+            : mpl::bool_< detail::tiff_read_support::is_supported > {};
 
 template< typename Pixel >
 struct is_write_supported< Pixel
-                         , tiff_tag
-                         > 
-    : mpl::bool_< detail::tiff_write_support::is_supported >
-{};
+            , tiff_tag
+            >
+            : mpl::bool_< detail::tiff_write_support::is_supported >
+    {};
 
 } // namespace gil
 } // namespace boost

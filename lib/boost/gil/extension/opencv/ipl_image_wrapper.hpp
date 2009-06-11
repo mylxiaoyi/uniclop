@@ -11,10 +11,10 @@
 #define BOOST_GIL_EXTENSION_OPENCV_IPL_IMAGE_WRAPPER_HPP_INCLUDED
 
 ////////////////////////////////////////////////////////////////////////////////////////
-/// \file               
+/// \file
 /// \brief
 /// \author Christian Henning \n
-///         
+///
 /// \date 2008 \n
 ///
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -23,7 +23,12 @@
 
 #include "utilities.hpp"
 
-namespace boost { namespace gil { namespace opencv {
+namespace boost
+{
+namespace gil
+{
+namespace opencv
+{
 
 template < typename Channel > struct ipl_channel_type : boost::mpl::false_ {};
 template<> struct ipl_channel_type< bits8 >   : boost::mpl::int_< IPL_DEPTH_8U  > {};
@@ -50,20 +55,26 @@ public:
 public:
     ipl_image_wrapper( IplImage* img ) : _img( img, ipl_deleter ) {}
 
-    IplImage*       get()       { return _img.get(); }
-    const IplImage* get() const { return _img.get(); }
+    IplImage*       get()
+    {
+        return _img.get();
+    }
+    const IplImage* get() const
+    {
+        return _img.get();
+    }
 
 private:
 
     static void ipl_deleter( IplImage* ipl_img )
     {
-        if( ipl_img )
+        if ( ipl_img )
         {
             cvReleaseImageHeader( &ipl_img );
         }
     }
 
-   ipl_image_ptr_t _img;
+    ipl_image_ptr_t _img;
 };
 
 template< typename View >
@@ -74,17 +85,17 @@ ipl_image_wrapper create_ipl_image( View view )
 
     IplImage* img;
 
-    if(( img = cvCreateImageHeader( make_cvSize( view.dimensions() )
-                                  , ipl_channel_type<channel_t>::type::value
-                                  , num_channels<View>::value
-                                  )) == NULL )
+    if (( img = cvCreateImageHeader( make_cvSize( view.dimensions() )
+                                     , ipl_channel_type<channel_t>::type::value
+                                     , num_channels<View>::value
+                                   )) == NULL )
     {
         throw std::runtime_error( "Cannot create IPL image." );
     }
 
     cvSetData( img
-             , &view.begin()[0]
-             , num_channels<View>::value * view.width() * sizeof( channel_t ) );
+               , &view.begin()[0]
+               , num_channels<View>::value * view.width() * sizeof( channel_t ) );
 
     return ipl_image_wrapper( img );
 }

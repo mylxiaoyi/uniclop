@@ -1,6 +1,6 @@
 
-#ifndef VIDEOINPUTAPPLICATION_HPP_
-#define VIDEOINPUTAPPLICATION_HPP_
+#if !defined(FEATURES_DETECTION_APPLICATION_HEADER)
+#define FEATURES_DETECTION_APPLICATION_HEADER
 
 #include "applications/AbstractApplication.hpp"
 
@@ -14,22 +14,23 @@ namespace features_detection
 namespace args = boost::program_options;
 using namespace std;
 
-class FeaturesDetectionApplication : public AbstractApplication {
+class FeaturesDetectionApplication : public AbstractApplication
+{
 
 
-	int width, height, depth;
+    int width, height, depth;
 
 public:
-	string get_application_title() const;
-	args::options_description get_command_line_options(void) const;
-	int main_loop(args::variables_map &options);
+    string get_application_title() const;
+    args::options_description get_command_line_options(void) const;
+    int main_loop(args::variables_map &options);
 
 private:
-	
+
 };
 
 }
 }
 }
 
-#endif /* VIDEOINPUTAPPLICATION_HPP_ */
+#endif // FEATURES_DETECTION_APPLICATION_HEADER

@@ -24,36 +24,29 @@ using namespace uniclop::devices::video;
 string FeaturesDetectionApplication::get_application_title() const
 {
 
-	return "Features detection input. A simple test application. Uniclop 2009";
+    return "Features detection input. A simple test application. Uniclop 2009";
 }
 
 args::options_description FeaturesDetectionApplication::get_command_line_options(void) const
 {
 
-	args::options_description desc;
+    args::options_description desc;
 
-	desc.add(ImagesInput<uint8_t>::get_options_description());
+    desc.add(ImagesInput<uint8_t>::get_options_description());
 
-	return desc;
+    return desc;
 }
 
 
 int FeaturesDetectionApplication::main_loop(args::variables_map &options)
 {
-	printf("FeaturesDetectionApplication::main_loop says hello world !\n");
+    printf("FeaturesDetectionApplication::main_loop says hello world !\n");
 
- 	
-	//init_gui(options);
-	//run_gui();
 
-		if (true)
-		{
-			printf(".");
-		}
+    //init_gui(options);
+    //run_gui();
 
-		
-
-	return 0;
+    return 0;
 }
 
 }

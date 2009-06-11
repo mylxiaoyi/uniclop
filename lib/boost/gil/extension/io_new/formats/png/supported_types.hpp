@@ -23,14 +23,19 @@
 #include <boost/gil/extension/toolbox/gray_alpha.hpp>
 #endif // BOOST_GIL_IO_ENABLE_GRAY_ALPHA
 
-namespace boost { namespace gil { namespace detail {
+namespace boost
+{
+namespace gil
+{
+namespace detail
+{
 
 static const size_t PNG_BYTES_TO_CHECK = 4;
 
 // Read support
 template< png_bitdepth::type   BitDepth
-        , png_color_type::type ColorType
-        >
+, png_color_type::type ColorType
+>
 struct png_rw_support_base
 {
     static const png_bitdepth::type   _bit_depth  = BitDepth;
@@ -38,246 +43,246 @@ struct png_rw_support_base
 };
 
 template< typename Channel
-        , typename ColorSpace
-        >
+, typename ColorSpace
+>
 struct png_read_support : read_support_false
-                        , png_rw_support_base< 1
-                                             , PNG_COLOR_TYPE_GRAY
-                                             > {};
+            , png_rw_support_base< 1
+            , PNG_COLOR_TYPE_GRAY
+            > {};
 
 template< typename BitField
-        , bool     Mutable
-        >
+, bool     Mutable
+>
 struct png_read_support< packed_dynamic_channel_reference< BitField
-                                                         , 1
-                                                         , Mutable
-                                                         >
-                       , gray_t
-                       > : read_support_true
-                         , png_rw_support_base< 1
-                                              , PNG_COLOR_TYPE_GRAY
-                                              > {};
+            , 1
+            , Mutable
+            >
+            , gray_t
+            > : read_support_true
+            , png_rw_support_base< 1
+            , PNG_COLOR_TYPE_GRAY
+            > {};
 
 template< typename BitField
-        , bool     Mutable
-        >
+, bool     Mutable
+>
 struct png_read_support< packed_dynamic_channel_reference< BitField
-                                                         , 2
-                                                         , Mutable
-                                                         >
-                       , gray_t
-                       > : read_support_true
-                         , png_rw_support_base< 2
-                                              , PNG_COLOR_TYPE_GRAY
-                                              > {};
+            , 2
+            , Mutable
+            >
+            , gray_t
+            > : read_support_true
+            , png_rw_support_base< 2
+            , PNG_COLOR_TYPE_GRAY
+            > {};
 
 template< typename BitField
-        , bool     Mutable
-        >
+, bool     Mutable
+>
 struct png_read_support< packed_dynamic_channel_reference< BitField
-                                                         , 4
-                                                         , Mutable
-                                                         >
-                       , gray_t
-                       > : read_support_true
-                         , png_rw_support_base< 4
-                                              , PNG_COLOR_TYPE_GRAY
-                                              > {};
+            , 4
+            , Mutable
+            >
+            , gray_t
+            > : read_support_true
+            , png_rw_support_base< 4
+            , PNG_COLOR_TYPE_GRAY
+            > {};
 
 template<>
 struct png_read_support< bits8
-                       , gray_t
-                       > : read_support_true
-                         , png_rw_support_base< 8
-                                              , PNG_COLOR_TYPE_GRAY
-                                              > {};
+            , gray_t
+            > : read_support_true
+            , png_rw_support_base< 8
+            , PNG_COLOR_TYPE_GRAY
+            > {};
 
 #ifdef BOOST_GIL_IO_ENABLE_GRAY_ALPHA
 template<>
 struct png_read_support< bits8
-                       , gray_alpha_t
-                       > : read_support_true
-                         , png_rw_support_base< 8
-                                              , PNG_COLOR_TYPE_GA
-                                              > {};
+            , gray_alpha_t
+            > : read_support_true
+            , png_rw_support_base< 8
+            , PNG_COLOR_TYPE_GA
+            > {};
 #endif // BOOST_GIL_IO_ENABLE_GRAY_ALPHA
 
 template<>
 struct png_read_support< bits8
-                       , rgb_t
-                       > : read_support_true
-                         , png_rw_support_base< 8
-                                              , PNG_COLOR_TYPE_RGB
-                                              > {};
+            , rgb_t
+            > : read_support_true
+            , png_rw_support_base< 8
+            , PNG_COLOR_TYPE_RGB
+            > {};
 
 template<>
 struct png_read_support< bits8
-                       , rgba_t
-                       > : read_support_true
-                         , png_rw_support_base< 8
-                                              , PNG_COLOR_TYPE_RGBA
-                                              > {};
+            , rgba_t
+            > : read_support_true
+            , png_rw_support_base< 8
+            , PNG_COLOR_TYPE_RGBA
+            > {};
 
 template<>
 struct png_read_support< bits16
-                       , gray_t
-                       > : read_support_true
-                         , png_rw_support_base< 16
-                                              , PNG_COLOR_TYPE_GRAY
-                                              > {};
+            , gray_t
+            > : read_support_true
+            , png_rw_support_base< 16
+            , PNG_COLOR_TYPE_GRAY
+            > {};
 
 template<>
 struct png_read_support< bits16
-                       , rgb_t
-                       > : read_support_true
-                         , png_rw_support_base< 16
-                                              , PNG_COLOR_TYPE_RGB
-                                              > {};
+            , rgb_t
+            > : read_support_true
+            , png_rw_support_base< 16
+            , PNG_COLOR_TYPE_RGB
+            > {};
 
 template<>
 struct png_read_support< bits16
-                       , rgba_t
-                       > : read_support_true
-                         , png_rw_support_base< 16
-                                              , PNG_COLOR_TYPE_RGBA
-                                              > {};
+            , rgba_t
+            > : read_support_true
+            , png_rw_support_base< 16
+            , PNG_COLOR_TYPE_RGBA
+            > {};
 
 #ifdef BOOST_GIL_IO_ENABLE_GRAY_ALPHA
 template<>
 struct png_read_support< bits16
-                       , gray_alpha_t
-                       > : read_support_true
-                         , png_rw_support_base< 16
-                                              , PNG_COLOR_TYPE_GA
-                                              > {};
+            , gray_alpha_t
+            > : read_support_true
+            , png_rw_support_base< 16
+            , PNG_COLOR_TYPE_GA
+            > {};
 #endif // BOOST_GIL_IO_ENABLE_GRAY_ALPHA
 
 // Write support
 
 template< typename Channel
-        , typename ColorSpace
-        >
+, typename ColorSpace
+>
 struct png_write_support : write_support_false
-                         , png_rw_support_base< 1
-                                              , PNG_COLOR_TYPE_GRAY
-                                              > {};
+            , png_rw_support_base< 1
+            , PNG_COLOR_TYPE_GRAY
+            > {};
 
 template< typename BitField
-        , bool     Mutable
-        >
+, bool     Mutable
+>
 struct png_write_support< packed_dynamic_channel_reference< BitField
-                                                          , 1
-                                                          , Mutable
-                                                          >
-                        , gray_t
-                        > : write_support_true
-                          , png_rw_support_base< 1
-                                               , PNG_COLOR_TYPE_GRAY
-                                               >
-{};
+            , 1
+            , Mutable
+            >
+            , gray_t
+            > : write_support_true
+            , png_rw_support_base< 1
+            , PNG_COLOR_TYPE_GRAY
+            >
+    {};
 
 template< typename BitField
-        , bool     Mutable
-        >
+, bool     Mutable
+>
 struct png_write_support< packed_dynamic_channel_reference< BitField
-                                                          , 2
-                                                          , Mutable
-                                                          >
-                        , gray_t
-                        > : write_support_true
-                          , png_rw_support_base< 2
-                                               , PNG_COLOR_TYPE_GRAY
-                                               >
-{};
+            , 2
+            , Mutable
+            >
+            , gray_t
+            > : write_support_true
+            , png_rw_support_base< 2
+            , PNG_COLOR_TYPE_GRAY
+            >
+    {};
 
 template< typename BitField
-        , bool     Mutable
-        >
+, bool     Mutable
+>
 struct png_write_support< packed_dynamic_channel_reference< BitField
-                                                          , 4
-                                                          , Mutable
-                                                          >
-                        , gray_t
-                        > : write_support_true
-                          , png_rw_support_base< 4
-                                               , PNG_COLOR_TYPE_GRAY
-                                               >
-{};
+            , 4
+            , Mutable
+            >
+            , gray_t
+            > : write_support_true
+            , png_rw_support_base< 4
+            , PNG_COLOR_TYPE_GRAY
+            >
+    {};
 
 template<>
 struct png_write_support< bits8
-                        , gray_t
-                        > : write_support_true
-                          , png_rw_support_base< 8
-                                               , PNG_COLOR_TYPE_GRAY
-                                               >
-{};
+            , gray_t
+            > : write_support_true
+            , png_rw_support_base< 8
+            , PNG_COLOR_TYPE_GRAY
+            >
+    {};
 
 #ifdef BOOST_GIL_IO_ENABLE_GRAY_ALPHA
 template<>
 struct png_write_support< bits8
-                        , gray_alpha_t
-                        > : write_support_true
-                          , png_rw_support_base< 8
-                                               , PNG_COLOR_TYPE_GA
-                                               >
-{};
+            , gray_alpha_t
+            > : write_support_true
+            , png_rw_support_base< 8
+            , PNG_COLOR_TYPE_GA
+            >
+    {};
 #endif // BOOST_GIL_IO_ENABLE_GRAY_ALPHA
 
 template<>
 struct png_write_support< bits8
-                        , rgb_t
-                        > : write_support_true
-                          , png_rw_support_base< 8
-                                               , PNG_COLOR_TYPE_RGB
-                                               >
-{};
+            , rgb_t
+            > : write_support_true
+            , png_rw_support_base< 8
+            , PNG_COLOR_TYPE_RGB
+            >
+    {};
 
 template<>
 struct png_write_support< bits8
-                        , rgba_t
-                        > : write_support_true
-                          , png_rw_support_base< 8
-                                               , PNG_COLOR_TYPE_RGBA
-                                               >
-{};
+            , rgba_t
+            > : write_support_true
+            , png_rw_support_base< 8
+            , PNG_COLOR_TYPE_RGBA
+            >
+    {};
 
 template<>
 struct png_write_support< bits16
-                        , gray_t
-                        > : write_support_true
-                          , png_rw_support_base< 16
-                                               , PNG_COLOR_TYPE_GRAY
-                                               >
-{};
+            , gray_t
+            > : write_support_true
+            , png_rw_support_base< 16
+            , PNG_COLOR_TYPE_GRAY
+            >
+    {};
 
 template<>
 struct png_write_support< bits16
-                        , rgb_t
-                        > : write_support_true
-                          , png_rw_support_base< 16
-                                               , PNG_COLOR_TYPE_RGB
-                                               >
-{};
+            , rgb_t
+            > : write_support_true
+            , png_rw_support_base< 16
+            , PNG_COLOR_TYPE_RGB
+            >
+    {};
 
 template<>
 struct png_write_support< bits16
-                        , rgba_t
-                        > : write_support_true
-                          , png_rw_support_base< 16
-                                               , PNG_COLOR_TYPE_RGBA
-                                               >
-{};
+            , rgba_t
+            > : write_support_true
+            , png_rw_support_base< 16
+            , PNG_COLOR_TYPE_RGBA
+            >
+    {};
 
 #ifdef BOOST_GIL_IO_ENABLE_GRAY_ALPHA
 template<>
 struct png_write_support< bits16
-                        , gray_alpha_t
-                        > : write_support_true
-                          , png_rw_support_base< 16
-                                               , PNG_COLOR_TYPE_GA
-                                               >
-{};
+            , gray_alpha_t
+            > : write_support_true
+            , png_rw_support_base< 16
+            , PNG_COLOR_TYPE_GA
+            >
+    {};
 #endif // BOOST_GIL_IO_ENABLE_GRAY_ALPHA
 
 
@@ -285,16 +290,16 @@ struct png_write_support< bits16
 
 template< typename Pixel >
 struct is_read_supported< Pixel
-                        , png_tag
-                        >
-    : mpl::bool_< detail::png_read_support< typename channel_type< Pixel >::type
-                                          , typename color_space_type< Pixel >::type
-                                          >::is_supported
-                >
+            , png_tag
+            >
+            : mpl::bool_< detail::png_read_support< typename channel_type< Pixel >::type
+            , typename color_space_type< Pixel >::type
+            >::is_supported
+            >
 {
     typedef detail::png_read_support< typename channel_type< Pixel >::type
-                                    , typename color_space_type< Pixel >::type
-                                    > parent_t;
+    , typename color_space_type< Pixel >::type
+    > parent_t;
 
     static const png_bitdepth::type   _bit_depth  = parent_t::_bit_depth;
     static const png_color_type::type _color_type = parent_t::_color_type;
@@ -302,16 +307,16 @@ struct is_read_supported< Pixel
 
 template< typename Pixel >
 struct is_write_supported< Pixel
-                         , png_tag
-                         >
-    : mpl::bool_< detail::png_write_support< typename channel_type< Pixel >::type
-                                           , typename color_space_type< Pixel >::type
-                                           >::is_supported
-                > 
+            , png_tag
+            >
+            : mpl::bool_< detail::png_write_support< typename channel_type< Pixel >::type
+            , typename color_space_type< Pixel >::type
+            >::is_supported
+            >
 {
     typedef detail::png_write_support< typename channel_type< Pixel >::type
-                                     , typename color_space_type< Pixel >::type
-                                     > parent_t;
+    , typename color_space_type< Pixel >::type
+    > parent_t;
 
     static const png_bitdepth::type   _bit_depth  = parent_t::_bit_depth;
     static const png_color_type::type _color_type = parent_t::_color_type;

@@ -6,7 +6,6 @@
 #include <vector>
 using namespace std;
 
-// Boost http://boost.org
 #include <boost/program_options.hpp>
 namespace args = boost::program_options;
 
@@ -20,9 +19,12 @@ using namespace cimg_library;
 
 struct CvCapture; // forward declaration to avoid including all of OpenCv
 
-namespace uniclop {
-namespace devices {
-namespace video {
+namespace uniclop
+{
+namespace devices
+{
+namespace video
+{
 
 
 using namespace cimg_library;

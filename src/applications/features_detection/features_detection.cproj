@@ -7,7 +7,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{F0A9FE83-FD07-4492-AE8A-83840AD60032}</ProjectGuid>
     <Packages>
-      <Packages xmlns="">
+      <Packages>
         <Package file="/usr/lib/pkgconfig/gstreamer-0.10.pc" name="GStreamer" IsProject="false" />
         <Package file="/usr/lib/pkgconfig/gtk+-2.0.pc" name="GTK+" IsProject="false" />
         <Package file="/usr/lib/pkgconfig/libavc1394.pc" name="libavc1394" IsProject="false" />
@@ -15,10 +15,11 @@
         <Package file="/usr/lib/pkgconfig/libavformat.pc" name="libavformat" IsProject="false" />
         <Package file="/usr/lib/pkgconfig/libavutil.pc" name="libavutil" IsProject="false" />
         <Package file="/usr/lib/pkgconfig/opencv.pc" name="OpenCV" IsProject="false" />
+        <Package file="/home/rodrigob/work/eclipse_workspace/uniclop/uniclop_base.md.pc" name="uniclop_base" IsProject="true" />
       </Packages>
     </Packages>
     <Compiler>
-      <Compiler ctype="GppCompiler" xmlns="" />
+      <Compiler ctype="GppCompiler" />
     </Compiler>
     <Language>CPP</Language>
     <Target>Bin</Target>
@@ -27,8 +28,7 @@
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Debug</OutputPath>
     <Libs>
-      <Libs xmlns="">
-        <Lib>uniclop_base</Lib>
+      <Libs>
         <Lib>boost_program_options</Lib>
         <Lib>boost_thread</Lib>
         <Lib>boost_filesystem</Lib>
@@ -36,15 +36,10 @@
     </Libs>
     <DefineSymbols>DEBUG MONODEVELOP</DefineSymbols>
     <SourceDirectory>.</SourceDirectory>
-    <LibPaths>
-      <LibPaths xmlns="">
-        <LibPath>${CombineDir}/bin/Debug</LibPath>
-      </LibPaths>
-    </LibPaths>
     <OutputName>features_detection</OutputName>
     <CompileTarget>Bin</CompileTarget>
     <Includes>
-      <Includes xmlns="">
+      <Includes>
         <Include>${CombineDir}/src</Include>
       </Includes>
     </Includes>

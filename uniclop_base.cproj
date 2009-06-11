@@ -34,7 +34,7 @@
     <CompileTarget>StaticLibrary</CompileTarget>
     <Includes>
       <Includes>
-        <Include>${ProjectDir}/src</Include>
+        <Include>${CombineDir}/src</Include>
       </Includes>
     </Includes>
     <Libs>
@@ -61,12 +61,14 @@
     <Compile Include="src\devices\video\ImagesInput.cpp" />
     <Compile Include="src\algorithms\features\fast\fast.cpp" />
     <Compile Include="src\algorithms\features\features_detection.cpp" />
+    <Compile Include="src\devices\video\GstVideoInput.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\applications\AbstractApplication.hpp" />
     <None Include="src\devices\video\ImagesInput.hpp" />
     <None Include="src\algorithms\features\fast\fast.hpp" />
     <None Include="src\algorithms\features\features_detection.hpp" />
+    <None Include="src\devices\video\GstVideoInput.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="src\applications\video_input/" />

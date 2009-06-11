@@ -11,10 +11,10 @@
 #define BOOST_GIL_EXTENSION_OPENCV_SMOOTH_HPP_INCLUDED
 
 ////////////////////////////////////////////////////////////////////////////////////////
-/// \file               
+/// \file
 /// \brief
 /// \author Christian Henning \n
-///         
+///
 /// \date 2008 \n
 ///
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -25,7 +25,12 @@
 
 #include "ipl_image_wrapper.hpp"
 
-namespace boost { namespace gil { namespace opencv {
+namespace boost
+{
+namespace gil
+{
+namespace opencv
+{
 
 struct smooth_base {};
 
@@ -37,51 +42,51 @@ struct bilateral     : smooth_base, boost::mpl::int_< CV_BILATERAL     > {};
 
 template< typename Smooth >
 void smooth( const ipl_image_wrapper& src
-           , ipl_image_wrapper&       dst
-           , const Smooth&            smooth
-           , size_t                   param1 = 3
-           , size_t                   param2 = 0
-           , size_t                   param3 = 0
-           , size_t                   param4 = 0
-           , typename boost::enable_if< typename boost::is_base_of< smooth_base 
-                                                                  , Smooth
-                                                                  >::type
-                                      >::type* ptr = 0
+             , ipl_image_wrapper&       dst
+             , const Smooth&            smooth
+             , size_t                   param1 = 3
+                                                 , size_t                   param2 = 0
+                                                                                     , size_t                   param3 = 0
+                                                                                                                         , size_t                   param4 = 0
+                                                                                                                                                             , typename boost::enable_if< typename boost::is_base_of< smooth_base
+             , Smooth
+             >::type
+             >::type* ptr = 0
            )
-           
+
 {
-   cvSmooth( src.get()
-           , dst.get()
-           , Smooth::type::value
-           , param1
-           , param2
-           , param3
-           , param4
-           );
+    cvSmooth( src.get()
+              , dst.get()
+              , Smooth::type::value
+              , param1
+              , param2
+              , param3
+              , param4
+            );
 }
 
 template< typename View
-        , typename Smooth
-        >
+, typename Smooth
+>
 void smooth( View          src
-           , View          dst
-           , const Smooth& smooth_type
-           , size_t        param1 = 3
-           , size_t        param2 = 0
-           , size_t        param3 = 0
-           , size_t        param4 = 0
-           , typename boost::enable_if< typename boost::is_base_of< smooth_base 
-                                                                  , Smooth
-                                                                  >::type
-                                      >::type* ptr = 0
+             , View          dst
+             , const Smooth& smooth_type
+             , size_t        param1 = 3
+                                      , size_t        param2 = 0
+                                                               , size_t        param3 = 0
+                                                                                        , size_t        param4 = 0
+                                                                                                                 , typename boost::enable_if< typename boost::is_base_of< smooth_base
+             , Smooth
+             >::type
+             >::type* ptr = 0
            )
 {
     ipl_image_wrapper src_ipl = create_ipl_image( src );
     ipl_image_wrapper dst_ipl = create_ipl_image( dst );
 
     smooth( src_ipl
-          , dst_ipl
-          , smooth_type
+            , dst_ipl
+            , smooth_type
           );
 }
 

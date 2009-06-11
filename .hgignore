@@ -1,4 +1,9 @@
-.waf*
+# use glob syntax.
+syntax: glob
+
+.*
 Debug/*
 output/*
-.o
+*.o
+*~
+*.pidb

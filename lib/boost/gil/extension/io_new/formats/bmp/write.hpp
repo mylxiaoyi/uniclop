@@ -26,12 +26,26 @@
 
 #include <boost/gil/extension/io_new/bmp_tags.hpp>
 
-namespace boost { namespace gil { namespace detail {
+namespace boost
+{
+namespace gil
+{
+namespace detail
+{
 
 template < int N > struct get_bgr_cs {};
-template <> struct get_bgr_cs< 1 > { typedef gray8_view_t type; };
-template <> struct get_bgr_cs< 3 > { typedef bgr8_view_t type; };
-template <> struct get_bgr_cs< 4 > { typedef bgra8_view_t type; };
+template <> struct get_bgr_cs< 1 >
+{
+    typedef gray8_view_t type;
+};
+template <> struct get_bgr_cs< 3 >
+{
+    typedef bgr8_view_t type;
+};
+template <> struct get_bgr_cs< 4 >
+{
+    typedef bgra8_view_t type;
+};
 
 template< typename Device >
 class writer< Device
@@ -41,7 +55,7 @@ class writer< Device
 public:
 
     writer( Device& file )
-    : _out( file )
+            : _out( file )
     {
     }
 
@@ -57,7 +71,7 @@ public:
 
     template<typename View>
     void apply( const View&                        view
-              , const image_write_info< bmp_tag >& info )
+                , const image_write_info< bmp_tag >& info )
     {
         // Add code here, once image_write_info< bmp_tag > isn't empty anymore.
 
@@ -70,31 +84,31 @@ private:
     void write( const View& view )
     {
         typedef typename channel_type<
-                    typename get_pixel_type< View >::type >::type channel_t;
+        typename get_pixel_type< View >::type >::type channel_t;
 
         typedef typename color_space_type< View >::type color_space_t;
 
         // check if supported
-/*
-        /// todo
-        if( bmp_read_write_support_private<channel_t, color_space_t>::channel != 8)
-        {
-            io_error("Input view type is incompatible with the image type");
-        }
-*/
+        /*
+                /// todo
+                if( bmp_read_write_support_private<channel_t, color_space_t>::channel != 8)
+                {
+                    io_error("Input view type is incompatible with the image type");
+                }
+        */
 
         // compute the file size
         int bpp = num_channels< View >::value * 8;
         int entries = 0;
 
-/*
-        /// @todo: Not supported for now. bit_aligned_images refer to indexed images
-        ///        in this context.
-        if( bpp <= 8 )
-        {
-            entries = 1 << bpp;
-        }
-*/
+        /*
+                /// @todo: Not supported for now. bit_aligned_images refer to indexed images
+                ///        in this context.
+                if( bpp <= 8 )
+                {
+                    entries = 1 << bpp;
+                }
+        */
 
         std::size_t spn = ( view.width() * num_channels< View >::value + 3 ) & ~3;
         std::size_t ofs = bmp_header_size + bmp_win32_info_size + entries * 4;
@@ -121,16 +135,16 @@ private:
         _out.write_int32( 0 );
 
         write_image< View
-                   , typename get_bgr_cs< num_channels< View >::value >::type
-                   >( view, spn );
+        , typename get_bgr_cs< num_channels< View >::value >::type
+        >( view, spn );
     }
 
 
     template< typename View
-            , typename BMP_View
-            >
+    , typename BMP_View
+    >
     void write_image( const View&       view
-                    , const std::size_t spn
+                      , const std::size_t spn
                     )
     {
         byte_vector_t buffer( spn );
@@ -138,20 +152,20 @@ private:
 
 
         BMP_View row = interleaved_view( view.width()
-                                       , 1
-                                       , (typename BMP_View::value_type*) &buffer.front()
-                                       , spn
+                                         , 1
+                                         , (typename BMP_View::value_type*) &buffer.front()
+                                         , spn
                                        );
 
-        for( typename View::y_coord_t y = view.height() - 1; y > -1; --y  )
+        for ( typename View::y_coord_t y = view.height() - 1; y > -1; --y  )
         {
             copy_pixels( subimage_view( view
-                                      , 0
-                                      , (int) y
-                                      , (int) view.width()
-                                      , 1
+                                        , 0
+                                        , (int) y
+                                        , (int) view.width()
+                                        , 1
                                       )
-                       , row
+                         , row
                        );
 
             _out.write( &buffer.front(), spn );
@@ -168,37 +182,37 @@ private:
 struct bmp_write_is_supported
 {
     template< typename View >
-    struct apply 
-        : public is_write_supported< typename get_pixel_type< View >::type
-                                   , bmp_tag
-                                   >
-    {};
+    struct apply
+                : public is_write_supported< typename get_pixel_type< View >::type
+                , bmp_tag
+                >
+        {};
 };
 
 template< typename Device >
 class dynamic_image_writer< Device
-                          , bmp_tag
-                          >
-    : public writer< Device
-                   , bmp_tag
-                   >
+            , bmp_tag
+            >
+            : public writer< Device
+            , bmp_tag
+            >
 {
     typedef writer< Device
-                  , bmp_tag
-                  > parent_t;
+    , bmp_tag
+    > parent_t;
 
 public:
 
     dynamic_image_writer( Device& file )
-    : writer( file )
+            : writer( file )
     {}
 
     template< typename Views >
     void apply( const any_image_view< Views >& views )
     {
         dynamic_io_fnobj< bmp_write_is_supported
-                        , parent_t
-                        > op( this );
+        , parent_t
+        > op( this );
 
         apply_operation( views, op );
     }

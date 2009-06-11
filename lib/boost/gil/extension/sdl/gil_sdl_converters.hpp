@@ -10,17 +10,24 @@
 
 #include <SDL.h>
 
-namespace boost { namespace gil { namespace sdl { 
+namespace boost
+{
+namespace gil
+{
+namespace sdl
+{
 
 inline
 bgra8_view_t wrap_sdl_image( SDL_Surface* screen )
 {
-   return interleaved_view( screen->w
-                          , screen->h
-                          , (bgra8_pixel_t*) screen->pixels
-                          , screen->pitch   );
+    return interleaved_view( screen->w
+                             , screen->h
+                             , (bgra8_pixel_t*) screen->pixels
+                             , screen->pitch   );
 }
 
-} } } // namespace boost::gil::sdl
+}
+}
+} // namespace boost::gil::sdl
 
 #endif // GIL_SDL_CONVERTERS_HPP

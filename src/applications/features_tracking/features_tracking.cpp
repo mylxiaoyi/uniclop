@@ -6,6 +6,6 @@
 
 int main(int argc, char *argv[])
 {
-	boost::scoped_ptr<AbstractApplication> application_p(new FeaturesTrackingApplication());
-	return application_p->main(argc, argv);
+    boost::scoped_ptr<AbstractApplication> application_p(new FeaturesTrackingApplication());
+    return application_p->main(argc, argv);
 }

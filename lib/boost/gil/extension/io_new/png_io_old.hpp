@@ -11,17 +11,20 @@
 #define BOOST_GIL_EXTENSION_IO_PNG_IO_OLD_HPP_INCLUDED
 
 ////////////////////////////////////////////////////////////////////////////////////////
-/// \file               
+/// \file
 /// \brief
 /// \author Christian Henning \n
-///         
+///
 /// \date   2007-2008 \n
 ///
 ////////////////////////////////////////////////////////////////////////////////////////
 
 #include "png_all.hpp"
 
-namespace boost { namespace gil {
+namespace boost
+{
+namespace gil
+{
 
 /// \ingroup PNG_IO
 /// \brief Returns the width and height of the PNG file at the specified location.
@@ -31,49 +34,49 @@ inline
 point2< std::ptrdiff_t > png_read_dimensions( const String& filename )
 {
     image_read_info< png_tag > info = read_image_info( filename
-                                                     , png_tag()
+                                      , png_tag()
                                                      );
 
     return point2< std::ptrdiff_t >( info._width
-                                   , info._height
+                                     , info._height
                                    );
 }
 
 /// \ingroup PNG_IO
 /// \brief Loads the image specified by the given png image file name into the given view.
 /// Triggers a compile assert if the view color space and channel depth are not supported by the PNG library or by the I/O extension.
-/// Throws std::ios_base::failure if the file is not a valid PNG file, or if its color space or channel depth are not 
+/// Throws std::ios_base::failure if the file is not a valid PNG file, or if its color space or channel depth are not
 /// compatible with the ones specified by View, or if its dimensions don't match the ones of the view.
 template< typename String
-        , typename View
-        >
-inline 
+, typename View
+>
+inline
 void png_read_view( const String& filename
-                   , const View&   view
-                   )
+                    , const View&   view
+                  )
 {
     read_view( filename
-             , view
-             , png_tag()
+               , view
+               , png_tag()
              );
 }
 
 /// \ingroup PNG_IO
 /// \brief Allocates a new image whose dimensions are determined by the given png image file, and loads the pixels into it.
 /// Triggers a compile assert if the image color space or channel depth are not supported by the PNG library or by the I/O extension.
-/// Throws std::ios_base::failure if the file is not a valid PNG file, or if its color space or channel depth are not 
+/// Throws std::ios_base::failure if the file is not a valid PNG file, or if its color space or channel depth are not
 /// compatible with the ones specified by Image
 template< typename String
-        , typename Image
-        >
-inline 
+, typename Image
+>
+inline
 void png_read_image( const String& filename
-                   , Image&        img
+                     , Image&        img
                    )
 {
     read_image( filename
-              , img
-              , png_tag()
+                , img
+                , png_tag()
               );
 }
 
@@ -81,19 +84,19 @@ void png_read_image( const String& filename
 /// \brief Loads the image specified by the given png image file name and color-converts it into the given view.
 /// Throws std::ios_base::failure if the file is not a valid PNG file, or if its dimensions don't match the ones of the view.
 template< typename String
-        , typename View
-        , typename CC
-        >
-inline 
+, typename View
+, typename CC
+>
+inline
 void png_read_and_convert_view( const String& filename
-                               , const View&   view
-                               , CC            cc
-                               )
+                                , const View&   view
+                                , CC            cc
+                              )
 {
     read_and_convert_view( filename
-                         , view
-                         , cc
-                         , png_tag()
+                           , view
+                           , cc
+                           , png_tag()
                          );
 }
 
@@ -101,16 +104,16 @@ void png_read_and_convert_view( const String& filename
 /// \brief Loads the image specified by the given png image file name and color-converts it into the given view.
 /// Throws std::ios_base::failure if the file is not a valid PNG file, or if its dimensions don't match the ones of the view.
 template< typename String
-        , typename View
-        >
-inline 
+, typename View
+>
+inline
 void png_read_and_convert_view( const String& filename
-                               , const View&   view
-                               )
+                                , const View&   view
+                              )
 {
     read_and_convert_view( filename
-                         , view
-                         , png_tag()
+                           , view
+                           , png_tag()
                          );
 }
 
@@ -118,19 +121,19 @@ void png_read_and_convert_view( const String& filename
 /// \brief Allocates a new image whose dimensions are determined by the given png image file, loads and color-converts the pixels into it.
 /// Throws std::ios_base::failure if the file is not a valid PNG file
 template< typename String
-        , typename Image
-        , typename CC
-        >
-inline 
+, typename Image
+, typename CC
+>
+inline
 void png_read_and_convert_image( const String& filename
-                                , Image& img
-                                , CC     cc
-                                )
+                                 , Image& img
+                                 , CC     cc
+                               )
 {
     read_and_convert_image( filename
-                          , img
-                          , cc
-                          , png_tag()
+                            , img
+                            , cc
+                            , png_tag()
                           );
 }
 
@@ -138,16 +141,16 @@ void png_read_and_convert_image( const String& filename
 /// \brief Allocates a new image whose dimensions are determined by the given png image file, loads and color-converts the pixels into it.
 /// Throws std::ios_base::failure if the file is not a valid PNG file
 template< typename String
-        , typename Image
-        >
-inline 
+, typename Image
+>
+inline
 void png_read_and_convert_image( const String filename
-                                , Image&       img
-                                )
+                                 , Image&       img
+                               )
 {
     read_and_convert_image( filename
-                          , img
-                          , png_tag()
+                            , img
+                            , png_tag()
                           );
 }
 
@@ -156,16 +159,16 @@ void png_read_and_convert_image( const String filename
 /// Triggers a compile assert if the view color space and channel depth are not supported by the PNG library or by the I/O extension.
 /// Throws std::ios_base::failure if it fails to create the file.
 template< typename String
-        , typename View
-        >
+, typename View
+>
 inline
 void png_write_view( const String& filename
-                    , const View&   view
-                    )
+                     , const View&   view
+                   )
 {
     write_view( filename
-              , view
-              , png_tag()
+                , view
+                , png_tag()
               );
 }
 

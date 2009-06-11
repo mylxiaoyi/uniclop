@@ -21,6 +21,7 @@
         <Package file="/usr/lib/pkgconfig/libavformat.pc" name="libavformat" IsProject="false" />
         <Package file="/usr/lib/pkgconfig/libavutil.pc" name="libavutil" IsProject="false" />
         <Package file="/usr/lib/pkgconfig/opencv.pc" name="OpenCV" IsProject="false" />
+        <Package file="/home/rodrigob/work/eclipse_workspace/uniclop/uniclop_base.md.pc" name="uniclop_base" IsProject="true" />
       </Packages>
     </Packages>
     <Compiler>
@@ -37,7 +38,6 @@
         <Lib>boost_filesystem</Lib>
         <Lib>boost_thread</Lib>
         <Lib>boost_program_options</Lib>
-        <Lib>uniclop_base</Lib>
       </Libs>
     </Libs>
     <DefineSymbols>DEBUG MONODEVELOP</DefineSymbols>
@@ -49,11 +49,6 @@
         <Include>${CombineDir}/src</Include>
       </Includes>
     </Includes>
-    <LibPaths>
-      <LibPaths>
-        <LibPath>${CombineDir}/bin/Debug</LibPath>
-      </LibPaths>
-    </LibPaths>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\Release</OutputPath>

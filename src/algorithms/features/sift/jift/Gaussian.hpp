@@ -12,7 +12,7 @@ namespace JIFT
 
 class Gaussian
 {
-  public:
+public:
     static void gaussian_filter(vil_image_view<double>&, vil_image_view<double>&, double, double cut_off=0.001);
     static unsigned int getGaussianKernelSize(double sigma, double cut_off=0.001);
     static vnl_matrix<double> buildInterpolatedGaussianTable(unsigned int size, double sigma);

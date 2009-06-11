@@ -9,7 +9,7 @@
 
 #include "algorithms/features/features_detection.hpp"
 
-#include <boost/gil/gil_all.hpp>
+#include <boost/gil/typedefs.hpp>
 
 // forward declaration to avoid including directly CImg.h
 namespace cimg_library

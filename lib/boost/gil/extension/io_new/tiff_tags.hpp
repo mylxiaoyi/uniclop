@@ -11,7 +11,7 @@
 #define BOOST_GIL_EXTENSION_IO_TIFF_TAGS_HPP
 
 ////////////////////////////////////////////////////////////////////////////////////////
-/// \file               
+/// \file
 /// \brief All supported tiff tags by the gil io extension.
 /// \author Christian Henning, Andreas Pokorny, Lubomir Bourdev \n
 ///
@@ -24,14 +24,18 @@
 /// or http://www.libtiff.org/man/
 
 
-extern "C" {
+extern "C"
+{
 #include "tiff.h"
 }
 
 #include "detail/base.hpp"
 #include "formats/tiff/log.hpp"
 
-namespace boost { namespace gil {
+namespace boost
+{
+namespace gil
+{
 
 template< typename T, int Value >
 struct tiff_property_base : property_base< T >
@@ -101,11 +105,11 @@ struct tiff_host_computer : tiff_property_base< std::string, TIFFTAG_HOSTCOMPUTE
 
 struct tiff_color_map
 {
-   typedef uint16_t* red_t;
-   typedef uint16_t* green_t;
-   typedef uint16_t* blue_t;
+    typedef uint16_t* red_t;
+    typedef uint16_t* green_t;
+    typedef uint16_t* blue_t;
 
-   static const unsigned int tag = TIFFTAG_COLORMAP;
+    static const unsigned int tag = TIFFTAG_COLORMAP;
 };
 
 struct tiff_extra_samples : tiff_property_base< uint16_t*, TIFFTAG_EXTRASAMPLES > {};
@@ -121,33 +125,33 @@ struct tiff_indexed : tiff_property_base< uint16_t, TIFFTAG_INDEXED > {};
 template<>
 struct image_read_info< tiff_tag >
 {
-   tiff_image_width::type  _width;
-   tiff_image_height::type _height;
+    tiff_image_width::type  _width;
+    tiff_image_height::type _height;
 
-   tiff_compression::type _compression;
+    tiff_compression::type _compression;
 
-   tiff_bits_per_sample::type   _bits_per_sample;
-   tiff_samples_per_pixel::type _samples_per_pixel;
-   tiff_sample_format::type     _sample_format;
+    tiff_bits_per_sample::type   _bits_per_sample;
+    tiff_samples_per_pixel::type _samples_per_pixel;
+    tiff_sample_format::type     _sample_format;
 
-   tiff_planar_configuration::type _planar_configuration;
+    tiff_planar_configuration::type _planar_configuration;
 
-   tiff_photometric_interpretation::type _photometric_interpretation;
+    tiff_photometric_interpretation::type _photometric_interpretation;
 };
 
 template<>
 struct image_read_settings< tiff_tag > : public image_read_settings_base
 {
     image_read_settings< tiff_tag >()
-    : image_read_settings_base()
+            : image_read_settings_base()
     {}
 
     image_read_settings( const point_t& top_left
-                       , const point_t& dim
+                         , const point_t& dim
                        )
-    : image_read_settings_base( top_left
-                              , dim
-                              )
+            : image_read_settings_base( top_left
+                                        , dim
+                                      )
     {}
 
 };
@@ -156,10 +160,10 @@ template< typename Log >
 struct image_write_info< tiff_tag, Log >
 {
     image_write_info()
-    : _photometric_interpretation( PHOTOMETRIC_MINISBLACK )
-    , _compression               ( COMPRESSION_NONE       )
-    , _orientation               ( ORIENTATION_TOPLEFT    )
-    , _planar_configuration      ( PLANARCONFIG_CONTIG    )
+            : _photometric_interpretation( PHOTOMETRIC_MINISBLACK )
+            , _compression               ( COMPRESSION_NONE       )
+            , _orientation               ( ORIENTATION_TOPLEFT    )
+            , _planar_configuration      ( PLANARCONFIG_CONTIG    )
     {}
 
     tiff_photometric_interpretation::type _photometric_interpretation;

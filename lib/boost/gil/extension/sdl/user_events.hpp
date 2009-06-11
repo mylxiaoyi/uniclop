@@ -8,31 +8,47 @@
 #ifndef USER_EVENTS_HPP
 #define USER_EVENTS_HPP
 
-namespace boost { namespace gil { namespace sdl { namespace detail {
+namespace boost
+{
+namespace gil
+{
+namespace sdl
+{
+namespace detail
+{
 
 struct default_keyboard_event_handler
 {
-   // Return true to trigger redraw.
-   bool key_up() { return false; }
+    // Return true to trigger redraw.
+    bool key_up()
+    {
+        return false;
+    }
 };
 
 struct default_redraw_event_handler
 {
-   void redraw( const bgra8_view_t& sdl_view ) {}
+    void redraw( const bgra8_view_t& sdl_view ) {}
 };
 
 struct default_timer_event_handler
 {
-   // Return true to trigger redraw.
-   bool time_elapsed() { return false; }
+    // Return true to trigger redraw.
+    bool time_elapsed()
+    {
+        return false;
+    }
 };
 
 
 struct default_quit_event_handler
 {
-   void quit() {}
+    void quit() {}
 };
 
-} } } } // namespace boost::gil::sdl::detail
+}
+}
+}
+} // namespace boost::gil::sdl::detail
 
 #endif // GIL_SDL_CONVERTERS_HPP

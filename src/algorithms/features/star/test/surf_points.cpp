@@ -6,7 +6,7 @@
 using namespace surf;
 
 std::vector<KeypointFl> DetectSurfPoints(Image* im, bool doubled_image,
-                                         int subsampling_factor)
+        int subsampling_factor)
 {
     // Default params
     static const int octaves = 4;
@@ -27,11 +27,12 @@ std::vector<KeypointFl> DetectSurfPoints(Image* im, bool doubled_image,
     // Copy keypoints into our own format
     std::vector<KeypointFl> keypts;
     keypts.reserve(ipts.size());
-    
+
     typedef std::vector<Ipoint>::const_iterator iter;
-    for (iter i = ipts.begin(); i != ipts.end(); ++i) {
+    for (iter i = ipts.begin(); i != ipts.end(); ++i)
+    {
         keypts.push_back(KeypointFl(i->x, i->y, i->scale, i->strength));
     }
-    
+
     return keypts;
 }

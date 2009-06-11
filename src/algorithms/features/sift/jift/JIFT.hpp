@@ -26,64 +26,64 @@ namespace JIFT
 
 class Keypoint
 {
-    public:
-        // its location in the image, subpixel precision, so use float
-	float xi;
-	float yi;
+public:
+    // its location in the image, subpixel precision, so use float
+    float xi;
+    float yi;
 
-        // its magnitude and orientation
-	vector<double> mag;
-	vector<double> orien;
+    // its magnitude and orientation
+    vector<double> mag;
+    vector<double> orien;
 
-        // the scale where it is detected
-	unsigned int scale;
+    // the scale where it is detected
+    unsigned int scale;
 
 
-        // the trival constructor
-	Keypoint (){}
-	Keypoint(float x, float y):xi(x),yi(y){}
+    // the trival constructor
+    Keypoint () {}
+    Keypoint(float x, float y):xi(x),yi(y) {}
 
-	Keypoint(float x, float y, vector<double> const& m, vector<double> const& o, unsigned int s)
-    : xi(x), yi(y), mag(m), orien(o), scale(s){}
+    Keypoint(float x, float y, vector<double> const& m, vector<double> const& o, unsigned int s)
+            : xi(x), yi(y), mag(m), orien(o), scale(s) {}
 
 };
 
 // the main class for JIFT operation
 class JIFT
 {
-  public:
-	JIFT( unsigned int octaves = 4, unsigned int intervals = 2);
+public:
+    JIFT( unsigned int octaves = 4, unsigned int intervals = 2);
     void init();
     ~JIFT();
     void doJIFT(const vil_image_view<vxl_byte>& srcimg);
     const vector<SIFTFeature> &descriptor() const;
     const vector<Keypoint>  &keypoint() const;
 
-  private:
+private:
     void buildPyramid(const vil_image_view<vxl_byte>& srcimg);
     void detectLocalExtrema(void);
     void assignOrientation(void);
     void extractKeypointDescriptor(void);
 
-  private:
-  
+private:
+
     // octaves and intervals, oriented from SIFT
     unsigned int m_octaves;
     unsigned int m_intervals;
 
-        // gaussian pyramid
+    // gaussian pyramid
     vil_image_view<double> ** m_glist;
 
-        // difference of gaussian pyramid
+    // difference of gaussian pyramid
     vil_image_view<double> ** m_doglist;
 
-        // extrema
+    // extrema
     vil_image_view<bool>   ** m_extrema;
 
-        // absolute sigma
+    // absolute sigma
     double ** m_abssigmas;
 
-        // number of keypoints
+    // number of keypoints
     unsigned int m_kpnum;
 
     vector<Keypoint>   m_kps;

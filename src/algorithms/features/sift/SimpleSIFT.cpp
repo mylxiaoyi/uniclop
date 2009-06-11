@@ -53,7 +53,7 @@ float SIFTFeature::distance(const SIFTFeature &f) const
     vector<double>::const_iterator v1_it, v2_it;
 
     float distance = 0.0f;
-    for(v1_it = feature_vector.begin(), v2_it = f.feature_vector.begin();
+    for (v1_it = feature_vector.begin(), v2_it = f.feature_vector.begin();
             v1_it != feature_vector.end() && v2_it != f.feature_vector.end();
             ++v1_it, ++v2_it)
     {
@@ -90,11 +90,11 @@ SimpleSIFT::SimpleSIFT(args::variables_map &options)
 {
 
     int octaves = 4;
-    if( options.count("sift.octaves") )
+    if ( options.count("sift.octaves") )
         octaves = options["sift.octaves"].as<int>();
 
     int intervals = 2;
-    if( options.count("sift.intervals") )
+    if ( options.count("sift.intervals") )
         intervals = options["sift.intervals"].as<int>();
 
     jift_features_detector_p.reset(new JIFT::JIFT(octaves, intervals));

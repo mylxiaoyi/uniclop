@@ -19,13 +19,17 @@
 ///
 ////////////////////////////////////////////////////////////////////////////////////////
 
-extern "C" {
+extern "C"
+{
 #include "tiffio.h"
 }
 
 #include <iostream>
 
-namespace boost { namespace gil {
+namespace boost
+{
+namespace gil
+{
 
 class console_log
 {

@@ -28,17 +28,22 @@
 
 #include "supported_types.hpp"
 
-namespace boost { namespace gil { namespace detail {
+namespace boost
+{
+namespace gil
+{
+namespace detail
+{
 
 template< typename Device >
 class writer< Device
             , jpeg_tag
-            > 
+            >
 {
 public:
 
     writer( Device & file )
-        : out(file)
+            : out(file)
     {
         _dest._jdest.free_in_buffer = sizeof(buffer);
         _dest._jdest.next_output_byte = buffer;
@@ -75,8 +80,8 @@ public:
         _cinfo.image_height = JDIMENSION(view.height());
         _cinfo.input_components = num_channels<View>::value;
         _cinfo.in_color_space = detail::jpeg_write_support< channel_t
-                                                          , typename color_space_type<View>::type
-                                                          >::_color_space;
+                                , typename color_space_type<View>::type
+                                >::_color_space;
 
         jpeg_set_defaults(&_cinfo);
         jpeg_set_quality(&_cinfo, 100, TRUE);
@@ -86,7 +91,7 @@ public:
 
     template<typename View>
     void apply( const View&                       view
-              , const image_write_info<jpeg_tag>& info )
+                , const image_write_info<jpeg_tag>& info )
     {
         typedef typename channel_type< View >::type channel_t;
 
@@ -94,13 +99,13 @@ public:
         _cinfo.image_height = JDIMENSION(view.height());
         _cinfo.input_components = num_channels<View>::value;
         _cinfo.in_color_space = detail::jpeg_write_support< channel_t
-                                                          , typename color_space_type<View>::type
-                                                          >::_color_space;
+                                , typename color_space_type<View>::type
+                                >::_color_space;
 
         jpeg_set_defaults( &_cinfo);
         jpeg_set_quality ( &_cinfo
-                         , info._quality
-                         , TRUE
+                           , info._quality
+                           , TRUE
                          );
 
         write_rows( view );
@@ -116,16 +121,16 @@ private:
         std::vector<typename View::value_type> row_buffer( view.width() );
         JSAMPLE* row_addr = reinterpret_cast<JSAMPLE*>( &row_buffer[0] );
 
-        for( int y =0; y != view.height(); ++ y )
+        for ( int y =0; y != view.height(); ++ y )
         {
             std::copy( view.row_begin( y )
-                     , view.row_end  ( y )
-                     , row_buffer.begin()
+                       , view.row_end  ( y )
+                       , row_buffer.begin()
                      );
 
             jpeg_write_scanlines( &this->_cinfo
-                                , &row_addr
-                                , 1
+                                  , &row_addr
+                                  , 1
                                 );
         }
     }
@@ -149,7 +154,7 @@ private:
         gil_jpeg_destination_mgr* dest = reinterpret_cast< gil_jpeg_destination_mgr* >( cinfo->dest );
 
         dest->_this->out.write( dest->_this->buffer
-                              , buffer_size 
+                                , buffer_size
                               );
 
         writer<Device,jpeg_tag>::init_device( cinfo );
@@ -179,37 +184,37 @@ private:
 struct jpeg_write_is_supported
 {
     template< typename View >
-    struct apply 
-        : public is_write_supported< typename get_pixel_type< View >::type
-                                   , jpeg_tag
-                                   >
-    {};
+    struct apply
+                : public is_write_supported< typename get_pixel_type< View >::type
+                , jpeg_tag
+                >
+        {};
 };
 
 template< typename Device >
 class dynamic_image_writer< Device
-                          , jpeg_tag
-                          >
-    : public writer< Device
-                   , jpeg_tag
-                   >
+            , jpeg_tag
+            >
+            : public writer< Device
+            , jpeg_tag
+            >
 {
     typedef writer< Device
-                  , jpeg_tag
-                  > parent_t;
+    , jpeg_tag
+    > parent_t;
 
 public:
 
     dynamic_image_writer( Device& file )
-    : writer( file )
+            : writer( file )
     {}
 
     template< typename Views >
     void apply( const any_image_view< Views >& views )
     {
         dynamic_io_fnobj< jpeg_write_is_supported
-                        , parent_t
-                        > op( this );
+        , parent_t
+        > op( this );
 
         apply_operation( views, op );
     }

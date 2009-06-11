@@ -10,7 +10,8 @@
 #include <iostream>
 #include <ostream>
 
-typedef struct {
+typedef struct
+{
     PyObject_HEAD
     StarDetector *psd;
     int xsize, ysize;
@@ -33,22 +34,28 @@ PyObject *detect(PyObject *self, PyObject *args)
     char *imdata;
     if (PyString_AsStringAndSize(PyTuple_GetItem(args,0), &imdata, &im_size) == -1)
         return NULL;
-    if (im_size != (sd->xsize * sd->ysize)) {
+    if (im_size != (sd->xsize * sd->ysize))
+    {
         PyErr_SetString(PyExc_TypeError, "Image size mismatch");
         return NULL;
     }
 
-    if (sd->img->widthStep == sd->xsize) {
+    if (sd->img->widthStep == sd->xsize)
+    {
         memcpy(sd->img->imageData, imdata, sd->xsize * sd->ysize);
-    } else {
-        for (int y = 0; y < sd->ysize; y++) {
+    }
+    else
+    {
+        for (int y = 0; y < sd->ysize; y++)
+        {
             memcpy(&CV_IMAGE_ELEM(sd->img, char, y, 0), imdata + y * (sd->xsize), sd->xsize);
         }
     }
     std::vector<Keypoint> kp;
     sd->psd->DetectPoints(sd->img, std::back_inserter(kp));
     PyObject *r = PyList_New(kp.size());
-    for (size_t i = 0; i < kp.size(); i++) {
+    for (size_t i = 0; i < kp.size(); i++)
+    {
         PyObject *t = PyTuple_New(4);
         PyTuple_SetItem(t, 0, PyInt_FromLong(kp[i].x));
         PyTuple_SetItem(t, 1, PyInt_FromLong(kp[i].y));
@@ -100,13 +107,14 @@ PyObject *setBinarizedThreshold(PyObject *self, PyObject *args)
 }
 
 /* Method table */
-static PyMethodDef star_detector_methods[] = {
-  {"detect", detect, METH_VARARGS},
-  {"setScales", setScales, METH_VARARGS},
-  {"setResponseThreshold", setResponseThreshold, METH_VARARGS},
-  {"setProjectedThreshold", setProjectedThreshold, METH_VARARGS},
-  {"setBinarizedThreshold", setBinarizedThreshold, METH_VARARGS},
-  {NULL, NULL},
+static PyMethodDef star_detector_methods[] =
+{
+    {"detect", detect, METH_VARARGS},
+    {"setScales", setScales, METH_VARARGS},
+    {"setResponseThreshold", setResponseThreshold, METH_VARARGS},
+    {"setProjectedThreshold", setProjectedThreshold, METH_VARARGS},
+    {"setBinarizedThreshold", setBinarizedThreshold, METH_VARARGS},
+    {NULL, NULL},
 };
 
 static PyObject *
@@ -115,7 +123,8 @@ star_detector_GetAttr(PyObject *self, char *attrname)
     return Py_FindMethod(star_detector_methods, self, attrname);
 }
 
-static PyTypeObject star_detector_Type = {
+static PyTypeObject star_detector_Type =
+{
     PyObject_HEAD_INIT(&PyType_Type)
     0,
     "star_detector",
@@ -136,9 +145,9 @@ static PyTypeObject star_detector_Type = {
     0,
     0,
     0,
-    
+
     0,
-    
+
     Py_TPFLAGS_CHECKTYPES,
 
     0,
@@ -163,9 +172,10 @@ PyObject *star_detector(PyObject *self, PyObject *args)
     return (PyObject*)object;
 }
 
-static PyMethodDef methods[] = {
-  {"star_detector", star_detector, METH_VARARGS},
-  {NULL, NULL},
+static PyMethodDef methods[] =
+{
+    {"star_detector", star_detector, METH_VARARGS},
+    {NULL, NULL},
 };
 
 extern "C" void initstarfeature()
@@ -176,22 +186,23 @@ extern "C" void initstarfeature()
     d = PyModule_GetDict(m);
 }
 #if 0
-    cv::WImageBuffer1_b reference( cvLoadImage("im640x480.pgm", CV_LOAD_IMAGE_GRAYSCALE) );
+cv::WImageBuffer1_b reference( cvLoadImage("im640x480.pgm", CV_LOAD_IMAGE_GRAYSCALE) );
 
-    // Detect points in reference image
-    StarDetector ref_detector( cvSize(reference.Width(), reference.Height()) );
+// Detect points in reference image
+StarDetector ref_detector( cvSize(reference.Width(), reference.Height()) );
 
-    struct timeval started, finished;
-    gettimeofday(&started, NULL);
+struct timeval started, finished;
+gettimeofday(&started, NULL);
 
-    int ITER = 200;
-    for (int i = 0; i < ITER; i++) {
-        std::vector<Keypoint> ref_keypts;
-        ref_detector.DetectPoints(reference.Ipl(), std::back_inserter(ref_keypts));
-    }
-    gettimeofday(&finished, NULL);
-    long long a = started.tv_sec * 1000000 + started.tv_usec;
-    long long b = finished.tv_sec * 1000000 + finished.tv_usec;
-    float took = (b - a) * 1.0e-6;
-    printf("took %f s, so %f ms/image\n", took, 1000 * took / ITER);
+int ITER = 200;
+for (int i = 0; i < ITER; i++)
+{
+    std::vector<Keypoint> ref_keypts;
+    ref_detector.DetectPoints(reference.Ipl(), std::back_inserter(ref_keypts));
+}
+gettimeofday(&finished, NULL);
+long long a = started.tv_sec * 1000000 + started.tv_usec;
+long long b = finished.tv_sec * 1000000 + finished.tv_usec;
+float took = (b - a) * 1.0e-6;
+printf("took %f s, so %f ms/image\n", took, 1000 * took / ITER);
 #endif

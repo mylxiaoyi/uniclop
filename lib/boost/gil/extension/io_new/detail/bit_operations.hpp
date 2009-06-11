@@ -19,17 +19,22 @@
 ///
 ////////////////////////////////////////////////////////////////////////////////////////
 
-namespace boost { namespace gil { namespace detail {
+namespace boost
+{
+namespace gil
+{
+namespace detail
+{
 
 // 1110 1100 -> 0011 0111
 template< typename Buffer
-        , typename IsBitAligned
-        >
+, typename IsBitAligned
+>
 struct mirror_bits
 {
-   mirror_bits() {}
+    mirror_bits() {}
 
-   void operator() ( Buffer& ) {}
+    void operator() ( Buffer& ) {}
 };
 
 
@@ -38,32 +43,32 @@ struct mirror_bits
 // have proven it.
 template< typename Buffer >
 struct mirror_bits< Buffer
-                  , mpl::true_
-                  >
+            , mpl::true_
+            >
 {
-   mirror_bits()
-   {
-        for( int i = 0; i < 256; ++i )
+    mirror_bits()
+    {
+        for ( int i = 0; i < 256; ++i )
         {
             byte_t c = i;
             mirror( c );
 
             _lookup[i] = c;
         }
-   }
+    }
 
-   void operator() ( Buffer& buf )
-   {
+    void operator() ( Buffer& buf )
+    {
         for_each( buf.begin()
-                , buf.end()
-                , bind( &mirror_bits< Buffer
-                                    , mpl::true_
-                                    >::lookup
-                       , *this
-                       , _1
-                       )
+                  , buf.end()
+                  , bind( &mirror_bits< Buffer
+                          , mpl::true_
+                          >::lookup
+                          , *this
+                          , _1
+                        )
                 );
-   }
+    }
 
 private:
 
@@ -75,7 +80,7 @@ private:
     static void mirror( byte_t& c )
     {
         byte_t result = 0;
-        for( int i = 0; i < 8; ++i )
+        for ( int i = 0; i < 8; ++i )
         {
             result = result << 1;
             result |= ( c & 1 );
@@ -84,17 +89,17 @@ private:
 
         c = result;
     }
- 
+
 private:
- 
+
     array< byte_t, 256 > _lookup;
 };
 
 
 // 0011 1111 -> 1100 0000
 template< typename Buffer
-        , typename IsBitAligned
-        >
+, typename IsBitAligned
+>
 struct negate_bits
 {
     void operator() ( Buffer& ) {}
@@ -106,8 +111,8 @@ struct negate_bits< Buffer, mpl::true_ >
     void operator() ( Buffer& buf )
     {
         for_each( buf.begin()
-                , buf.end()
-                , negate_bits< Buffer, mpl::true_ >::negate
+                  , buf.end()
+                  , negate_bits< Buffer, mpl::true_ >::negate
                 );
     }
 
@@ -122,8 +127,8 @@ private:
 
 // 11101100 -> 11001110
 template< typename Buffer
-        , typename IsBitAligned
-        >
+, typename IsBitAligned
+>
 struct swap_half_bytes
 {
     void operator() ( Buffer& ) {}
@@ -131,14 +136,14 @@ struct swap_half_bytes
 
 template< typename Buffer >
 struct swap_half_bytes< Buffer
-                      , mpl::true_
-                      >
+            , mpl::true_
+            >
 {
     void operator() ( Buffer& buf )
     {
         for_each( buf.begin()
-                , buf.end()
-                , swap_half_bytes< Buffer, mpl::true_ >::swap
+                  , buf.end()
+                  , swap_half_bytes< Buffer, mpl::true_ >::swap
                 );
     }
 
@@ -153,9 +158,9 @@ private:
 template< typename Buffer >
 struct do_nothing
 {
-   do_nothing() {}
+    do_nothing() {}
 
-   void operator() ( Buffer& ) {}
+    void operator() ( Buffer& ) {}
 };
 
 /// Count consecutive zeros on the right
@@ -168,7 +173,7 @@ throw()
 
     x = ~x & (x - 1);
 
-    while( x )
+    while ( x )
     {
         n = n + 1;
         x = x >> 1;
@@ -185,11 +190,11 @@ throw()
 {
     unsigned int n = 0;
 
-    while( x )
+    while ( x )
     {
-	    // clear the least significant bit set
-	    x &= x - 1;
-	    ++n;
+        // clear the least significant bit set
+        x &= x - 1;
+        ++n;
     }
 
     return n;

@@ -21,21 +21,21 @@ using namespace std;
 class AbstractApplication
 {
 
-	args::variables_map options;
+    args::variables_map options;
 
 public:
-	AbstractApplication();
-	~AbstractApplication();
+    AbstractApplication();
+    ~AbstractApplication();
 
-	int main(int argc, char *argv[]);
+    int main(int argc, char *argv[]);
 
 private:
-	args::variables_map parse_arguments(int argc, char *argv[]);
+    args::variables_map parse_arguments(int argc, char *argv[]);
 
 public:
-	virtual string get_application_title() const = 0;
-	virtual args::options_description get_command_line_options(void) const = 0;
-	virtual int main_loop(args::variables_map &options) = 0;
+    virtual string get_application_title() const = 0;
+    virtual args::options_description get_command_line_options(void) const = 0;
+    virtual int main_loop(args::variables_map &options) = 0;
 
 };
 

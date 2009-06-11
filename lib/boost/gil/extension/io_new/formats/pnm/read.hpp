@@ -34,7 +34,12 @@
 
 #include "is_allowed.hpp"
 
-namespace boost { namespace gil { namespace detail {
+namespace boost
+{
+namespace gil
+{
+namespace detail
+{
 
 template< typename View, typename T >
 struct calc_pitch {};
@@ -42,26 +47,32 @@ struct calc_pitch {};
 template< typename View >
 struct calc_pitch< View, mpl::false_ >
 {
-    static uint32_t do_it( uint32_t width ) { return width * num_channels< View >::value; }
+    static uint32_t do_it( uint32_t width )
+    {
+        return width * num_channels< View >::value;
+    }
 };
 
 template< typename View >
 struct calc_pitch< View, mpl::true_ >
 {
-    static uint32_t do_it( uint32_t width ) {  return ( width + 7 ) >> 3; }
+    static uint32_t do_it( uint32_t width )
+    {
+        return ( width + 7 ) >> 3;
+    }
 };
 
 
 template< typename Device
-        , typename ConversionPolicy
-        >
+, typename ConversionPolicy
+>
 class reader< Device
             , pnm_tag
             , ConversionPolicy
-            > 
-    : public reader_base< pnm_tag
-                        , ConversionPolicy
-                        >
+            >
+            : public reader_base< pnm_tag
+            , ConversionPolicy
+            >
 {
 private:
 
@@ -69,15 +80,15 @@ private:
 
 public:
     reader( Device& device )
-    : _io_dev( device )
+            : _io_dev( device )
     {}
 
     reader( Device&     device
-          , const cc_t& cc
+            , const cc_t& cc
           )
-    : reader_base< pnm_tag
-                 , ConversionPolicy >( cc )
-    , _io_dev( device )
+            : reader_base< pnm_tag
+            , ConversionPolicy >( cc )
+            , _io_dev( device )
     {}
 
     image_read_info<pnm_tag> get_info()
@@ -89,14 +100,14 @@ public:
 
         ret._type = read_char() - '0';
 
-		io_error_if( ret._type < pnm_type_mono_asc || ret._type > pnm_type_color_bin
-		           , "Invalid PNM file (supports P1 to P6)"
-		           );
+        io_error_if( ret._type < pnm_type_mono_asc || ret._type > pnm_type_color_bin
+                     , "Invalid PNM file (supports P1 to P6)"
+                   );
 
         ret._width  = read_int();
         ret._height = read_int();
 
-        if( ret._type == pnm_type_mono_asc || ret._type == pnm_type_mono_bin )
+        if ( ret._type == pnm_type_mono_asc || ret._type == pnm_type_mono_bin )
         {
             ret._max_value = 1;
         }
@@ -104,9 +115,9 @@ public:
         {
             ret._max_value = read_int();
 
-		    io_error_if( ret._max_value > 255
-		               , "Unsupported PNM format (supports maximum value 255)"
-		               );
+            io_error_if( ret._max_value > 255
+                         , "Unsupported PNM format (supports maximum value 255)"
+                       );
         }
 
         return ret;
@@ -117,34 +128,58 @@ public:
     {
 
         typedef typename is_same< ConversionPolicy
-                                , read_and_no_convert
-                                >::type is_read_and_convert_t;
+        , read_and_no_convert
+        >::type is_read_and_convert_t;
 
         io_error_if( !is_allowed< View >( this->_info
-                                        , is_read_and_convert_t()
+                                          , is_read_and_convert_t()
                                         )
-                   , "Image types aren't compatible."
+                     , "Image types aren't compatible."
                    );
 
 
-        switch( this->_info._type )
-		{
+        switch ( this->_info._type )
+        {
             // reading mono text is reading grayscale but with only two values
-			case pnm_type_mono_asc:  { read_text_data< gray8_view_t >( view ); break; }
-			case pnm_type_gray_asc:  { read_text_data< gray8_view_t >( view ); break; }
-			case pnm_type_color_asc: { read_text_data< rgb8_view_t  >( view ); break; } 
-			
-			case pnm_type_mono_bin:  { read_bin_data< gray1_image_t::view_t >( view ); break; }
-			case pnm_type_gray_bin:  { read_bin_data< gray8_view_t          >( view ); break; } 
-			case pnm_type_color_bin: { read_bin_data< rgb8_view_t           >( view ); break; }
-		}
+        case pnm_type_mono_asc:
+        {
+            read_text_data< gray8_view_t >( view );
+            break;
+        }
+        case pnm_type_gray_asc:
+        {
+            read_text_data< gray8_view_t >( view );
+            break;
+        }
+        case pnm_type_color_asc:
+        {
+            read_text_data< rgb8_view_t  >( view );
+            break;
+        }
+
+        case pnm_type_mono_bin:
+        {
+            read_bin_data< gray1_image_t::view_t >( view );
+            break;
+        }
+        case pnm_type_gray_bin:
+        {
+            read_bin_data< gray8_view_t          >( view );
+            break;
+        }
+        case pnm_type_color_bin:
+        {
+            read_bin_data< rgb8_view_t           >( view );
+            break;
+        }
+        }
     }
 
 private:
 
     template< typename View_Src
-            , typename View_Dst
-            >
+    , typename View_Dst
+    >
     void read_text_data( const View_Dst& dst )
     {
         typedef typename View_Dst::y_coord_t y_t;
@@ -153,46 +188,46 @@ private:
 
         byte_vector_t row( pitch );
         View_Src src = interleaved_view( this->_info._width
-                                       , 1
-                                       , (typename View_Src::value_type*) &row.front()
-                                       , pitch
+                                         , 1
+                                         , (typename View_Src::value_type*) &row.front()
+                                         , pitch
                                        );
 
         char buf[16];
 
-        for( y_t y = 0; y < dst.height(); ++y )
+        for ( y_t y = 0; y < dst.height(); ++y )
         {
-            for( uint32_t x = 0; x < pitch; ++x )
+            for ( uint32_t x = 0; x < pitch; ++x )
             {
-                for( uint32_t k = 0; ; )
+                for ( uint32_t k = 0; ; )
                 {
-					int ch = _io_dev.getc_unchecked();
+                    int ch = _io_dev.getc_unchecked();
 
-					if( isdigit( ch ))
-					{
+                    if ( isdigit( ch ))
+                    {
                         buf[ k++ ] = ch;
-					}
-					else if( k )
-					{
-						buf[ k ] = 0;
-						break;
-					}
-					else if( ch == EOF || !isspace( ch ))
-					{
-						return;
-					}
+                    }
+                    else if ( k )
+                    {
+                        buf[ k ] = 0;
+                        break;
+                    }
+                    else if ( ch == EOF || !isspace( ch ))
+                    {
+                        return;
+                    }
                 }
 
                 int value = atoi( buf );
 
-                
-                if( this->_info._max_value == 1 )
+
+                if ( this->_info._max_value == 1 )
                 {
                     typedef channel_type< typename get_pixel_type< View_Dst >::type >::type channel_t;
 
                     // for pnm format 0 is white
-                    row[x] = ( value != 0 ) 
-                             ? 0 
+                    row[x] = ( value != 0 )
+                             ? 0
                              : channel_traits< channel_t >::max_value();
                 }
                 else
@@ -204,32 +239,32 @@ private:
             // We are reading a gray1_image like a gray8_image but the two pixel_t
             // aren't compatible. Though, read_and_no_convert::read(...) wont work.
             copy_data< View_Dst, View_Src >( dst
-                                           , src
-                                           , y
-                                           , is_same< View_Dst
-                                                    , gray1_image_t::view_t
-                                                    >::type()
+                                             , src
+                                             , y
+                                             , is_same< View_Dst
+                                             , gray1_image_t::view_t
+                                             >::type()
                                            );
         }
     }
 
     template< typename View_Dst
-            , typename View_Src
-            >
+    , typename View_Src
+    >
     void copy_data( const View_Dst&              dst
-                  , const View_Src&              src
-                  , typename View_Dst::y_coord_t y
-                  , mpl::true_ // is gray1_view
+                    , const View_Src&              src
+                    , typename View_Dst::y_coord_t y
+                    , mpl::true_ // is gray1_view
                   )
     {
-        if(  this->_info._max_value == 1 )
+        if (  this->_info._max_value == 1 )
         {
             typename View_Dst::x_iterator it = dst.row_begin( y );
 
-            for( typename View_Dst::x_coord_t x = 0
-               ; x < dst.width()
-               ; ++x
-               )
+            for ( typename View_Dst::x_coord_t x = 0
+                                                   ; x < dst.width()
+                    ; ++x
+                )
             {
                 it[x] = src[x];
             }
@@ -237,40 +272,40 @@ private:
         else
         {
             copy_data( dst
-                     , src
-                     , y
-                     , mpl::false_()
+                       , src
+                       , y
+                       , mpl::false_()
                      );
         }
     }
 
     template< typename View_Dst
-            , typename View_Src
-            >
+    , typename View_Src
+    >
     void copy_data( const View_Dst&              view
-                  , const View_Src&              dst
-                  , typename View_Dst::y_coord_t y
-                  , mpl::false_ // is gray1_view
+                    , const View_Src&              dst
+                    , typename View_Dst::y_coord_t y
+                    , mpl::false_ // is gray1_view
                   )
     {
         typename View_Src::x_iterator beg = dst.row_begin( 0 ) + this->_settings._top_left.x;
         typename View_Src::x_iterator end = beg + this->_settings._dim.x;
 
         this->_cc_policy.read( beg
-                             , end
-                             , view.row_begin( y )
+                               , end
+                               , view.row_begin( y )
                              );
     }
 
 
     template< typename View_Src
-            , typename View_Dst
-            >
+    , typename View_Dst
+    >
     void read_bin_data( const View_Dst& view )
     {
         typedef typename View_Dst::y_coord_t y_t;
-        typedef typename is_bit_aligned< 
-                    typename View_Src::value_type >::type is_bit_aligned_t;
+        typedef typename is_bit_aligned<
+        typename View_Src::value_type >::type is_bit_aligned_t;
 
         uint32_t pitch = calc_pitch< View_Src, is_bit_aligned_t >::do_it( this->_info._width );
 
@@ -283,25 +318,25 @@ private:
         // For bit_aligned images we need to negate all bytes in the row_buffer
         // to make sure that 0 is black and 255 is white.
         negate_bits< typename rh_t::buffer_t
-                   , is_bit_aligned_t
-                   > neg;
+        , is_bit_aligned_t
+        > neg;
 
         swap_half_bytes< typename rh_t::buffer_t
-                       , is_bit_aligned_t
-                       > swhb;
+        , is_bit_aligned_t
+        > swhb;
 
-        for( y_t y = 0; y < view.height(); ++y )
+        for ( y_t y = 0; y < view.height(); ++y )
         {
             _io_dev.read( reinterpret_cast< byte_t* >( rh.data() )
-                        , pitch
+                          , pitch
                         );
 
             neg( rh.buffer() );
             swhb( rh.buffer() );
 
             this->_cc_policy.read( beg
-                                 , end
-                                 , view.row_begin( y )
+                                   , end
+                                   , view.row_begin( y )
                                  );
         }
     }
@@ -313,7 +348,7 @@ private:
     {
         char ch;
 
-        if(( ch = _io_dev.getc() ) == '#' )
+        if (( ch = _io_dev.getc() ) == '#' )
         {
             // skip comment to EOL
             do
@@ -326,41 +361,41 @@ private:
         return ch;
     }
 
-	unsigned int read_int()
-	{
-		char ch;
+    unsigned int read_int()
+    {
+        char ch;
 
         // skip whitespaces, tabs, and new lines
-		do
-		{
-			ch = read_char();
-		}
-		while (ch == ' ' || ch == '\t' || ch == '\n' || ch == '\r');
+        do
+        {
+            ch = read_char();
+        }
+        while (ch == ' ' || ch == '\t' || ch == '\n' || ch == '\r');
 
-		if( ch < '0' || ch > '9' )
-		{
-			io_error( "Unexpected characters reading decimal digits" );
-		}
+        if ( ch < '0' || ch > '9' )
+        {
+            io_error( "Unexpected characters reading decimal digits" );
+        }
 
-		unsigned val = 0;
+        unsigned val = 0;
 
         do
         {
-			unsigned dig = ch - '0';
+            unsigned dig = ch - '0';
 
-			if( val > INT_MAX / 10 - dig )
-			{
-				io_error( "Integer too large" );
-			}
+            if ( val > INT_MAX / 10 - dig )
+            {
+                io_error( "Integer too large" );
+            }
 
-			val = val * 10 + dig;
+            val = val * 10 + dig;
 
-			ch = read_char();
-		}
-		while( '0' <= ch && ch <= '9' );
+            ch = read_char();
+        }
+        while ( '0' <= ch && ch <= '9' );
 
-		return val;
-	}
+        return val;
+    }
 
 private:
 
@@ -370,18 +405,18 @@ private:
 struct pnm_type_format_checker
 {
     pnm_type_format_checker( pnm_image_type::type type )
-    : _type( type )
+            : _type( type )
     {}
 
     template< typename Image >
     bool apply()
     {
         typedef is_read_supported< typename get_pixel_type< Image::view_t >::type
-                                 , pnm_tag
-                                 > is_supported_t;
+        , pnm_tag
+        > is_supported_t;
 
         return is_supported_t::_asc_type == _type
-            || is_supported_t::_bin_type == _type;
+               || is_supported_t::_bin_type == _type;
     }
 
 private:
@@ -393,56 +428,56 @@ struct pnm_read_is_supported
 {
     template< typename View >
     struct apply : public is_read_supported< typename get_pixel_type< View >::type
-                                           , pnm_tag
-                                           >
-    {};
+                , pnm_tag
+                >
+        {};
 };
 
 template< typename Device
-        >
+>
 class dynamic_image_reader< Device
-                          , pnm_tag
-                          > 
-    : public reader< Device
-                   , pnm_tag
-                   , detail::read_and_no_convert
-                   >
+            , pnm_tag
+            >
+            : public reader< Device
+            , pnm_tag
+            , detail::read_and_no_convert
+            >
 {
     typedef reader< Device
-                  , pnm_tag
-                  , detail::read_and_no_convert
-                  > parent_t;
+    , pnm_tag
+    , detail::read_and_no_convert
+    > parent_t;
 
 public:
 
     dynamic_image_reader( Device& device )
-    : reader( device )
-    {}    
+            : reader( device )
+    {}
 
     template< typename Images >
     void apply( any_image< Images >& images )
     {
         pnm_type_format_checker format_checker( _info._type );
 
-        if( !construct_matched( images
-                              , format_checker
-                              ))
+        if ( !construct_matched( images
+                                 , format_checker
+                               ))
         {
             io_error( "No matching image type between those of the given any_image and that of the file" );
         }
         else
         {
             init_image( images
-                      , _settings
-                      , _info
+                        , _settings
+                        , _info
                       );
 
             dynamic_io_fnobj< pnm_read_is_supported
-                            , parent_t
-                            > op( this );
+            , parent_t
+            > op( this );
 
             apply_operation( view( images )
-                           , op
+                             , op
                            );
         }
     }

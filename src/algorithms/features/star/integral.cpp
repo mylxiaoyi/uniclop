@@ -27,8 +27,9 @@ void TiltedIntegral(IplImage* source, IplImage* tilted, IplImage* flat_tilted)
     // Fill in row 1 explicitly
     tilt[0] = 0;
     flat[0] = src[0];
-    
-    for (int x = 1; x < width; ++x) {
+
+    for (int x = 1; x < width; ++x)
+    {
         tilt[x] = src[x-1];
         flat[x] = src[x] + src[x-1];
     }
@@ -40,18 +41,20 @@ void TiltedIntegral(IplImage* source, IplImage* tilted, IplImage* flat_tilted)
 
     // Fill in remaining rows by dynamic programming
     for (int y = 2; y < tilted->height; ++y, src += src_step,
-             tilt += tilt_step, flat += flat_step) {
+            tilt += tilt_step, flat += flat_step)
+    {
         tilt[0] = tilt[-tilt_step + 1];
 
         int elem = tilt[-tilt_step + 2] + src[-src_step] + src[0];
         tilt[1] = flat[0] = elem;
         flat[1] = flat[-tilt_step + 2] + src[-src_step] + src[1] + src[0];
-        
-        for (int x = 2; x < width; ++x) {
+
+        for (int x = 2; x < width; ++x)
+        {
             tilt[x] = tilt[-tilt_step + x - 1] + tilt[-tilt_step + x + 1] -
-                tilt[-tilt_step*2 + x] + src[-src_step + x - 1] + src[x - 1];
+                      tilt[-tilt_step*2 + x] + src[-src_step + x - 1] + src[x - 1];
             flat[x] = flat[-flat_step + x - 1] + flat[-flat_step + x + 1] -
-                flat[-flat_step*2 + x] + src[x] + src[x - 1];
+                      flat[-flat_step*2 + x] + src[x] + src[x - 1];
         }
 
         elem = tilt[-tilt_step + width - 1] + src[-src_step + width - 1] + src[width - 1];

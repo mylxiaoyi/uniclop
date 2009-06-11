@@ -28,7 +28,7 @@ FASTFeature::FASTFeature(const FASTFeature& f) : IFeature<FASTFeature>()
     y = f.y;
 
     int i;
-    for(i=0;i<16;i+=1)
+    for (i=0;i<16;i+=1)
         circle_intensities[i] = f.circle_intensities[i];
 
     return;
@@ -89,7 +89,7 @@ SimpleFAST::SimpleFAST(args::variables_map &options)
 {
     barrier = 20; // default value
 
-    if( options.count("fast.barrier") )
+    if ( options.count("fast.barrier") )
         barrier = options["fast.barrier"].as<int>();
 
     return;

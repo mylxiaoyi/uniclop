@@ -1,0 +1,68 @@
+
+#if !defined(GST_VIDEO_INPUT_HEADER)
+#define GST_VIDEO_INPUT_HEADER
+
+#include <string>
+
+#include <boost/program_options.hpp>
+
+//#include <boost/gil/typedefs.hpp>
+//#include <boost/gil/image_view.hpp>
+#include <boost/gil/gil_all.hpp>
+
+#include <boost/scoped_ptr.hpp>
+
+
+namespace uniclop
+{
+namespace devices
+{
+namespace video
+{
+
+using std::string;
+namespace program_options = boost::program_options;
+using boost::gil::rgb8_image_t;
+using boost::scoped_ptr;
+
+/**
+GStreamer video input class
+*/
+class GstVideoInput
+{
+
+public:
+    // RGB 8 bits interleaved image type
+    typedef rgb8_image_t image_t;
+    typedef image_t::const_view_t const_view_t;
+
+private:
+    scoped_ptr<image_t> current_image_p;
+    const_view_t current_image_view;
+
+    string video_sink_name;
+    int width, height;
+
+public:
+    static program_options::options_description get_options_description();
+    GstVideoInput(program_options::variables_map &options);
+    ~GstVideoInput();
+
+    /**
+    Blocking call to retrieve a new image
+    */
+    const_view_t &get_new_image();
+
+private:
+    void parse_options(program_options::variables_map &options);
+
+    void init_gstreamer(const string &video_sink_name);
+
+};
+
+}
+}
+}
+
+
+#endif // GST_VIDEO_INPUT_HEADER

@@ -12,43 +12,46 @@
  */
 struct Keypoint
 {
-  int x;
-  int y;
-  int scale;
-  // sign of response indicates dark/bright feature
-  float response;
+    int x;
+    int y;
+    int scale;
+    // sign of response indicates dark/bright feature
+    float response;
 
-  Keypoint()
-    : x(0), y(0), scale(0), response(0)
-  {}
+    Keypoint()
+            : x(0), y(0), scale(0), response(0)
+    {}
 
-  Keypoint(int x, int y, int scale, float response)
-    : x(x), y(y), scale(scale), response(response)
-  {};
+    Keypoint(int x, int y, int scale, float response)
+            : x(x), y(y), scale(scale), response(response)
+    {};
 
-  //! Allow sorting a list of keypoints into descending order
-  //! of response magnitude using std::sort.
-  inline bool operator< (Keypoint const& other) const {
-    return std::abs(response) > std::abs(other.response);
-  }
+    //! Allow sorting a list of keypoints into descending order
+    //! of response magnitude using std::sort.
+    inline bool operator< (Keypoint const& other) const
+    {
+        return std::abs(response) > std::abs(other.response);
+    }
 };
 
 //! Keep only the best N keypoints.
 inline void KeepBestPoints(std::vector<Keypoint> &pts, int N)
 {
-  if ((int)pts.size() > N) {
-    std::vector<Keypoint>::iterator nth = pts.begin() + N;
-    std::nth_element(pts.begin(), nth, pts.end());
-    pts.erase(nth, pts.end());
-  }
+    if ((int)pts.size() > N)
+    {
+        std::vector<Keypoint>::iterator nth = pts.begin() + N;
+        std::nth_element(pts.begin(), nth, pts.end());
+        pts.erase(nth, pts.end());
+    }
 }
 
 //! Predicate for partitioning a set of keypoints into dark and bright.
 struct DarkOrBright
 {
-  inline bool operator() (Keypoint const& pt) {
-    return pt.response > 0;
-  }
+    inline bool operator() (Keypoint const& pt)
+    {
+        return pt.response > 0;
+    }
 };
 
 //! Writes a set of keypoints to a file.

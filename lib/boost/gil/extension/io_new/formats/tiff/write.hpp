@@ -19,7 +19,8 @@
 ///
 ////////////////////////////////////////////////////////////////////////////////////////
 
-extern "C" {
+extern "C"
+{
 #include "tiff.h"
 #include "tiffio.h"
 }
@@ -38,41 +39,46 @@ extern "C" {
 
 #include "device.hpp"
 
-namespace boost { namespace gil { namespace detail {
+namespace boost
+{
+namespace gil
+{
+namespace detail
+{
 
 template <typename PixelReference>
 struct my_interleaved_pixel_iterator_type_from_pixel_reference
 {
 private:
-	typedef typename remove_reference< PixelReference >::type::value_type pixel_t;
+    typedef typename remove_reference< PixelReference >::type::value_type pixel_t;
 public:
-	typedef typename iterator_type_from_pixel< pixel_t
-	                                         , false
-	                                         , false
-	                                         , true
-	                                         >::type type;
+    typedef typename iterator_type_from_pixel< pixel_t
+    , false
+    , false
+    , true
+    >::type type;
 };
 
 
 template< typename Channel
-        , typename Layout
-        , bool Mutable
-        >
+, typename Layout
+, bool Mutable
+>
 struct my_interleaved_pixel_iterator_type_from_pixel_reference< const bit_aligned_pixel_reference< byte_t
-                                                                                                 , Channel
-                                                                                                 , Layout
-                                                                                                 , Mutable
-                                                                                                 >
-                                                              >
-	: public iterator_type_from_pixel< const bit_aligned_pixel_reference< uint8_t
-	                                                                    , Channel
-	                                                                    , Layout
-	                                                                    , Mutable
-	                                                                    >
-	                                 ,false
-	                                 ,false
-	                                 ,true
-	                                 > {};
+            , Channel
+            , Layout
+            , Mutable
+            >
+            >
+            : public iterator_type_from_pixel< const bit_aligned_pixel_reference< uint8_t
+            , Channel
+            , Layout
+            , Mutable
+            >
+            ,false
+            ,false
+            ,true
+            > {};
 
 
 
@@ -105,7 +111,7 @@ public:
     typedef image_write_info<tiff_tag, Log> info_t;
 
     writer( Device& dev )
-    : _io_dev( dev ) {}
+            : _io_dev( dev ) {}
 
     template<typename View>
     void apply( const View& view )
@@ -122,22 +128,22 @@ public:
         info._photometric_interpretation = photometric_interpretation< color_space_t >::value;
 
         write_view( view
-                  , info );
+                    , info );
     }
 
     template<typename View>
     void apply( const View&   view
-              , const info_t& info )
+                , const info_t& info )
     {
         write_view( view
-                  , info );
+                    , info );
     }
 
 private:
 
     template< typename View >
     void write_view( const View&   src_view
-                   , const info_t& info
+                     , const info_t& info
                    )
     {
         typedef typename View::value_type pixel_t;
@@ -153,7 +159,7 @@ private:
         _io_dev.template set_property< tiff_image_height >( height );
 
         // write planar configuration
-        if( is_bit_aligned<View>::value == false )
+        if ( is_bit_aligned<View>::value == false )
         {
             _io_dev.template set_property<tiff_planar_configuration>( info._planar_configuration );
         }
@@ -185,17 +191,17 @@ private:
         _io_dev.template set_property<tiff_rows_per_strip>( _io_dev.get_default_strip_size() );
 
         write_data( src_view
-                  , info
-                  , (src_view.width() * samples_per_pixel * bits_per_sample + 7) / 8
-                  , typename is_bit_aligned< pixel_t >::type()
+                    , info
+                    , (src_view.width() * samples_per_pixel * bits_per_sample + 7) / 8
+                    , typename is_bit_aligned< pixel_t >::type()
                   );
     }
 
     template< typename View >
     void write_data( const View&   src_view
-                   , const info_t& info
-                   , std::size_t   row_size_in_bytes
-                   , const mpl::true_&    // bit_aligned
+                     , const info_t& info
+                     , std::size_t   row_size_in_bytes
+                     , const mpl::true_&    // bit_aligned
                    )
     {
         byte_vector_t row( row_size_in_bytes );
@@ -203,16 +209,16 @@ private:
         typedef typename View::x_iterator x_it_t;
         x_it_t row_it = x_it_t( &(*row.begin()));
 
-        for( typename View::y_coord_t y = 0; y < src_view.height(); ++y )
+        for ( typename View::y_coord_t y = 0; y < src_view.height(); ++y )
         {
             std::copy( src_view.row_begin( y )
-                     , src_view.row_end( y )
-                     , row_it
+                       , src_view.row_end( y )
+                       , row_it
                      );
 
             _io_dev.write_scaline( row
-                                 , (uint32) y
-                                 , 0
+                                   , (uint32) y
+                                   , 0
                                  );
 
             // @todo: do optional bit swapping here if you need to...
@@ -221,28 +227,28 @@ private:
 
     template< typename View >
     void write_data( const View&   src_view
-                   , const info_t& info
-                   , std::size_t   row_size_in_bytes
-                   , const mpl::false_&    // bit_aligned
+                     , const info_t& info
+                     , std::size_t   row_size_in_bytes
+                     , const mpl::false_&    // bit_aligned
                    )
     {
         byte_vector_t row( row_size_in_bytes );
 
         typedef typename my_interleaved_pixel_iterator_type_from_pixel_reference< typename View::reference
-                                                                                >::type x_iterator;
+        >::type x_iterator;
 
         x_iterator row_it = x_iterator( &(*row.begin()));
 
-        for( typename View::y_coord_t y = 0; y < src_view.height(); ++y )
+        for ( typename View::y_coord_t y = 0; y < src_view.height(); ++y )
         {
             std::copy( src_view.row_begin( y )
-                     , src_view.row_end( y )
-                     , row_it
+                       , src_view.row_end( y )
+                       , row_it
                      );
 
             _io_dev.write_scaline( row
-                                 , (uint32) y
-                                 , 0
+                                   , (uint32) y
+                                   , 0
                                  );
 
             // @todo: do optional bit swapping here if you need to...
@@ -255,37 +261,37 @@ private:
 struct tiff_write_is_supported
 {
     template< typename View >
-    struct apply 
-        : public is_write_supported< typename get_pixel_type< View >::type
-                                   , tiff_tag
-                                   >
-    {};
+    struct apply
+                : public is_write_supported< typename get_pixel_type< View >::type
+                , tiff_tag
+                >
+        {};
 };
 
 template< typename Device >
 class dynamic_image_writer< Device
-                          , tiff_tag
-                          >
-    : public writer< Device
-                   , tiff_tag
-                   >
+            , tiff_tag
+            >
+            : public writer< Device
+            , tiff_tag
+            >
 {
     typedef writer< Device
-                  , tiff_tag
-                  > parent_t;
+    , tiff_tag
+    > parent_t;
 
 public:
 
     dynamic_image_writer( Device& file )
-    : writer( file )
+            : writer( file )
     {}
 
     template< typename Views >
     void apply( const any_image_view< Views >& views )
     {
         dynamic_io_fnobj< tiff_write_is_supported
-                        , parent_t
-                        > op( this );
+        , parent_t
+        > op( this );
 
         apply_operation( views, op );
     }

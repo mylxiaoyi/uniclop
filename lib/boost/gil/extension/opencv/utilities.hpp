@@ -11,10 +11,10 @@
 #define BOOST_GIL_EXTENSION_OPENCV_UTILITIES_HPP_INCLUDED
 
 ////////////////////////////////////////////////////////////////////////////////////////
-/// \file               
+/// \file
 /// \brief
 /// \author Christian Henning \n
-///         
+///
 /// \date 2008 \n
 ///
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -25,7 +25,12 @@
 
 #include <boost/gil/gil_all.hpp>
 
-namespace boost { namespace gil { namespace opencv {
+namespace boost
+{
+namespace gil
+{
+namespace opencv
+{
 
 typedef gil::point2<ptrdiff_t> point_t;
 typedef std::vector< point_t > curve_t;
@@ -37,41 +42,41 @@ typedef std::vector< cvpoint_array_t > cvpoint_array_vec_t;
 inline
 CvPoint make_cvPoint( point_t point )
 {
-   return cvPoint( point.x, point.y );
+    return cvPoint( point.x, point.y );
 }
 
 inline
 cvpoint_array_t make_cvPoint_array( const curve_t& curve )
 {
-   std::size_t curve_size = curve.size();
+    std::size_t curve_size = curve.size();
 
-   cvpoint_array_t cvpoint_array( new CvPoint[ curve.size() ] );
+    cvpoint_array_t cvpoint_array( new CvPoint[ curve.size() ] );
 
-   for( std::size_t i = 0; i < curve_size ; ++i )
-   {
-      cvpoint_array[i] = make_cvPoint( curve[i] );
-   }
+    for ( std::size_t i = 0; i < curve_size ; ++i )
+    {
+        cvpoint_array[i] = make_cvPoint( curve[i] );
+    }
 
-   return cvpoint_array;
+    return cvpoint_array;
 }
 
 inline
 CvSize make_cvSize( point_t point )
 {
-   return cvSize( point.x, point.y );
+    return cvSize( point.x, point.y );
 }
 
 template< class PIXEL >
 inline
 CvScalar make_cvScalar( const PIXEL& pixel )
 {
-   CvScalar s;
-   for( int i = 0; i < num_channels<PIXEL>::value; ++i )
-   {
-      s.val[i] = pixel[i];
-   }
+    CvScalar s;
+    for ( int i = 0; i < num_channels<PIXEL>::value; ++i )
+    {
+        s.val[i] = pixel[i];
+    }
 
-   return s;
+    return s;
 }
 
 } // namespace opencv

@@ -3,32 +3,36 @@
 
 void WriteKeypointsFl(std::string file_name, std::vector<KeypointFl> const& pts)
 {
-  FILE* file = fopen(file_name.c_str(), "w");
-  if (file) {
-    fprintf(file, "# %d points\n", pts.size());
-    
-    typedef std::vector<KeypointFl>::const_iterator iter;
-    for (iter i = pts.begin(); i != pts.end(); ++i) {
-      fprintf(file, "%f %f %f %f\n", i->x, i->y, i->scale, i->response);
+    FILE* file = fopen(file_name.c_str(), "w");
+    if (file)
+    {
+        fprintf(file, "# %d points\n", pts.size());
+
+        typedef std::vector<KeypointFl>::const_iterator iter;
+        for (iter i = pts.begin(); i != pts.end(); ++i)
+        {
+            fprintf(file, "%f %f %f %f\n", i->x, i->y, i->scale, i->response);
+        }
+        fclose(file);
     }
-    fclose(file);
-  }
 }
 
 std::vector<KeypointFl> ReadKeypointsFl(std::string file_name)
 {
-  std::vector<KeypointFl> pts;
-  FILE* file = fopen(file_name.c_str(), "r");
-  if (file) {
-    int num_pts;
-    fscanf(file, "# %d points\n", &num_pts);
-    pts.resize(num_pts);
-    for (int i = 0; i < num_pts; ++i) {
-      fscanf(file, "%f %f %f %f\n", &pts[i].x, &pts[i].y, &pts[i].scale, &pts[i].response);
+    std::vector<KeypointFl> pts;
+    FILE* file = fopen(file_name.c_str(), "r");
+    if (file)
+    {
+        int num_pts;
+        fscanf(file, "# %d points\n", &num_pts);
+        pts.resize(num_pts);
+        for (int i = 0; i < num_pts; ++i)
+        {
+            fscanf(file, "%f %f %f %f\n", &pts[i].x, &pts[i].y, &pts[i].scale, &pts[i].response);
+        }
     }
-  }
-  
-  return pts;
+
+    return pts;
 }
 
 //! Find the overlap error between two circles of radii r1 and r2 with
@@ -42,7 +46,7 @@ float OverlapError(float r1, float r2, float d)
     // Rename to larger radius (R) and smaller radius (r)
     float R = std::max(r1, r2);
     float r = std::min(r1, r2);
-    
+
     float RR = R*R;
     float rr = r*r;
     float dd = d*d;
@@ -70,7 +74,7 @@ float OverlapError(float r1, float r2, float d)
     float A1 = CircularSegmentArea(R, d1);
     float A2 = CircularSegmentArea(r, d2); // negative area in case (2)
     float A_intersect = A1 + A2;
-    
+
     if (A_intersect < 0) {
         // Here A_intersect is the negative area of the protruding circular cusp.
         // We add the area of the smaller circle to get the true intersection area.
@@ -80,10 +84,13 @@ float OverlapError(float r1, float r2, float d)
     float A1 = CircularSegmentArea(R, d1);
     float A2 = CircularSegmentArea(r, fabs(d2));
     float A_intersect;
-    if (d2 > 0) {
-      A_intersect = A1 + A2;
-    } else {
-      A_intersect = A_r - A2 + A1;
+    if (d2 > 0)
+    {
+        A_intersect = A1 + A2;
+    }
+    else
+    {
+        A_intersect = A_r - A2 + A1;
     }
     float A_union = A_R + A_r - A_intersect;
 

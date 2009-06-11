@@ -35,34 +35,37 @@
 #include "typedefs.hpp"
 #include "gil_extensions.hpp"
 
-namespace boost { namespace gil {
+namespace boost
+{
+namespace gil
+{
 
 struct format_tag {};
 
-template< typename Property > 
+template< typename Property >
 struct property_base
 {
     typedef Property type;
 };
 
 template<typename FormatTag> struct is_format_tag : is_base_and_derived< format_tag
-                                                                       , FormatTag
-                                                                       > {};
+            , FormatTag
+            > {};
 
 struct image_read_settings_base
 {
 protected:
 
     image_read_settings_base()
-    : _top_left( 0, 0 )
-    , _dim     ( 0, 0 )
+            : _top_left( 0, 0 )
+            , _dim     ( 0, 0 )
     {}
 
     image_read_settings_base( const point_t& top_left
-                            , const point_t& dim
+                              , const point_t& dim
                             )
-    : _top_left( top_left )
-    , _dim     ( dim      )
+            : _top_left( top_left )
+            , _dim     ( dim      )
     {}
 
 public:
@@ -72,42 +75,55 @@ public:
 };
 
 /**
- * Boolean meta function, mpl::true_ if the pixel type \a PixelType is supported 
+ * Boolean meta function, mpl::true_ if the pixel type \a PixelType is supported
  * by the image format identified with \a FormatTag.
  * \todo the name is_supported is to generic, pick something more IO realted.
  */
-// Depending on image type the parameter Pixel can be a reference type 
+// Depending on image type the parameter Pixel can be a reference type
 // for bit_aligned images or a pixel for byte images.
 template< typename Pixel, typename FormatTag > struct is_read_supported {};
 template< typename Pixel, typename FormatTag > struct is_write_supported {};
 
 
-namespace detail {
+namespace detail
+{
 
-template< typename Property > 
+template< typename Property >
 struct property_base
 {
     typedef Property type;
 };
 
 
-inline 
+inline
 void io_error( const std::string& descr )
 {
-   throw std::ios_base::failure( descr );
+    throw std::ios_base::failure( descr );
 }
 
-inline 
+inline
 void io_error_if( bool expr, const std::string& descr )
 {
-   if( expr ) 
-      io_error( descr );
+    if ( expr )
+        io_error( descr );
 }
 
-struct read_support_true  { BOOST_STATIC_CONSTANT( bool, is_supported = true );  };
-struct read_support_false { BOOST_STATIC_CONSTANT( bool, is_supported = false ); };
-struct write_support_true { BOOST_STATIC_CONSTANT( bool, is_supported = true );  };
-struct write_support_false{ BOOST_STATIC_CONSTANT( bool, is_supported = false ); };
+struct read_support_true
+{
+    BOOST_STATIC_CONSTANT( bool, is_supported = true );
+};
+struct read_support_false
+{
+    BOOST_STATIC_CONSTANT( bool, is_supported = false );
+};
+struct write_support_true
+{
+    BOOST_STATIC_CONSTANT( bool, is_supported = true );
+};
+struct write_support_false
+{
+    BOOST_STATIC_CONSTANT( bool, is_supported = false );
+};
 
 class no_log {};
 

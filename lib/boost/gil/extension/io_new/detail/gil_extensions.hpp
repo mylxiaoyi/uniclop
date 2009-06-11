@@ -25,25 +25,28 @@
 
 #include "dynamic_io_new.hpp"
 
-namespace boost { namespace gil {
+namespace boost
+{
+namespace gil
+{
 
 /// is_bit_aligned metafunctions
 /// \brief Determines whether the given type is bit_aligned.
 
 template< typename PixelRef >
-struct is_bit_aligned : mpl::false_{};
+struct is_bit_aligned : mpl::false_ {};
 
-template <typename B, typename C, typename L, bool M>  
-struct is_bit_aligned<bit_aligned_pixel_reference<B,C,L,M> > : mpl::true_{};
+template <typename B, typename C, typename L, bool M>
+struct is_bit_aligned<bit_aligned_pixel_reference<B,C,L,M> > : mpl::true_ {};
 
-template <typename B, typename C, typename L, bool M>  
-struct is_bit_aligned<const bit_aligned_pixel_reference<B,C,L,M> > : mpl::true_{};
+template <typename B, typename C, typename L, bool M>
+struct is_bit_aligned<const bit_aligned_pixel_reference<B,C,L,M> > : mpl::true_ {};
 
-template <typename B, typename C, typename L>  
-struct is_bit_aligned<packed_pixel<B,C,L> > : mpl::true_{};
+template <typename B, typename C, typename L>
+struct is_bit_aligned<packed_pixel<B,C,L> > : mpl::true_ {};
 
-template <typename B, typename C, typename L>  
-struct is_bit_aligned<const packed_pixel<B,C,L> > : mpl::true_{};
+template <typename B, typename C, typename L>
+struct is_bit_aligned<const packed_pixel<B,C,L> > : mpl::true_ {};
 
 
 /// is_similar metafunctions
@@ -57,8 +60,8 @@ struct is_similar< A, A > : mpl::true_ {};
 
 template<typename B,int I, int S, bool M, int I2>
 struct is_similar< packed_channel_reference< B,  I, S, M >
-                 , packed_channel_reference< B, I2, S, M >
-                 > : mpl::true_ {};
+            , packed_channel_reference< B, I2, S, M >
+            > : mpl::true_ {};
 
 /// is_homogeneous metafunctions
 /// \brief Determines if a pixel types are homogeneous.
@@ -66,12 +69,12 @@ struct is_similar< packed_channel_reference< B,  I, S, M >
 template<typename C,typename CMP, int Next, int Last> struct is_homogeneous_impl;
 
 template<typename C,typename CMP, int Last>
-struct is_homogeneous_impl<C,CMP,Last,Last> : mpl::true_{};
+struct is_homogeneous_impl<C,CMP,Last,Last> : mpl::true_ {};
 
 template<typename C,typename CMP, int Next, int Last>
 struct is_homogeneous_impl : mpl::and_< is_homogeneous_impl< C, CMP,Next + 1, Last >
-                                      , is_same< CMP, typename mpl::at_c<C,Next>::type
-                                      > > {};
+            , is_same< CMP, typename mpl::at_c<C,Next>::type
+            > > {};
 
 template < typename P > struct is_homogeneous : mpl::false_ {};
 
@@ -92,34 +95,34 @@ struct is_homogeneous_impl_p {};
 
 // for packed_pixel
 template <typename B, typename C, typename L >
-struct is_homogeneous<packed_pixel< B, C, L > > 
-	: is_homogeneous_impl_p< C 
-                           , typename mpl::at_c< C, 0 >::type
-                           , 1
-                           , mpl::size< C >::type::value
-                           > {};
+struct is_homogeneous<packed_pixel< B, C, L > >
+            : is_homogeneous_impl_p< C
+            , typename mpl::at_c< C, 0 >::type
+            , 1
+            , mpl::size< C >::type::value
+            > {};
 
 template< typename B
-        , typename C
-        , typename L
-        >  
-struct is_homogeneous< const packed_pixel< B, C, L > > 
-	: is_homogeneous_impl_p< C
-	                       , typename mpl::at_c<C,0>::type
-	                       , 1
-	                       , mpl::size< C >::type::value
-	                       > {};
+, typename C
+, typename L
+>
+struct is_homogeneous< const packed_pixel< B, C, L > >
+            : is_homogeneous_impl_p< C
+            , typename mpl::at_c<C,0>::type
+            , 1
+            , mpl::size< C >::type::value
+            > {};
 
 // for bit_aligned_pixel_reference
-template <typename B, typename C, typename L, bool M>  
-struct is_homogeneous<bit_aligned_pixel_reference<B,C,L,M> > 
-	: is_homogeneous_impl<C,typename mpl::at_c<C,0>::type,1,mpl::size<C>::type::value>
-{};
+template <typename B, typename C, typename L, bool M>
+struct is_homogeneous<bit_aligned_pixel_reference<B,C,L,M> >
+            : is_homogeneous_impl<C,typename mpl::at_c<C,0>::type,1,mpl::size<C>::type::value>
+    {};
 
-template <typename B, typename C, typename L, bool M>  
-struct is_homogeneous<const bit_aligned_pixel_reference<B,C,L,M> > 
-	: is_homogeneous_impl<C,typename mpl::at_c<C,0>::type,1,mpl::size<C>::type::value>
-{};
+template <typename B, typename C, typename L, bool M>
+struct is_homogeneous<const bit_aligned_pixel_reference<B,C,L,M> >
+            : is_homogeneous_impl<C,typename mpl::at_c<C,0>::type,1,mpl::size<C>::type::value>
+    {};
 
 //////////////////////
 /// other goodies
@@ -144,72 +147,72 @@ struct get_num_bits< const packed_channel_reference< B, I, S, M > >
 
 
 /// channel_type metafunction
-/// \brief Generates the channel type for 
+/// \brief Generates the channel type for
 
 
-template <typename B, typename C, typename L, bool M>  
+template <typename B, typename C, typename L, bool M>
 struct gen_chan_ref
 {
-	typedef packed_dynamic_channel_reference< B
-	                                        , mpl::at_c< C, 0 >::type::value
-	                                        , M
-	                                        > type;
+    typedef packed_dynamic_channel_reference< B
+    , mpl::at_c< C, 0 >::type::value
+    , M
+    > type;
 };
 
 
-//! This implementation works for bit_algined_pixel_reference 
-//! with a homegeneous channel layout. 
-//! The result type will be a packed_dynamic_channel_reference, since the 
-//! offset info will be missing. 
+//! This implementation works for bit_algined_pixel_reference
+//! with a homegeneous channel layout.
+//! The result type will be a packed_dynamic_channel_reference, since the
+//! offset info will be missing.
 
 // bit_aligned_pixel_reference
-template <typename B, typename C, typename L, bool M>  
-struct channel_type< bit_aligned_pixel_reference<B,C,L,M> > 
-	: lazy_enable_if< is_homogeneous< bit_aligned_pixel_reference< B, C, L, M > >
-                    , gen_chan_ref< B, C, L, M >
-		            > {};
+template <typename B, typename C, typename L, bool M>
+struct channel_type< bit_aligned_pixel_reference<B,C,L,M> >
+            : lazy_enable_if< is_homogeneous< bit_aligned_pixel_reference< B, C, L, M > >
+            , gen_chan_ref< B, C, L, M >
+            > {};
 
-template <typename B, typename C, typename L, bool M>  
-struct channel_type<const bit_aligned_pixel_reference<B,C,L,M> > 
-	: lazy_enable_if< is_homogeneous< bit_aligned_pixel_reference< B, C, L, M > >
-	                , gen_chan_ref< B, C, L, M >
-		            > {};
+template <typename B, typename C, typename L, bool M>
+struct channel_type<const bit_aligned_pixel_reference<B,C,L,M> >
+            : lazy_enable_if< is_homogeneous< bit_aligned_pixel_reference< B, C, L, M > >
+            , gen_chan_ref< B, C, L, M >
+            > {};
 
-template <typename B, typename C, typename L>  
+template <typename B, typename C, typename L>
 struct gen_chan_ref_p
 {
-	typedef packed_dynamic_channel_reference< B
-	                                        , get_num_bits< typename mpl::at_c<C,0>::type>::value
-	                                        , true
-	                                        > type;
+    typedef packed_dynamic_channel_reference< B
+    , get_num_bits< typename mpl::at_c<C,0>::type>::value
+    , true
+    > type;
 };
 
 // packed_pixel
 template < typename BitField
-         , typename ChannelRefVec
-         , typename Layout
-         >
+, typename ChannelRefVec
+, typename Layout
+>
 struct channel_type< packed_pixel< BitField
-                                 , ChannelRefVec
-                                 , Layout
-                                 >
-                   > : lazy_enable_if< is_homogeneous< packed_pixel< BitField
-                                                                   , ChannelRefVec
-                                                                   , Layout
-                                                                   >
-                                                     >
-                                     , gen_chan_ref_p< BitField
-                                                     , ChannelRefVec
-                                                     , Layout
-                                                     >
-		                             > {};
+            , ChannelRefVec
+            , Layout
+            >
+            > : lazy_enable_if< is_homogeneous< packed_pixel< BitField
+            , ChannelRefVec
+            , Layout
+            >
+            >
+            , gen_chan_ref_p< BitField
+            , ChannelRefVec
+            , Layout
+            >
+            > {};
 
-template <typename B, typename C, typename L>  
-struct channel_type< const packed_pixel< B, C, L > > 
-	: lazy_enable_if< is_homogeneous<packed_pixel< B, C, L > >
-	                , gen_chan_ref_p< B, C, L >
-		            >
-{};
+template <typename B, typename C, typename L>
+struct channel_type< const packed_pixel< B, C, L > >
+            : lazy_enable_if< is_homogeneous<packed_pixel< B, C, L > >
+            , gen_chan_ref_p< B, C, L >
+            >
+    {};
 
 template<>
 struct channel_type< any_image_pixel_t >
@@ -224,14 +227,14 @@ struct color_space_type< any_image_pixel_t >
 };
 
 /// get_pixel_type metafunction
-/// \brief Depending on Image this function generates either 
+/// \brief Depending on Image this function generates either
 ///        the pixel type or the reference type in case
 ///        the image is bit_aligned.
 template< typename View >
 struct get_pixel_type : mpl::if_< typename is_bit_aligned< typename View::value_type >::type
-                                , typename View::reference
-                                , typename View::value_type
-                                > {};
+            , typename View::reference
+            , typename View::value_type
+            > {};
 
 template< typename ImageViewTypes >
 struct get_pixel_type< any_image_view< ImageViewTypes > >
@@ -239,7 +242,8 @@ struct get_pixel_type< any_image_view< ImageViewTypes > >
     typedef any_image_pixel_t type;
 };
 
-namespace detail {
+namespace detail
+{
 
 /// - performance specialization double
 /// - to eliminate compiler warning 4244
@@ -247,11 +251,11 @@ template <typename GrayChannelValue>
 struct rgb_to_luminance_fn< double, double, double, GrayChannelValue >
 {
     GrayChannelValue operator()( const double& red
-                               , const double& green
-                               , const double& blue    ) const
-   {
-      return channel_convert<GrayChannelValue>( red * 0.30 + green * 0.59 + blue * 0.11 );
-   }
+                                 , const double& green
+                                 , const double& blue    ) const
+    {
+        return channel_convert<GrayChannelValue>( red * 0.30 + green * 0.59 + blue * 0.11 );
+    }
 };
 
 } // namespace detail

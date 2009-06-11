@@ -21,129 +21,136 @@
 #include "user_events.hpp"
 #include "message_queue.h"
 
-namespace boost { namespace gil { namespace sdl { 
+namespace boost
+{
+namespace gil
+{
+namespace sdl
+{
 
 typedef detail::sdl_event_base sdl_event_t;
 
 // active object for displaying images
 
 template < typename KEYBOARD_EVENTS = detail::default_keyboard_event_handler
-         , typename REDRAW_EVENT    = detail::default_redraw_event_handler
-         , typename TIMER_EVENT     = detail::default_timer_event_handler
-         , typename QUIT_EVENT      = detail::default_quit_event_handler
-         >
+, typename REDRAW_EVENT    = detail::default_redraw_event_handler
+, typename TIMER_EVENT     = detail::default_timer_event_handler
+, typename QUIT_EVENT      = detail::default_quit_event_handler
+>
 class sdl_window : virtual public sdl_window_base
-                 , public detail::sdl_timer_base< TIMER_EVENT
-                                                , REDRAW_EVENT >
-                 , public KEYBOARD_EVENTS
-                 , public QUIT_EVENT
+            , public detail::sdl_timer_base< TIMER_EVENT
+            , REDRAW_EVENT >
+            , public KEYBOARD_EVENTS
+            , public QUIT_EVENT
 {
-   typedef shared_ptr<REDRAW_EVENT> redraw_handler_t;
+    typedef shared_ptr<REDRAW_EVENT> redraw_handler_t;
 
 public:
 
-   sdl_window( int width
-             , int height
-             , redraw_handler_t rh = redraw_handler_t( new REDRAW_EVENT() ))
-   : sdl_window_base( width
-                    , height )
-   , detail::sdl_timer_base< TIMER_EVENT
-                           , REDRAW_EVENT>( width
-                                          , height
-                                          , rh     )
+    sdl_window( int width
+                , int height
+                , redraw_handler_t rh = redraw_handler_t( new REDRAW_EVENT() ))
+            : sdl_window_base( width
+                               , height )
+            , detail::sdl_timer_base< TIMER_EVENT
+            , REDRAW_EVENT>( width
+                             , height
+                             , rh     )
 
-   , _redraw_handler( rh )
-   , _cancel( false )
-   {
-      _thread.reset( new boost::thread( boost::bind( &boost::gil::sdl::sdl_window< KEYBOARD_EVENTS
-                                                                                 , REDRAW_EVENT
-                                                                                 , TIMER_EVENT 
-                                                                                 , QUIT_EVENT >::_run
-                                                   , this )));
-   }
+            , _redraw_handler( rh )
+            , _cancel( false )
+    {
+        _thread.reset( new boost::thread( boost::bind( &boost::gil::sdl::sdl_window< KEYBOARD_EVENTS
+                                          , REDRAW_EVENT
+                                          , TIMER_EVENT
+                                          , QUIT_EVENT >::_run
+                                          , this )));
+    }
 
-   ~sdl_window()
-   {
-      cancel();
-      _thread->join();
-   }
+    ~sdl_window()
+    {
+        cancel();
+        _thread->join();
+    }
 
-   void cancel()
-   {
-      boost::mutex::scoped_lock oLock( _sentinel );
+    void cancel()
+    {
+        boost::mutex::scoped_lock oLock( _sentinel );
 
-      _cancel = true;
-      std::cout << "cancel is true." << std::endl;
-   }
+        _cancel = true;
+        std::cout << "cancel is true." << std::endl;
+    }
 
 private:
 
-   void _run()
-   {
-      boost::shared_ptr< sdl_event_t > e;
+    void _run()
+    {
+        boost::shared_ptr< sdl_event_t > e;
 
-      while( _cancel == false )
-      {
-         if( get_queue() )
-         {
-            std::cout << "before get event." << std::endl;
-            get_queue()->dequeue( e );
-            std::cout << "after get event." << std::endl;
-
-            switch( e->type() )
+        while ( _cancel == false )
+        {
+            if ( get_queue() )
             {
-               case detail::redraw_event::type:
-               {
-                  lock();
+                std::cout << "before get event." << std::endl;
+                get_queue()->dequeue( e );
+                std::cout << "after get event." << std::endl;
 
-                  _redraw_handler->redraw( wrap_sdl_image( _screen ));
+                switch ( e->type() )
+                {
+                case detail::redraw_event::type:
+                {
+                    lock();
 
-                  unlock();
+                    _redraw_handler->redraw( wrap_sdl_image( _screen ));
 
-                  break;
-               }
+                    unlock();
 
-               case detail::key_up_event::type:
-               {
-                  lock();
+                    break;
+                }
 
-                  if( key_up() == true )
-                  {
-                     _redraw_handler->redraw( wrap_sdl_image( _screen ));
-                  }
+                case detail::key_up_event::type:
+                {
+                    lock();
 
-                  unlock();
+                    if ( key_up() == true )
+                    {
+                        _redraw_handler->redraw( wrap_sdl_image( _screen ));
+                    }
 
-                  break;
-               }
+                    unlock();
 
-               case detail::quit_event::type:
-               {
-                  std::cout << "received quit event." << std::endl;
+                    break;
+                }
 
-                  quit();
-               }
+                case detail::quit_event::type:
+                {
+                    std::cout << "received quit event." << std::endl;
+
+                    quit();
+                }
+                }
             }
-         }
-      }
+        }
 
 
-      std::cout << "thread main is done." << std::endl;
-   }
+        std::cout << "thread main is done." << std::endl;
+    }
 
 private:
 
-   typedef boost::scoped_ptr<boost::thread> thread_t;
-   thread_t _thread;
+    typedef boost::scoped_ptr<boost::thread> thread_t;
+    thread_t _thread;
 
-   mutable boost::mutex _sentinel;
+    mutable boost::mutex _sentinel;
 
-   redraw_handler_t _redraw_handler;
+    redraw_handler_t _redraw_handler;
 
-   bool _cancel;
+    bool _cancel;
 };
 
 
-} } } // namespace boost::gil::sdl
+}
+}
+} // namespace boost::gil::sdl
 
 #endif // SDL_WINDOW_HPP

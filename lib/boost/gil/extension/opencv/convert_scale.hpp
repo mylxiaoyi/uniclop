@@ -11,10 +11,10 @@
 #define BOOST_GIL_EXTENSION_OPENCV_CONVERT_SCALE_HPP_INCLUDED
 
 ////////////////////////////////////////////////////////////////////////////////////////
-/// \file               
+/// \file
 /// \brief
 /// \author Christian Henning \n
-///         
+///
 /// \date 2008 \n
 ///
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -26,100 +26,105 @@
 
 #include "ipl_image_wrapper.hpp"
 
-namespace boost { namespace gil { namespace opencv {
+namespace boost
+{
+namespace gil
+{
+namespace opencv
+{
 
 inline
 void convert_scale_( const ipl_image_wrapper& src
-                   , ipl_image_wrapper&        dst
-                   , const double&             scale = 1.0
-                   , const double&             shift = 0.0
+                     , ipl_image_wrapper&        dst
+                     , const double&             scale = 1.0
+                                                         , const double&             shift = 0.0
                    )
 {
-   cvConvertScale( src.get()
-                 , dst.get()
-                 , scale
-                 , shift
-                 );
+    cvConvertScale( src.get()
+                    , dst.get()
+                    , scale
+                    , shift
+                  );
 }
 
 template< typename View_Src
-        , typename View_Dst
-        >
+, typename View_Dst
+>
 inline
 void convert_scale( View_Src&     src
-                  , View_Dst&     dst
-                  , const double& scale = 1.0
-                  , const double& shift = 0.0
+                    , View_Dst&     dst
+                    , const double& scale = 1.0
+                                            , const double& shift = 0.0
                   )
 {
-/*
-    // color spaces must be equal
-    BOOST_STATIC_ASSERT(( boost::is_same< typename color_space_type< View_Src >::type
-                                        , typename color_space_type< View_Dst >::type
-                                        >::type::value
-                       ));
+    /*
+        // color spaces must be equal
+        BOOST_STATIC_ASSERT(( boost::is_same< typename color_space_type< View_Src >::type
+                                            , typename color_space_type< View_Dst >::type
+                                            >::type::value
+                           ));
 
-    // destination image should have 8 bit unsigned channels
-    BOOST_STATIC_ASSERT(( boost::is_same< bits8
-                                        , typename channel_type< View_Dst >::type
-                                        >::type::value
-                       ));
-*/
+        // destination image should have 8 bit unsigned channels
+        BOOST_STATIC_ASSERT(( boost::is_same< bits8
+                                            , typename channel_type< View_Dst >::type
+                                            >::type::value
+                           ));
+    */
 
     ipl_image_wrapper src_ipl = create_ipl_image( src );
     ipl_image_wrapper dst_ipl = create_ipl_image( dst );
 
     convert_scale_( src_ipl
-                  , dst_ipl
-                  , scale
-                  , shift
+                    , dst_ipl
+                    , scale
+                    , shift
                   );
 }
 
 
 inline
 void convert_scale_abs_( const ipl_image_wrapper& src
-                      , ipl_image_wrapper&        dst
-                      , const double&             scale = 1.0
-                      , const double&             shift = 0.0
-                      )
+                         , ipl_image_wrapper&        dst
+                         , const double&             scale = 1.0
+                                                             , const double&             shift = 0.0
+                       )
 {
-   cvConvertScaleAbs( src.get()
-                    , dst.get()
-                    , scale
-                    , shift
-                    );
+    cvConvertScaleAbs( src.get()
+                       , dst.get()
+                       , scale
+                       , shift
+                     );
 }
 
 template< typename View_Src
-        , typename View_Dst
-        >
+, typename View_Dst
+>
 inline
 void convert_scale_abs( View_Src&     src
-                      , View_Dst&     dst
-                      , const double& scale = 1.0
-                      , const double& shift = 0.0
+                        , View_Dst&     dst
+                        , const double& scale = 1.0
+                                                , const double& shift = 0.0
                       )
 {
     // color spaces must be equal
     BOOST_STATIC_ASSERT(( boost::is_same< typename color_space_type< View_Src >::type
-                                        , typename color_space_type< View_Dst >::type
-                                        >::type::value
-                       ));
+                          , typename color_space_type< View_Dst >::type
+                          >::type::value
+                        ));
 
     // destination image should have 8 bit unsigned channels
     BOOST_STATIC_ASSERT(( boost::is_same< bits8
-                                        , typename channel_type< View_Dst >::type
-                                        >::type::value
-                       ));
+                          , typename channel_type< View_Dst >::type
+                          >::type::value
+                        ));
 
     ipl_image_wrapper src_ipl = create_ipl_image( src );
     ipl_image_wrapper dst_ipl = create_ipl_image( dst );
 
     convert_scale_abs_( src_ipl
-                      , dst_ipl
-                      , scale
-                      , shift
+                        , dst_ipl
+                        , scale
+                        , shift
                       );
 }
 

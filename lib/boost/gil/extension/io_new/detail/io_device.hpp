@@ -26,7 +26,12 @@
 #include <boost/utility/enable_if.hpp>
 #include "base.hpp"
 
-namespace boost { namespace gil { namespace detail {
+namespace boost
+{
+namespace gil
+{
+namespace detail
+{
 
 template < typename T > struct buff_item
 {
@@ -41,11 +46,11 @@ template <> struct buff_item< void >
 
 /*!
  * Implements the IODevice concept c.f. to \ref IODevice required by Image libraries like
- * libjpeg and libpng. 
+ * libjpeg and libpng.
  *
- * \todo switch to a sane interface as soon as there is 
+ * \todo switch to a sane interface as soon as there is
  * something good in boost. I.E. the IOChains library
- * would fit very well here. 
+ * would fit very well here.
  *
  * This implementation is based on FILE*.
  */
@@ -54,34 +59,34 @@ class file_stream_device
 {
 public:
 
-   typedef FormatTag _tag_t;
+    typedef FormatTag _tag_t;
 
 public:
     struct read_tag {};
     struct write_tag {};
 
     file_stream_device( std::string const& file_name, read_tag )
-        : file(0),_close(true)
+            : file(0),_close(true)
     {
         io_error_if( ( file = fopen( file_name.c_str(), "rb" )) == NULL
-                , "file_stream_device: failed to open file" );
+                     , "file_stream_device: failed to open file" );
     }
 
     file_stream_device( std::string const& file_name, write_tag )
-        : file(0),_close(true)
+            : file(0),_close(true)
     {
         io_error_if( ( file = fopen( file_name.c_str(), "wb" )) == NULL
-                , "file_stream_device: failed to open file" );
+                     , "file_stream_device: failed to open file" );
     }
 
     file_stream_device( FILE * filep)
-        : file(filep),_close(false)
+            : file(filep),_close(false)
     {
     }
 
     ~file_stream_device()
     {
-        if(_close)
+        if (_close)
             fclose(file);
     }
 
@@ -94,25 +99,25 @@ public:
     {
         int ch;
 
-        if(( ch = std::getc( file )) == EOF )
+        if (( ch = std::getc( file )) == EOF )
             io_error( "file_stream_device: unexpected EOF" );
 
         return ( char ) ch;
     }
 
     std::size_t read( byte_t*     data
-                    , std::size_t count )
+                      , std::size_t count )
     {
         return fread( data, 1, static_cast<int>( count ), file );
     }
 
     /// Reads array
     template< typename T
-            , int      N
-            >
+    , int      N
+    >
     size_t read( T (&buf)[N] )
     {
-	    return read( buf, N );
+        return read( buf, N );
     }
 
     /// Reads byte
@@ -151,8 +156,8 @@ public:
 
     /// Writes array
     template < typename T
-             , size_t   N
-             >
+    , size_t   N
+    >
     size_t write( const T (&buf)[N] ) throw()
     {
         return write( buf, N );
@@ -161,32 +166,32 @@ public:
     /// Writes byte
     void write_int8( uint8_t x ) throw()
     {
-	    byte_t m[1] = { x };
-	    write(m);
+        byte_t m[1] = { x };
+        write(m);
     }
 
     /// Writes 16 bit little endian integer
     void write_int16( uint16_t x ) throw()
     {
-	    byte_t m[2];
+        byte_t m[2];
 
-	    m[0] = byte_t( x >> 0 );
-	    m[1] = byte_t( x >> 8 );
+        m[0] = byte_t( x >> 0 );
+        m[1] = byte_t( x >> 8 );
 
-	    write( m );
+        write( m );
     }
 
     /// Writes 32 bit little endian integer
     void write_int32( uint32_t x ) throw()
     {
-	    byte_t m[4];
+        byte_t m[4];
 
-	    m[0] = byte_t( x >>  0 );
-	    m[1] = byte_t( x >>  8 );
-	    m[2] = byte_t( x >> 16 );
-	    m[3] = byte_t( x >> 24 );
+        m[0] = byte_t( x >>  0 );
+        m[1] = byte_t( x >>  8 );
+        m[2] = byte_t( x >> 16 );
+        m[3] = byte_t( x >> 24 );
 
-	    write( m );
+        write( m );
     }
 
 
@@ -227,8 +232,8 @@ template< typename FormatTag >
 class istream_device
 {
 public:
-   istream_device( std::istream& in )
-   : _in( in ) {}
+    istream_device( std::istream& in )
+            : _in( in ) {}
 
     int getc_unchecked()
     {
@@ -239,14 +244,14 @@ public:
     {
         int ch;
 
-        if(( ch = _in.get() ) == EOF )
+        if (( ch = _in.get() ) == EOF )
             io_error( "file_stream_device: unexpected EOF" );
 
         return ( char ) ch;
     }
 
     std::size_t read( byte_t*     data
-                    , std::size_t count )
+                      , std::size_t count )
     {
         std::streamsize cr = 0;
 
@@ -254,24 +259,25 @@ public:
         {
             _in.peek();
             std::streamsize c = _in.readsome( reinterpret_cast< char* >( data )
-                                            , static_cast< std::streamsize >( count ));
+                                              , static_cast< std::streamsize >( count ));
 
             count -= c;
             data += c;
             cr += c;
 
-        } while( count && _in );
+        }
+        while ( count && _in );
 
         return static_cast< std::size_t >( cr );
     }
 
     /// Reads array
     template< typename T
-            , int      N
-            >
+    , int      N
+    >
     size_t read( T (&buf)[N] )
     {
-	    return read( buf, N );
+        return read( buf, N );
     }
 
     /// Reads byte
@@ -304,14 +310,14 @@ public:
     void seek( long count, int whence = SEEK_SET )
     {
         _in.seekg( count
-                 , whence == SEEK_SET ? std::ios::beg
-                                      :( whence == SEEK_CUR ? std::ios::cur
-                                                            : std::ios::end )
+                   , whence == SEEK_SET ? std::ios::beg
+                   :( whence == SEEK_CUR ? std::ios::cur
+                      : std::ios::end )
                  );
     }
 
     void write( const byte_t* data
-              , std::size_t   count )
+                , std::size_t   count )
     {
         io_error( "Bad io error." );
     }
@@ -331,12 +337,12 @@ class ostream_device
 {
 public:
     ostream_device( std::ostream & out )
-        : _out( out )
+            : _out( out )
     {
     }
 
     size_t read( byte_t*     data
-               , std::size_t count )
+                 , std::size_t count )
     {
         io_error( "Bad io error." );
     }
@@ -344,7 +350,7 @@ public:
     void seek( long count, int whence )
     {
         _out.seekp( count
-                  , whence == SEEK_SET
+                    , whence == SEEK_SET
                     ? std::ios::beg
                     : ( whence == SEEK_CUR
                         ?std::ios::cur
@@ -353,17 +359,17 @@ public:
     }
 
     void write( const byte_t* data
-              , std::size_t   count )
+                , std::size_t   count )
     {
         _out.write( reinterpret_cast<char const*>( data )
-                 , static_cast<std::streamsize>( count )
-                 );
+                    , static_cast<std::streamsize>( count )
+                  );
     }
 
     /// Writes array
     template < typename T
-             , size_t   N
-             >
+    , size_t   N
+    >
     void write( const T (&buf)[N] ) throw()
     {
         write( buf, N );
@@ -372,32 +378,32 @@ public:
     /// Writes byte
     void write_int8( uint8_t x ) throw()
     {
-	    byte_t m[1] = { x };
-	    write(m);
+        byte_t m[1] = { x };
+        write(m);
     }
 
     /// Writes 16 bit little endian integer
     void write_int16( uint16_t x ) throw()
     {
-	    byte_t m[2];
+        byte_t m[2];
 
-	    m[0] = byte_t( x >> 0 );
-	    m[1] = byte_t( x >> 8 );
+        m[0] = byte_t( x >> 0 );
+        m[1] = byte_t( x >> 8 );
 
-	    write( m );
+        write( m );
     }
 
     /// Writes 32 bit little endian integer
     void write_int32( uint32_t x ) throw()
     {
-	    byte_t m[4];
+        byte_t m[4];
 
-	    m[0] = byte_t( x >>  0 );
-	    m[1] = byte_t( x >>  8 );
-	    m[2] = byte_t( x >> 16 );
-	    m[3] = byte_t( x >> 24 );
+        m[0] = byte_t( x >>  0 );
+        m[1] = byte_t( x >>  8 );
+        m[2] = byte_t( x >> 16 );
+        m[3] = byte_t( x >> 24 );
 
-	    write( m );
+        write( m );
     }
 
     void flush()
@@ -420,39 +426,39 @@ private:
 
 
 /**
- * Metafunction to detect input devices. 
+ * Metafunction to detect input devices.
  * Should be replaced by an external facility in the future.
  */
-template< typename IODevice  > struct is_input_device : mpl::false_{};
-template< typename FormatTag > struct is_input_device< file_stream_device< FormatTag > > : mpl::true_{};
-template< typename FormatTag > struct is_input_device<     istream_device< FormatTag > > : mpl::true_{};
+template< typename IODevice  > struct is_input_device : mpl::false_ {};
+template< typename FormatTag > struct is_input_device< file_stream_device< FormatTag > > : mpl::true_ {};
+template< typename FormatTag > struct is_input_device<     istream_device< FormatTag > > : mpl::true_ {};
 
 template< typename FormatTag
-        , typename T
-        , typename D = void
-        >
-struct is_adaptable_input_device : mpl::false_{};
+, typename T
+, typename D = void
+>
+struct is_adaptable_input_device : mpl::false_ {};
 
 template< typename FormatTag
-        , typename T
-        >
+, typename T
+>
 struct is_adaptable_input_device< FormatTag
-                                , T
-                                , typename enable_if< is_base_and_derived< std::istream
-                                                                         , T
-                                                                         >
-                                                    >::type
-                                > : mpl::true_
+            , T
+            , typename enable_if< is_base_and_derived< std::istream
+            , T
+            >
+            >::type
+            > : mpl::true_
 {
     typedef istream_device< FormatTag > device_type;
 };
 
 template< typename FormatTag >
 struct is_adaptable_input_device< FormatTag
-                                , FILE*
-                                , void
-                                >
-    : mpl::true_
+            , FILE*
+            , void
+            >
+            : mpl::true_
 {
     typedef file_stream_device< FormatTag > device_type;
 };
@@ -460,35 +466,35 @@ struct is_adaptable_input_device< FormatTag
 
 
 /**
- * Metafunction to detect output devices. 
+ * Metafunction to detect output devices.
  * Should be replaced by an external facility in the future.
  */
-template<typename IODevice> struct is_output_device : mpl::false_{};
+template<typename IODevice> struct is_output_device : mpl::false_ {};
 
-template< typename FormatTag > struct is_output_device< file_stream_device< FormatTag > > : mpl::true_{};
-template< typename FormatTag > struct is_output_device< ostream_device    < FormatTag > > : mpl::true_{};
+template< typename FormatTag > struct is_output_device< file_stream_device< FormatTag > > : mpl::true_ {};
+template< typename FormatTag > struct is_output_device< ostream_device    < FormatTag > > : mpl::true_ {};
 
 template< typename FormatTag
-        , typename IODevice
-        , typename D = void
-        >
+, typename IODevice
+, typename D = void
+>
 struct is_adaptable_output_device : mpl::false_ {};
 
 template< typename FormatTag
-        , typename T
-        > struct is_adaptable_output_device< FormatTag
-                                           , T
-                                           , typename enable_if< is_base_and_derived< std::ostream
-                                                                                    , T
-                                                                                    >
-                                                               >::type
-        > : mpl::true_
+, typename T
+> struct is_adaptable_output_device< FormatTag
+            , T
+            , typename enable_if< is_base_and_derived< std::ostream
+            , T
+            >
+            >::type
+            > : mpl::true_
 {
     typedef ostream_device< FormatTag > device_type;
 };
 
 template<typename FormatTag> struct is_adaptable_output_device<FormatTag,FILE*,void>
-  : mpl::true_
+            : mpl::true_
 {
     typedef file_stream_device< FormatTag > device_type;
 };
