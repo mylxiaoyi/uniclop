@@ -9,7 +9,6 @@
     <Packages>
       <Packages>
         <Package file="/usr/lib/pkgconfig/gstreamer-0.10.pc" name="GStreamer" IsProject="false" />
-        <Package file="/usr/lib/pkgconfig/gtk+-2.0.pc" name="GTK+" IsProject="false" />
         <Package file="/usr/lib/pkgconfig/opencv.pc" name="OpenCV" IsProject="false" />
         <Package file="/usr/lib/pkgconfig/libavc1394.pc" name="libavc1394" IsProject="false" />
         <Package file="/usr/lib/pkgconfig/libavcodec.pc" name="libavcodec" IsProject="false" />
@@ -22,6 +21,8 @@
         <Package file="/usr/lib/pkgconfig/libavutil.pc" name="libavutil" IsProject="false" />
         <Package file="/usr/lib/pkgconfig/opencv.pc" name="OpenCV" IsProject="false" />
         <Package file="/home/rodrigob/work/eclipse_workspace/uniclop/uniclop_base.md.pc" name="uniclop_base" IsProject="true" />
+        <Package file="/usr/lib/pkgconfig/glib-2.0.pc" name="GLib" IsProject="false" />
+        <Package file="/usr/lib/pkgconfig/glibmm-2.4.pc" name="GLibmm" IsProject="false" />
       </Packages>
     </Packages>
     <Compiler>
@@ -49,6 +50,8 @@
         <Include>${CombineDir}/src</Include>
       </Includes>
     </Includes>
+    <WarningLevel>All</WarningLevel>
+    <WarningsAsErrors>true</WarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\Release</OutputPath>

@@ -12,6 +12,8 @@
 
 #include <boost/scoped_ptr.hpp>
 
+#include <gst/gst.h>
+
 
 namespace uniclop
 {
@@ -58,6 +60,9 @@ private:
 
     void init_gstreamer(const string &video_sink_name);
 
+    static void on_new_frame_callback(GstElement *element, GstBuffer * buffer, GstPad* pad, gpointer self_p);
+
+    void on_new_frame(GstElement *element, GstBuffer * buffer, GstPad* pad);
 };
 
 }

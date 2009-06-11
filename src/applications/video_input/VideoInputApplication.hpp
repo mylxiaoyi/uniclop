@@ -4,7 +4,7 @@
 
 #include "applications/AbstractApplication.hpp"
 
-#include <gst/gst.h>
+#include "devices/video/GstVideoInput.hpp"
 
 namespace uniclop
 {
@@ -15,12 +15,13 @@ namespace video_input
 
 namespace args = boost::program_options;
 using namespace std;
+using uniclop::devices::video::GstVideoInput;
+
 
 class VideoInputApplication : public AbstractApplication
 {
 
-
-    int width, height, depth;
+	boost::scoped_ptr<GstVideoInput> gst_video_input_p;	
 
 public:
     string get_application_title() const;
@@ -28,11 +29,7 @@ public:
     int main_loop(args::variables_map &options);
 
 private:
-    void init_video_input();
-
-    static void on_new_frame_callback(GstElement *element, GstBuffer * buffer, GstPad* pad, gpointer self_p);
-
-    void on_new_frame(GstElement *element, GstBuffer * buffer, GstPad* pad);
+    void init_video_input(args::variables_map &options);
 
 };
 
