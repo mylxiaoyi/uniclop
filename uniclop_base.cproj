@@ -59,12 +59,17 @@
   <ItemGroup>
     <Compile Include="src\applications\AbstractApplication.cpp" />
     <Compile Include="src\devices\video\ImagesInput.cpp" />
+    <Compile Include="src\algorithms\features\fast\fast.cpp" />
+    <Compile Include="src\algorithms\features\features_detection.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="src\applications\video_input\video_input.cpp" />
-    <None Include="src\applications\video_input\VideoInputApplication.cpp" />
-    <None Include="src\applications\video_input\VideoInputApplication.hpp" />
     <None Include="src\applications\AbstractApplication.hpp" />
     <None Include="src\devices\video\ImagesInput.hpp" />
+    <None Include="src\algorithms\features\fast\fast.hpp" />
+    <None Include="src\algorithms\features\features_detection.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="src\applications\video_input/" />
+    <Folder Include="src\algorithms\features\sift\jift/" />
   </ItemGroup>
 </Project>

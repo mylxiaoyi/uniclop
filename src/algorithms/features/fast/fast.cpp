@@ -31,11 +31,13 @@ void FAST::corner_detect(const gray8c_view_t& view, const int barrier, std::vect
 {
 	// This looks like generated code
 
-	// FIXME this code should work on a view ? but instead it works directly on the image
     const int xsize = view.dimensions()[0];
     const int ysize = view.dimensions()[1];
-    const byte* im = &view.begin()[0];
-
+    // FIXME why static_cast or dynamic_cast fails here ?
+     //const byte* im = static_cast<const byte *>(&view.begin()[0]);
+    //const byte* im = dynamic_cast<const byte *>(&view.begin()[0]);
+    const byte* im = (const byte *)(&view.begin()[0]);
+    
     corners.clear();
 
     FASTFeature success_xy; // helper variable
@@ -2721,19 +2723,19 @@ int corner_score(const byte*  imp, const int *pointer_dir, const int barrier, FA
 }
 
 
-
-
-void FAST::nonmax(const CImg<uint8_t>& image,  const int barrier, std::vector<FASTFeature>& corners,
+void FAST::nonmax(const gray8c_view_t& view,  const int barrier, std::vector<FASTFeature>& corners,
                   std::vector<FASTFeature>& nonmax_corners)
 // void fast_nonmax(const BasicImage<byte>& im, const vector<ImageRef>& corners, int barrier, vector<ReturnType>& nonmax_corners)
 //xy*  fast_nonmax(const byte* im, int xsize, int ysize, xy* corners, int numcorners, int barrier, int* numnx)
 {
-    if(image.dimz() != 1 && image.dimv() != 1)
-        throw runtime_error("Input image does not match the expected dimensions");
-
-    const int xsize = image.dimx();
-    const int ysize = image.dimy();
-    const byte* im = image.ptr();
+    
+    const int xsize = view.dimensions()[0];
+    const int ysize = view.dimensions()[1];
+      // FIXME why static_cast or dynamic_cast fails here ?
+     //const byte* im = static_cast<const byte *>(&view.begin()[0]);
+    //const byte* im = dynamic_cast<const byte *>(&view.begin()[0]);
+    const byte* im = (const byte *)(&view.begin()[0]);
+    
     const int numcorners = corners.size();
 
     nonmax_corners.clear();

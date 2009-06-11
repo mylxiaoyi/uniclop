@@ -1,0 +1,3 @@
+JIFT: Jun Liu implementation of SIFT
+
+http://www.cs.man.ac.uk/~liuja/

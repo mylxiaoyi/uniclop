@@ -7,7 +7,7 @@
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 // Headers
 
-#include "features_detection.hpp"
+#include "algorithms/features/features_detection.hpp"
 
 #include <boost/gil/gil_all.hpp>
 
@@ -43,7 +43,7 @@ using boost::gil::gray8c_view_t;
     @param corners	The resulting container of corner locations
     @param barrier	Corner detection threshold (20~30 is an usual value)
 **/
-void corner_detect(const gray8c_view_t& image, const int barrier, vector<FASTFeature>& corners);
+void corner_detect(const gray8c_view_t& view, const int barrier, vector<FASTFeature>& corners);
 
 /** Perform non-maximal suppression on a set of FAST features. This cleans up
 areas where there are multiple adjacent features, using a computed score
@@ -58,7 +58,7 @@ Will also fill the feature.circle_intensities vector (used to match or not two f
 @param  barrier The barrier used to calculate the score, which should be the same as that passed to fast_corner_detect()
 @param nonmax_corners Vector to be filled with the new list of non-maximally-suppressed corners
 */
-void nonmax(const gray8c_view_t& image,  const int barrier, const vector<FASTFeature>& corners, vector<FASTFeature>& nonmax_corners);
+void nonmax(const gray8c_view_t& view,  const int barrier, vector<FASTFeature>& corners, vector<FASTFeature>& nonmax_corners);
 
 /*
 Usage example:
