@@ -13,11 +13,10 @@ namespace args = boost::program_options;
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 // Headers
 
-// forward declaration to avoid including directly CImg.h
-namespace cimg_library
-{
-template<typename T> struct CImg;
-}
+
+// Cimg http://cimg.sf.net
+#include <CImg/CImg.h>
+using namespace cimg_library;
 
 struct CvCapture; // forward declaration to avoid including all of OpenCv
 

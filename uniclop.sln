@@ -5,6 +5,8 @@ Project("{2857B73E-F847-4B02-9238-064979017E93}") = "uniclop_base", "uniclop_bas
 EndProject
 Project("{2857B73E-F847-4B02-9238-064979017E93}") = "video_input", "src\applications\video_input\video_input.cproj", "{C35F52B7-2214-4A65-8129-390FE0248E49}"
 EndProject
+Project("{2857B73E-F847-4B02-9238-064979017E93}") = "features_detection", "src\applications\features_detection\features_detection.cproj", "{F0A9FE83-FD07-4492-AE8A-83840AD60032}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +21,10 @@ Global
 		{C35F52B7-2214-4A65-8129-390FE0248E49}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C35F52B7-2214-4A65-8129-390FE0248E49}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C35F52B7-2214-4A65-8129-390FE0248E49}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F0A9FE83-FD07-4492-AE8A-83840AD60032}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F0A9FE83-FD07-4492-AE8A-83840AD60032}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F0A9FE83-FD07-4492-AE8A-83840AD60032}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F0A9FE83-FD07-4492-AE8A-83840AD60032}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		name = uniclop

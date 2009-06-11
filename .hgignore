@@ -1,3 +1,4 @@
 .waf*
 Debug/*
 output/*
+.o

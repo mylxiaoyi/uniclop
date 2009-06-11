@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{C35F52B7-2214-4A65-8129-390FE0248E49}</ProjectGuid>
+    <Packages>
+      <Packages>
+        <Package file="/usr/lib/pkgconfig/gstreamer-0.10.pc" name="GStreamer" IsProject="false" />
+        <Package file="/usr/lib/pkgconfig/gtk+-2.0.pc" name="GTK+" IsProject="false" />
+        <Package file="/usr/lib/pkgconfig/opencv.pc" name="OpenCV" IsProject="false" />
+        <Package file="/usr/lib/pkgconfig/libavc1394.pc" name="libavc1394" IsProject="false" />
+        <Package file="/usr/lib/pkgconfig/libavcodec.pc" name="libavcodec" IsProject="false" />
+        <Package file="/usr/lib/pkgconfig/libavformat.pc" name="libavformat" IsProject="false" />
+        <Package file="/usr/lib/pkgconfig/libavutil.pc" name="libavutil" IsProject="false" />
+        <Package file="/usr/lib/pkgconfig/gtk+-2.0.pc" name="GTK+" IsProject="false" />
+        <Package file="/usr/lib/pkgconfig/libavc1394.pc" name="libavc1394" IsProject="false" />
+        <Package file="/usr/lib/pkgconfig/libavcodec.pc" name="libavcodec" IsProject="false" />
+        <Package file="/usr/lib/pkgconfig/libavformat.pc" name="libavformat" IsProject="false" />
+        <Package file="/usr/lib/pkgconfig/libavutil.pc" name="libavutil" IsProject="false" />
+        <Package file="/usr/lib/pkgconfig/opencv.pc" name="OpenCV" IsProject="false" />
+      </Packages>
+    </Packages>
+    <Compiler>
+      <Compiler ctype="GppCompiler" />
+    </Compiler>
+    <Language>CPP</Language>
+    <Target>Bin</Target>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug</OutputPath>
+    <Libs>
+      <Libs>
+        <Lib>boost_filesystem</Lib>
+        <Lib>boost_thread</Lib>
+        <Lib>boost_program_options</Lib>
+        <Lib>uniclop_base</Lib>
+      </Libs>
+    </Libs>
+    <DefineSymbols>DEBUG MONODEVELOP</DefineSymbols>
+    <SourceDirectory>.</SourceDirectory>
+    <OutputName>video_input</OutputName>
+    <CompileTarget>Bin</CompileTarget>
+    <Includes>
+      <Includes>
+        <Include>${CombineDir}/src</Include>
+      </Includes>
+    </Includes>
+    <LibPaths>
+      <LibPaths>
+        <LibPath>${CombineDir}/bin/Debug</LibPath>
+      </LibPaths>
+    </LibPaths>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release</OutputPath>
+    <DefineSymbols>MONODEVELOP</DefineSymbols>
+    <SourceDirectory>.</SourceDirectory>
+    <OptimizationLevel>3</OptimizationLevel>
+    <OutputName>video_input</OutputName>
+    <CompileTarget>Bin</CompileTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="video_input.cpp" />
+    <Compile Include="VideoInputApplication.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="VideoInputApplication.hpp" />
+  </ItemGroup>
+</Project>

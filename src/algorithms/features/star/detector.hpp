@@ -1,10 +1,10 @@
 #ifndef FEATURES_STAR_DETECTOR_H
 #define FEATURES_STAR_DETECTOR_H
 
-#include "star_detector/keypoint.h"
-#include "star_detector/integral.h"
-#include "star_detector/nonmax_suppress.h"
-#include "star_detector/optimized_width.h"
+#include "keypoint.hpp"
+#include "integral.hpp"
+#include "nonmax_suppress.hpp"
+#include "optimized_width.hpp"
 #include <cv.h>
 #include <cmath>
 
