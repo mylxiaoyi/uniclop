@@ -103,6 +103,7 @@ int VideoInputApplication::main_loop(args::variables_map &options)
     return 0;
 }
 
+
 } // end of namespace video_input
 }
 }

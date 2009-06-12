@@ -7,7 +7,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{3F231BCB-9455-4CCA-8DF1-F7AFFC382133}</ProjectGuid>
     <Packages>
-      <Packages xmlns="">
+      <Packages>
         <Package file="/home/rodrigob/work/eclipse_workspace/uniclop/uniclop_base.md.pc" name="uniclop_base" IsProject="true" />
         <Package file="/usr/lib/pkgconfig/glib-2.0.pc" name="GLib" IsProject="false" />
         <Package file="/usr/lib/pkgconfig/glibmm-2.4.pc" name="GLibmm" IsProject="false" />
@@ -16,7 +16,7 @@
       </Packages>
     </Packages>
     <Compiler>
-      <Compiler ctype="GppCompiler" xmlns="" />
+      <Compiler ctype="GppCompiler" />
     </Compiler>
     <Language>CPP</Language>
     <Target>Bin</Target>
@@ -25,10 +25,20 @@
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Debug</OutputPath>
     <Libs>
-      <Libs xmlns="">
+      <Libs>
         <Lib>boost_program_options</Lib>
         <Lib>boost_filesystem</Lib>
         <Lib>boost_thread</Lib>
+        <Lib>vtkCommon</Lib>
+        <Lib>vtkFiltering</Lib>
+        <Lib>vtkRendering</Lib>
+        <Lib>vtkImaging</Lib>
+        <Lib>vtkHybrid</Lib>
+        <Lib>vtkIO</Lib>
+        <Lib>vtkParallel</Lib>
+        <Lib>vtksys</Lib>
+        <Lib>vtkVolumeRendering</Lib>
+        <Lib>vtkWidgets</Lib>
       </Libs>
     </Libs>
     <DefineSymbols>DEBUG MONODEVELOP</DefineSymbols>
@@ -36,10 +46,12 @@
     <OutputName>visual_odometry</OutputName>
     <CompileTarget>Bin</CompileTarget>
     <Includes>
-      <Includes xmlns="">
+      <Includes>
         <Include>${CombineDir}/src</Include>
+        <Include>/usr/include/vtk-5.0</Include>
       </Includes>
     </Includes>
+    <ExtraCompilerArguments> -Wno-deprecated</ExtraCompilerArguments>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\Release</OutputPath>
