@@ -56,6 +56,10 @@ void VideoInputApplication::init_video_input(args::variables_map &options)
 
 int VideoInputApplication::main_loop(args::variables_map &options)
 {
+	
+	using  boost::gil::copy_pixels;
+	using boost::gil::rgb8_planar_image_t;
+	
     printf("VideoInputApplication::main_loop says hello world !\n");
 
     //init_gui(options);
@@ -67,8 +71,15 @@ int VideoInputApplication::main_loop(args::variables_map &options)
     BOOST_MPL_ASSERT(( or_< is_same< GstVideoInput::const_view_t, rgb8_image_t::const_view_t >,
     						is_same< GstVideoInput::const_view_t, rgb8_planar_image_t::const_view_t > ));
 
-//    const uint8_t *data_p = boost::gil::interleaved_view_get_raw_data(view);
-    const uint8_t *data_p = boost::gil::planar_view_get_raw_data(view, 0);
+
+	// FIXME should create rgb8_cimg_t that herits CImg<uint8_t> and add the .assign(view) and .copy(view) methods
+	
+	// CImg employs planar pixels
+	rgb8_planar_image_t planar_image(view.dimensions());
+	rgb8_planar_image_t::view_t planar_view = boost::gil::view(planar_image); 
+	copy_pixels(view, planar_view);
+	 	 
+    const uint8_t *data_p = boost::gil::planar_view_get_raw_data(const_view(planar_image), 0);
     const bool shared_memory = true;
     const CImg<uint8_t> current_image(data_p, view.width(), view.height(), 1, 3, shared_memory);
 
@@ -85,9 +96,9 @@ int VideoInputApplication::main_loop(args::variables_map &options)
 
         //const CImg<uint8_t> &current_image = images_input.get_new_image();
 
-        // since we use only memory references, simply updating the image, will update the CImg current_image
+        // since we use only memory references, simply updating the planar_image, will update the CImg current_image
         gst_video_input_p->get_new_image();
-
+       	copy_pixels(view, planar_view);
         video_display.display(current_image);
 
         const float seconds_to_wait = 0.1; // [seconds]

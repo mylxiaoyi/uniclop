@@ -25,7 +25,6 @@ namespace video
 using std::string;
 namespace program_options = boost::program_options;
 using boost::gil::rgb8_image_t;
-using boost::gil::rgb8_planar_image_t;
 using boost::scoped_ptr;
 
 /**
@@ -36,9 +35,8 @@ class GstVideoInput
 
 public:
     // RGB 8 bits interleaved image type
-    //typedef rgb8_image_t image_t;
-	typedef rgb8_planar_image_t image_t;
-    typedef image_t::const_view_t const_view_t;
+    typedef rgb8_image_t image_t;
+	typedef image_t::const_view_t const_view_t;
 
 private:
     GstPipeline *pipeline;

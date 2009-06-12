@@ -196,7 +196,8 @@ void GstVideoInput::setup_video_input_pipeline(const string &video_sink_name)
 
     color_space_capabilities = gst_caps_new_simple(
     	"video/x-raw-rgb", 
-   		"bpp", G_TYPE_INT, depth, "depth", G_TYPE_INT, depth, 				 
+   		"bpp", G_TYPE_INT, depth, "depth", G_TYPE_INT, depth, 		
+   		 "width", G_TYPE_INT, width, "height", G_TYPE_INT, height, 		 
     	NULL);
 
     // Tee -> Queue -> ColorSpace -> Fakesink
@@ -264,20 +265,18 @@ void GstVideoInput::on_new_frame(GstElement *element, GstBuffer * buffer, GstPad
 {
 
     // create buffer view
-
     const uint8_t *data_p = (uint8_t *) GST_BUFFER_DATA(buffer);
-    const ptrdiff_t row_size = width*3; // FIXME is this true ? why ?
+    assert(depth == 24);
+    const ptrdiff_t row_size = width*3; 
+	const size_t buffer_size = GST_BUFFER_SIZE(buffer);
+	const size_t height =  buffer_size / row_size;
 
     typedef boost::gil::rgb8c_view_t buffer_view_t;
     typedef boost::gil::rgb8c_ptr_t buffer_pixel_ptr_t;
-
-	const size_t buffer_size = GST_BUFFER_SIZE(buffer);
-
-	const size_t height =  buffer_size / row_size;
-
-    buffer_view_t buffer_view =
+                
+	buffer_view_t buffer_view =
         boost::gil::interleaved_view<boost::gil::rgb8c_ptr_t>(static_cast<size_t>(width), height,
-                reinterpret_cast<buffer_pixel_ptr_t>(data_p), row_size);
+        	reinterpret_cast<buffer_pixel_ptr_t>(data_p), row_size);
 
 	
     if(current_image_p.get() == NULL) {
@@ -287,24 +286,13 @@ void GstVideoInput::on_new_frame(GstElement *element, GstBuffer * buffer, GstPad
     }
 
 
-	if(true) {
+	if(false) {
+		// just for debugging
 		gint pad_width, pad_height;
 		gst_video_get_size(pad, &pad_width, &pad_height);
 		printf("Buffer_size / (height * 3) == %i. Pad size (%i, %i)\n", buffer_size / row_size, pad_width, pad_height);
 	}
 	
-if(false) {
-	static CImgDisplay video_display(width, height, "on new frame debug");
-    video_display.show();
-    
-    const bool shared_memory = true;
-    const CImg<uint8_t> current_image(data_p, width, height, 1, 3, shared_memory);
-    
-    video_display.display(current_image);
-    
-    return;
-}
-
     {
         // copy the buffer into *current_image_p
         //boost::lock_guard<boost::mutex>
