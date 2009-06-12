@@ -40,10 +40,7 @@ void corner_detect(const gray8c_view_t& view, const int barrier, std::vector<FAS
 
     const int xsize = view.dimensions()[0];
     const int ysize = view.dimensions()[1];
-    // FIXME why static_cast or dynamic_cast fails here ?
-    //const byte* im = static_cast<const byte *>(&view.begin()[0]);
-    //const byte* im = dynamic_cast<const byte *>(&view.begin()[0]);
-    const byte* im = (const byte *)(&view.begin()[0]);
+    const byte* im = boost::gil::interleaved_view_get_raw_data(view);
 
     corners.clear();
 

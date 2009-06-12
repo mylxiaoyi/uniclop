@@ -69,7 +69,7 @@ int VideoInputApplication::main_loop(args::variables_map &options)
     GstVideoInput::const_view_t view = gst_video_input_p->get_new_image();
     BOOST_MPL_ASSERT(( is_same< stVideoInput::const_view_t, rgb8_image_t::const_view_t > ));
 
-    const uint8_t *data_p = static_cast<const uint8_t *>(&(view.begin()[0][0]));
+    const uint8_t *data_p = boost::gil::interleaved_view_get_raw_data(view);
     const bool shared_memory = true;
     const CImg<uint8_t> current_image(data_p, view.width(), view.height(), 1, 3, shared_memory);
 
@@ -77,17 +77,13 @@ int VideoInputApplication::main_loop(args::variables_map &options)
     //ImagesInput<uint8_t> images_input(options);
     //const CImg<uint8_t> &current_image = images_input.get_new_image();
 
-    CImgDisplay video_display(current_image.dimx(), current_image.dimy(), "Video stream");
+    CImgDisplay video_display(current_image.dimx(), current_image.dimy(), get_application_title().c_str());
     video_display.show();
     video_display.display(current_image);
 
     do
     {
-        if (true)
-        {
-            printf(".");
-        }
-
+  
         //const CImg<uint8_t> &current_image = images_input.get_new_image();
 
         // since we use only memory references, simply updating the image, will update the CImg current_image

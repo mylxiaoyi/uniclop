@@ -9,6 +9,7 @@
 
 // using C code because gstreamermm was too much paint to install
 #include <glib.h>
+#include <glibmm.h>
 #include <gst/gst.h>
 #include <gst/interfaces/xoverlay.h>
 
@@ -27,7 +28,8 @@ program_options::options_description GstVideoInput::get_options_description()
     ("width", program_options::value< int >()->default_value(640),
      "Define the input image width to define the input size. Accepted values are 320, 640, 800 (320x240, 640x480 and 800x600 respectivelly)")
 
-    ("video_sink",  program_options::value<string>()->default_value("v4l2src"), "video input  gstreamer module")
+    ("video_sink",  program_options::value<string>()->default_value("v4l2src"), 
+    	"video input gstreamer module. Example elements are: v4l2src, videotestsrc, etc...")
     ;
 
     return desc;
@@ -80,14 +82,28 @@ void GstVideoInput::parse_options(program_options::variables_map &options)
 GstVideoInput::GstVideoInput(program_options::variables_map &options)
 {
 
+	image_is_new = false;
+	pipeline = NULL;
+
     parse_options(options);
 
     current_image_p.reset(new GstVideoInput::image_t(width, height));
     current_image_view = boost::gil::const_view(*current_image_p);
 
-    pipeline = NULL;
-    init_gstreamer(video_sink_name);
+    
+    setup_video_input_pipeline(video_sink_name);
+    
+    // launch video_input_thread in a thread
+    
+    bool glib_thread_initialized = Glib::thread_supported ();
+    if(glib_thread_initialized == false)
+    {
+	    Glib::thread_init();
+    }
 
+	const bool video_input_thread_is_joinable = false;
+	sigc::slot<void> thead_slot = sigc::mem_fun(*this, &GstVideoInput::video_input_thread);
+	Glib::Thread::create( thead_slot , video_input_thread_is_joinable);
     return;
 }
 
@@ -102,7 +118,7 @@ GstVideoInput::~GstVideoInput()
     return;
 }
 
-void GstVideoInput::init_gstreamer(const string &video_sink_name)
+void GstVideoInput::setup_video_input_pipeline(const string &video_sink_name) 
 {
 
 
@@ -114,9 +130,6 @@ void GstVideoInput::init_gstreamer(const string &video_sink_name)
     GstCaps *videosink_caps, *color_space_caps;
 
     gboolean link_ok;
-
-    GMainLoop * loop;
-    loop = g_main_loop_new(NULL, FALSE);
 
     int argc = 0;
     gst_init(&argc, NULL);
@@ -190,26 +203,35 @@ void GstVideoInput::init_gstreamer(const string &video_sink_name)
     g_object_set(G_OBJECT(fakesink), "signal-handoffs", TRUE, NULL);
     g_signal_connect(fakesink, "handoff", G_CALLBACK(GstVideoInput::on_new_frame_callback), this);
 
+
+    return;
+}
+
+    
+void GstVideoInput::video_input_thread() {
+    
+        GMainLoop * loop = g_main_loop_new(NULL, FALSE);
+
     const GstStateChangeReturn ret = gst_element_set_state(GST_ELEMENT(pipeline), GST_STATE_PLAYING);
-    if (ret == GST_STATE_CHANGE_FAILURE)
-    {
-
-        GstMessage * msg;
-        g_print("Failed to start up pipeline!\n");
-        msg = gst_bus_poll(gst_pipeline_get_bus(pipeline), GST_MESSAGE_ERROR, 0);
-        if (msg)
-        {
-            GError * err = NULL;
-            gst_message_parse_error(msg, &err, NULL);
-            g_print("ERROR: %s\n", err->message);
-            g_error_free(err);
-            gst_message_unref(msg);
-        }
-        throw std::runtime_error("VideoInputApplication::init_video_input failed to start up pipeline!");
-    }
-
-    g_main_loop_run(loop);
-    g_main_loop_unref(loop);
+	if (ret == GST_STATE_CHANGE_FAILURE)
+	{
+	
+	    GstMessage * msg;
+	    g_print("Failed to start up pipeline!\n");
+	    msg = gst_bus_poll(gst_pipeline_get_bus(pipeline), GST_MESSAGE_ERROR, 0);
+	    if (msg)
+	    {
+	        GError * err = NULL;
+	        gst_message_parse_error(msg, &err, NULL);
+	        g_print("ERROR: %s\n", err->message);
+	        g_error_free(err);
+	        gst_message_unref(msg);
+	    }
+	    throw std::runtime_error("VideoInputApplication::init_video_input failed to start up pipeline!");
+	}
+	
+	g_main_loop_run(loop);
+	g_main_loop_unref(loop);
 
     return;
 }
@@ -229,15 +251,31 @@ void GstVideoInput::on_new_frame(GstElement *element, GstBuffer * buffer, GstPad
 
     // here goes the video processing
 
-    // unsigned char *data_photo = (unsigned char *) GST_BUFFER_DATA(buffer);
+   const unsigned char *data = (unsigned char *) GST_BUFFER_DATA(buffer);
+   const ptrdiff_t row_size = width*3; // FIXME is this true ? why ?
+
+   typedef boost::gil::rgb8c_view_t buffer_view_t;
+   typedef boost::gil::rgb8c_pixel_t buffer_pixel_t;
+   	
+  buffer_view_t buffer_view = 
+   		boost::gil::interleaved_view<boost::gil::rgb8c_ptr_t>(static_cast<size_t>(width), static_cast<size_t>(height), 
+   					reinterpret_cast<buffer_pixel_t *>(data), row_size);
+   
     // create buffer img_view
     // assert rgb8_image_t
+	
+
+{     
+	// copy the buffer into *current_image_p
+	//boost::lock_guard<boost::mutex> 
+	boost::mutex::scoped_lock image_lock(current_image_mutex);
+	copy_pixels(buffer_view, view(*current_image_p));
+	image_is_new = true;
+}
+new_image_condition.notify_all();
 
 
-
-    // copy into *current_image_p
-
-    if (true)
+    if (false)
     {
         g_debug("on_new_frame was called");
     }
@@ -248,8 +286,14 @@ void GstVideoInput::on_new_frame(GstElement *element, GstBuffer * buffer, GstPad
 
 GstVideoInput::const_view_t &GstVideoInput::get_new_image()
 {
-    // wait until a new image has arrived
-
+	//boost::unique_lock<boost::mutex> 
+	boost::mutex::scoped_lock lock(current_image_mutex);
+    while(image_is_new == false) {
+		// wait until a new image has arrived
+		new_image_condition.wait(lock);
+	}
+	
+	image_is_new = false;
     return  current_image_view;
 }
 

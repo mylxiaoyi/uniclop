@@ -9,7 +9,7 @@
 //#include <boost/gil/typedefs.hpp>
 //#include <boost/gil/image_view.hpp>
 #include <boost/gil/gil_all.hpp>
-
+#include <boost/thread.hpp>
 #include <boost/scoped_ptr.hpp>
 
 #include <gst/gst.h>
@@ -43,6 +43,9 @@ private:
 
     scoped_ptr<image_t> current_image_p;
     const_view_t current_image_view;
+    bool image_is_new;
+	boost::mutex current_image_mutex;
+	boost::condition new_image_condition;
 
     string video_sink_name;
     int width, height, depth;
@@ -60,7 +63,9 @@ public:
 private:
     void parse_options(program_options::variables_map &options);
 
-    void init_gstreamer(const string &video_sink_name);
+    void setup_video_input_pipeline(const string &video_sink_name);
+
+    void video_input_thread();
 
     static void on_new_frame_callback(GstElement *element, GstBuffer * buffer, GstPad* pad, gpointer self_p);
 
