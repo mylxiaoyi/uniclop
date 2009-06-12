@@ -205,6 +205,8 @@ void GstVideoInput::setup_video_input_pipeline(const string &video_sink_name)
     //link_ok = link_ok && gst_element_link(fakesink_queue, fakesink);
     link_ok = link_ok && gst_element_link(fakesink_queue, color_space);
     link_ok = link_ok && gst_element_link_filtered(color_space, fakesink, color_space_capabilities);
+    //link_ok = link_ok && gst_element_link_filtered(fakesink_queue, color_space, color_space_capabilities);
+    //link_ok = link_ok && gst_element_link(color_space, fakesink);
     if (!link_ok)
     {
         g_warning("Failed to link elements!");

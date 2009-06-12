@@ -16,6 +16,7 @@
 #include <cassert>
 
 #include <CImg/CImg.h>
+#include "helpers/rgb8_cimg_t.hpp"
 
 namespace uniclop
 {
@@ -67,25 +68,22 @@ int VideoInputApplication::main_loop(args::variables_map &options)
 
     init_video_input(options);
 
-    GstVideoInput::const_view_t view = gst_video_input_p->get_new_image();
+    GstVideoInput::const_view_t new_image_view = gst_video_input_p->get_new_image();
     BOOST_MPL_ASSERT(( or_< is_same< GstVideoInput::const_view_t, rgb8_image_t::const_view_t >,
     						is_same< GstVideoInput::const_view_t, rgb8_planar_image_t::const_view_t > ));
 
 
 	// FIXME should create rgb8_cimg_t that herits CImg<uint8_t> and add the .assign(view) and .copy(view) methods
 	
-	// CImg employs planar pixels
-	rgb8_planar_image_t planar_image(view.dimensions());
-	rgb8_planar_image_t::view_t planar_view = boost::gil::view(planar_image); 
-	copy_pixels(view, planar_view);
-	 	 
-    const uint8_t *data_p = boost::gil::planar_view_get_raw_data(const_view(planar_image), 0);
-    const bool shared_memory = true;
-    const CImg<uint8_t> current_image(data_p, view.width(), view.height(), 1, 3, shared_memory);
+	// rgb8_cimg_t adapts cimg and gil::image_view
+	rgb8_cimg_t current_image(new_image_view.width(), new_image_view.height());
 
+	//current_image = new_image_view; // copy the data
+	copy_pixels(new_image_view, current_image.view); // copy the data
+	
     // FIXME should port ImagesInput to Gil
-    //ImagesInput<uint8_t> images_input(options);
-    //const CImg<uint8_t> &current_image = images_input.get_new_image();
+    // ImagesInput<uint8_t> images_input(options);
+    // const CImg<uint8_t> &current_image = images_input.get_new_image();
 
     CImgDisplay video_display(current_image.dimx(), current_image.dimy(), get_application_title().c_str());
     video_display.show();
@@ -94,11 +92,13 @@ int VideoInputApplication::main_loop(args::variables_map &options)
     do
     {
 
-        //const CImg<uint8_t> &current_image = images_input.get_new_image();
+        // const CImg<uint8_t> &current_image = images_input.get_new_image();
 
         // since we use only memory references, simply updating the planar_image, will update the CImg current_image
         gst_video_input_p->get_new_image();
-       	copy_pixels(view, planar_view);
+      	//current_image = new_image_view; // copy the data
+		copy_pixels(new_image_view, current_image.view); // copy the data
+
         video_display.display(current_image);
 
         const float seconds_to_wait = 0.1; // [seconds]
@@ -113,6 +113,6 @@ int VideoInputApplication::main_loop(args::variables_map &options)
     return 0;
 }
 
-}
+} // end of namespace video_input
 }
 }

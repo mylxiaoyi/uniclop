@@ -63,6 +63,7 @@
     <Compile Include="src\algorithms\features\fast\fast.cpp" />
     <Compile Include="src\algorithms\features\features_detection.cpp" />
     <Compile Include="src\devices\video\GstVideoInput.cpp" />
+    <Compile Include="src\helpers\rgb8_cimg_t.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\applications\AbstractApplication.hpp" />
@@ -70,9 +71,11 @@
     <None Include="src\algorithms\features\fast\fast.hpp" />
     <None Include="src\algorithms\features\features_detection.hpp" />
     <None Include="src\devices\video\GstVideoInput.hpp" />
+    <None Include="src\helpers\rgb8_cimg_t.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="src\applications\video_input/" />
     <Folder Include="src\algorithms\features\sift\jift/" />
+    <Folder Include="src\helpers/" />
   </ItemGroup>
 </Project>
