@@ -24,13 +24,13 @@ Helper class that allows to exchange between image_view and CImg
 class rgb8_cimg_t : public CImg<uint8_t> {
 
 	rgb8_planar_image_t planar_image;
-	const uint8_t *data_p;
 public:
 
 	typedef rgb8_planar_image_t::view_t view_t;
 	view_t view;
 
 	rgb8_cimg_t(const int width, const int height);
+	rgb8_cimg_t(const boost::gil::point2<int> &size);
 	~rgb8_cimg_t();
 	
 	template<typename T>
@@ -39,6 +39,8 @@ public:
 	template<typename T>
 	void operator=(boost::gil::image_view<T> &view);
 
+private:
+	void init(const int width, const int height);
 };
 
 }

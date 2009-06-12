@@ -16,14 +16,29 @@ namespace cimg_library {
 	using boost::gil::rgb8_planar_image_t;
 	using boost::gil::rgb8_planar_view_t;
 	
-	rgb8_cimg_t::rgb8_cimg_t(const int width, const int height) 
-	: planar_image(width, height), view( boost::gil::view(planar_image) ),  
-	data_p( planar_view_get_raw_data(boost::gil::view(planar_image), 0)),
-	CImg<uint8_t>(data_p, width, height, 1, 3, true)  {
+	rgb8_cimg_t::rgb8_cimg_t(const int width, const int height) {
 		
-		
+		init(width, height);
 		return;
 	}
+	
+	rgb8_cimg_t::rgb8_cimg_t(const boost::gil::point2<int> &size) {
+		
+		init(size.x, size.y);
+		return;	
+	}
+	
+	void rgb8_cimg_t::init(const int width, const int height) {
+	
+		planar_image.recreate(width, height);
+	 	view = boost::gil::view(planar_image);
+	   
+		const uint8_t *data_p =  planar_view_get_raw_data(view, 0);
+		static_cast< CImg<uint8_t> *>(this)->assign( data_p, width, height, 1, 3, true );
+	  	
+	  	return;
+	}
+
 
 	rgb8_cimg_t::~rgb8_cimg_t() {
 		// nothing to do here
