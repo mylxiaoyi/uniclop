@@ -44,8 +44,8 @@ private:
     scoped_ptr<image_t> current_image_p;
     const_view_t current_image_view;
     bool image_is_new;
-	boost::mutex current_image_mutex;
-	boost::condition new_image_condition;
+    boost::mutex current_image_mutex;
+    boost::condition new_image_condition;
 
     string video_sink_name;
     int width, height, depth;

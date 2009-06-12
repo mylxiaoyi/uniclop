@@ -83,7 +83,7 @@ int VideoInputApplication::main_loop(args::variables_map &options)
 
     do
     {
-  
+
         //const CImg<uint8_t> &current_image = images_input.get_new_image();
 
         // since we use only memory references, simply updating the image, will update the CImg current_image
