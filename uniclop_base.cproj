@@ -22,6 +22,7 @@
         <Package file="/usr/lib/pkgconfig/libavformat.pc" name="libavformat" IsProject="false" />
         <Package file="/usr/lib/pkgconfig/libpng.pc" name="libpng" IsProject="false" />
         <Package file="/usr/lib/pkgconfig/glibmm-2.4.pc" name="GLibmm" IsProject="false" />
+        <Package file="/usr/lib/pkgconfig/gstreamer-video-0.10.pc" name="GStreamer Video Library" IsProject="false" />
       </Packages>
     </Packages>
   </PropertyGroup>

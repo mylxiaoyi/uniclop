@@ -14,6 +14,8 @@
 #include <gst/gst.h>
 #include <gst/interfaces/xoverlay.h>
 
+#include <gst/video/video.h>
+
 #include <CImg/CImg.h>
 
 namespace uniclop
@@ -44,7 +46,6 @@ program_options::options_description GstVideoInput::get_options_description()
 void GstVideoInput::parse_options(program_options::variables_map &options)
 {
 
-
     video_sink_name = "v4l2src";
     if (options.count("video_sink") != 0)
     {
@@ -70,7 +71,6 @@ void GstVideoInput::parse_options(program_options::variables_map &options)
         height = 600;
         break;
 
-
     default:
         throw std::runtime_error("GstVideoInput received and unmanaged video width value");
     }
@@ -92,8 +92,9 @@ GstVideoInput::GstVideoInput(program_options::variables_map &options)
 
     parse_options(options);
 
-    current_image_p.reset(new GstVideoInput::image_t(width, height));
-    current_image_view = boost::gil::const_view(*current_image_p);
+// FIXME just for debugging
+    //current_image_p.reset(new GstVideoInput::image_t(width, height));
+    //current_image_view = boost::gil::const_view(*current_image_p);
 
 
     setup_video_input_pipeline(video_sink_name);
@@ -132,7 +133,7 @@ void GstVideoInput::setup_video_input_pipeline(const string &video_sink_name)
 
     GstElement *camera_source, *tee, *videosink_queue, *fakesink_queue, *color_space, *videosink, *fakesink;
     //GstPad *pad;
-    GstCaps *videosink_caps, *color_space_caps;
+    GstCaps *videosink_capabilities, *color_space_capabilities;
 
     gboolean link_ok;
 
@@ -167,13 +168,15 @@ void GstVideoInput::setup_video_input_pipeline(const string &video_sink_name)
     gst_bin_add_many(GST_BIN(pipeline), camera_source, tee, videosink_queue, fakesink_queue, color_space, videosink, fakesink, NULL);
 
 
-    videosink_caps = gst_caps_new_simple(
+    videosink_capabilities = gst_caps_new_simple(
                          "video/x-raw-yuv",
-                         "width", G_TYPE_INT, width, "height", G_TYPE_INT, height, /*"framerate",
-	 GST_TYPE_FRACTION, 15, 1,*/"bpp", G_TYPE_INT, depth, "depth", G_TYPE_INT, depth, NULL);
+                         "width", G_TYPE_INT, width, "height", G_TYPE_INT, height, 
+                         //"framerate", GST_TYPE_FRACTION, 15, 1,
+						 "bpp", G_TYPE_INT, depth, "depth", G_TYPE_INT, depth, 
+						 NULL);
 
     // Camera -> Tee
-    link_ok = gst_element_link_filtered(camera_source, tee, videosink_caps);
+    link_ok = gst_element_link_filtered(camera_source, tee, videosink_capabilities);
     if (!link_ok)
     {
         g_warning("Failed to link elements !");
@@ -191,13 +194,16 @@ void GstVideoInput::setup_video_input_pipeline(const string &video_sink_name)
     }
 
 
-    //color_space_caps = gst_caps_new_simple("video/x-raw-rgb", NULL);
+    color_space_capabilities = gst_caps_new_simple(
+    	"video/x-raw-rgb", 
+   		"bpp", G_TYPE_INT, depth, "depth", G_TYPE_INT, depth, 				 
+    	NULL);
 
     // Tee -> Queue -> ColorSpace -> Fakesink
     link_ok = gst_element_link(tee, fakesink_queue);
-    link_ok = link_ok && gst_element_link(fakesink_queue, fakesink);
-    //link_ok = link_ok && gst_element_link(fakesink_queue, color_space);
-    //link_ok = link_ok && gst_element_link_filtered(color_space, fakesink, color_space_caps);
+    //link_ok = link_ok && gst_element_link(fakesink_queue, fakesink);
+    link_ok = link_ok && gst_element_link(fakesink_queue, color_space);
+    link_ok = link_ok && gst_element_link_filtered(color_space, fakesink, color_space_capabilities);
     if (!link_ok)
     {
         g_warning("Failed to link elements!");
@@ -265,11 +271,29 @@ void GstVideoInput::on_new_frame(GstElement *element, GstBuffer * buffer, GstPad
     typedef boost::gil::rgb8c_view_t buffer_view_t;
     typedef boost::gil::rgb8c_ptr_t buffer_pixel_ptr_t;
 
+	const size_t buffer_size = GST_BUFFER_SIZE(buffer);
+
+	const size_t height =  buffer_size / row_size;
+
     buffer_view_t buffer_view =
-        boost::gil::interleaved_view<boost::gil::rgb8c_ptr_t>(static_cast<size_t>(width), static_cast<size_t>(height),
+        boost::gil::interleaved_view<boost::gil::rgb8c_ptr_t>(static_cast<size_t>(width), height,
                 reinterpret_cast<buffer_pixel_ptr_t>(data_p), row_size);
 
-if(true) {
+	
+    if(current_image_p.get() == NULL) {
+	    // lazy initialization
+	    current_image_p.reset(new GstVideoInput::image_t(width, height));
+	    current_image_view = boost::gil::const_view(*current_image_p);
+    }
+
+
+	if(true) {
+		gint pad_width, pad_height;
+		gst_video_get_size(pad, &pad_width, &pad_height);
+		printf("Buffer_size / (height * 3) == %i. Pad size (%i, %i)\n", buffer_size / row_size, pad_width, pad_height);
+	}
+	
+if(false) {
 	static CImgDisplay video_display(width, height, "on new frame debug");
     video_display.show();
     

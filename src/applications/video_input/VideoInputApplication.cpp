@@ -64,9 +64,11 @@ int VideoInputApplication::main_loop(args::variables_map &options)
     init_video_input(options);
 
     GstVideoInput::const_view_t view = gst_video_input_p->get_new_image();
-    BOOST_MPL_ASSERT(( is_same< stVideoInput::const_view_t, rgb8_image_t::const_view_t > ));
+    BOOST_MPL_ASSERT(( or_< is_same< GstVideoInput::const_view_t, rgb8_image_t::const_view_t >,
+    						is_same< GstVideoInput::const_view_t, rgb8_planar_image_t::const_view_t > ));
 
-    const uint8_t *data_p = boost::gil::interleaved_view_get_raw_data(view);
+//    const uint8_t *data_p = boost::gil::interleaved_view_get_raw_data(view);
+    const uint8_t *data_p = boost::gil::planar_view_get_raw_data(view, 0);
     const bool shared_memory = true;
     const CImg<uint8_t> current_image(data_p, view.width(), view.height(), 1, 3, shared_memory);
 
