@@ -12,6 +12,12 @@
 
 #include <vector>
 
+
+
+namespace cimg_library {
+	class rgb8_cimg_t;
+}
+
 namespace uniclop
 {
 
@@ -22,6 +28,7 @@ namespace video
 class GstVideoInput;
 }
 }
+
 
 namespace applications
 {
@@ -34,6 +41,7 @@ using uniclop::algorithms::features::FASTFeature;
 
 namespace program_options =  boost::program_options;
 using boost::scoped_ptr;
+using namespace cimg_library;
 using namespace std;
 
 class FeaturesDetectionApplication : public AbstractApplication
@@ -49,7 +57,7 @@ public:
 
 private:
 
-    void draw_features(const vector<FASTFeature> &features);
+    void draw_features(const vector<FASTFeature> &features, rgb8_cimg_t &image);
 
 };
 

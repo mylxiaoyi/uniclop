@@ -72,6 +72,7 @@
     <None Include="src\algorithms\features\features_detection.hpp" />
     <None Include="src\devices\video\GstVideoInput.hpp" />
     <None Include="src\helpers\rgb8_cimg_t.hpp" />
+    <None Include="src\helpers\for_each.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="src\applications\video_input/" />

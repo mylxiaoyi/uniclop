@@ -8,13 +8,14 @@
 #include <boost/thread/xtime.hpp>
 #include <boost/thread/thread.hpp>
 
+
 #include <cstdio>
 #include <iostream>
 #include <stdexcept>
 
 #include <CImg/CImg.h>
 #include "helpers/rgb8_cimg_t.hpp"
-
+#include "helpers/for_each.hpp"
 
 namespace uniclop
 {
@@ -93,7 +94,7 @@ int FeaturesDetectionApplication::main_loop(program_options::variables_map &opti
             features_detector_p->detect_features((const_view(gray_image)));
 
         // plot features on output image
-        draw_features(features);
+        draw_features(features, current_image);
 
         video_display.display(current_image);
 
@@ -111,10 +112,21 @@ int FeaturesDetectionApplication::main_loop(program_options::variables_map &opti
 
 }
 
-void FeaturesDetectionApplication::draw_features(const vector<FASTFeature> &features)
+void FeaturesDetectionApplication::draw_features(const vector<FASTFeature> &features, rgb8_cimg_t &rgb_image)
 {
 	
 	printf("Found %i FASTFeatures\n", features.size());
+	
+	const uint8_t point_color[3] = {255, 155, 0}; // red
+		   
+	vector<FASTFeature>::const_iterator features_it;
+	for_each(features_it, features) {
+	
+		static_cast<rgb8_cimg_t::cimg_t>(rgb_image).draw_point(features_it->x, features_it->y, point_color);
+		
+	}
+	
+	
     /*
        // draw results --
         if (show_matching_result)
