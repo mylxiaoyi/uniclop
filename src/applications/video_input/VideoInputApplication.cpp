@@ -15,10 +15,7 @@
 #include <stdexcept>
 #include <cassert>
 
-
-// Cimg http://cimg.sf.net
 #include <CImg/CImg.h>
-using namespace cimg_library;
 
 namespace uniclop
 {

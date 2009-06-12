@@ -4,6 +4,7 @@
 
 
 #include <boost/gil/gil_all.hpp>
+#include <boost/cstdint.hpp>
 
 #include <stdexcept>
 
@@ -13,6 +14,8 @@
 #include <gst/gst.h>
 #include <gst/interfaces/xoverlay.h>
 
+#include <CImg/CImg.h>
+
 namespace uniclop
 {
 namespace devices
@@ -20,6 +23,8 @@ namespace devices
 namespace video
 {
 
+using namespace cimg_library;
+using boost::uint8_t;
 
 program_options::options_description GstVideoInput::get_options_description()
 {
@@ -254,7 +259,7 @@ void GstVideoInput::on_new_frame(GstElement *element, GstBuffer * buffer, GstPad
 
     // create buffer view
 
-    const unsigned char *data = (unsigned char *) GST_BUFFER_DATA(buffer);
+    const uint8_t *data_p = (uint8_t *) GST_BUFFER_DATA(buffer);
     const ptrdiff_t row_size = width*3; // FIXME is this true ? why ?
 
     typedef boost::gil::rgb8c_view_t buffer_view_t;
@@ -262,7 +267,19 @@ void GstVideoInput::on_new_frame(GstElement *element, GstBuffer * buffer, GstPad
 
     buffer_view_t buffer_view =
         boost::gil::interleaved_view<boost::gil::rgb8c_ptr_t>(static_cast<size_t>(width), static_cast<size_t>(height),
-                reinterpret_cast<buffer_pixel_ptr_t>(data), row_size);
+                reinterpret_cast<buffer_pixel_ptr_t>(data_p), row_size);
+
+if(true) {
+	static CImgDisplay video_display(width, height, "on new frame debug");
+    video_display.show();
+    
+    const bool shared_memory = true;
+    const CImg<uint8_t> current_image(data_p, width, height, 1, 3, shared_memory);
+    
+    video_display.display(current_image);
+    
+    return;
+}
 
     {
         // copy the buffer into *current_image_p
