@@ -5,18 +5,18 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{18B9664D-AFD5-4019-94CB-606B5D7EA048}</ProjectGuid>
+    <ProjectGuid>{3F231BCB-9455-4CCA-8DF1-F7AFFC382133}</ProjectGuid>
     <Packages>
-      <Packages>
-        <Package file="/usr/lib/pkgconfig/gstreamer-0.10.pc" name="GStreamer" IsProject="false" />
+      <Packages xmlns="">
         <Package file="/home/rodrigob/work/eclipse_workspace/uniclop/uniclop_base.md.pc" name="uniclop_base" IsProject="true" />
         <Package file="/usr/lib/pkgconfig/glib-2.0.pc" name="GLib" IsProject="false" />
         <Package file="/usr/lib/pkgconfig/glibmm-2.4.pc" name="GLibmm" IsProject="false" />
+        <Package file="/usr/lib/pkgconfig/gstreamer-0.10.pc" name="GStreamer" IsProject="false" />
         <Package file="/usr/lib/pkgconfig/gstreamer-video-0.10.pc" name="GStreamer Video Library" IsProject="false" />
       </Packages>
     </Packages>
     <Compiler>
-      <Compiler ctype="GppCompiler" />
+      <Compiler ctype="GppCompiler" xmlns="" />
     </Compiler>
     <Language>CPP</Language>
     <Target>Bin</Target>
@@ -25,7 +25,7 @@
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Debug</OutputPath>
     <Libs>
-      <Libs>
+      <Libs xmlns="">
         <Lib>boost_program_options</Lib>
         <Lib>boost_filesystem</Lib>
         <Lib>boost_thread</Lib>
@@ -33,10 +33,10 @@
     </Libs>
     <DefineSymbols>DEBUG MONODEVELOP</DefineSymbols>
     <SourceDirectory>.</SourceDirectory>
-    <OutputName>features_tracking</OutputName>
+    <OutputName>visual_odometry</OutputName>
     <CompileTarget>Bin</CompileTarget>
     <Includes>
-      <Includes>
+      <Includes xmlns="">
         <Include>${CombineDir}/src</Include>
       </Includes>
     </Includes>
@@ -46,14 +46,14 @@
     <DefineSymbols>MONODEVELOP</DefineSymbols>
     <SourceDirectory>.</SourceDirectory>
     <OptimizationLevel>3</OptimizationLevel>
-    <OutputName>features_tracking</OutputName>
+    <OutputName>visual_odometry</OutputName>
     <CompileTarget>Bin</CompileTarget>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="features_tracking.cpp" />
-    <Compile Include="FeaturesTrackingApplication.cpp" />
+    <Compile Include="visual_odometry.cpp" />
+    <Compile Include="VisualOdometryApplication.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="FeaturesTrackingApplication.hpp" />
+    <None Include="VisualOdometryApplication.hpp" />
   </ItemGroup>
 </Project>

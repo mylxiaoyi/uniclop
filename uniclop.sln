@@ -9,6 +9,8 @@ Project("{2857B73E-F847-4B02-9238-064979017E93}") = "features_detection", "src\a
 EndProject
 Project("{2857B73E-F847-4B02-9238-064979017E93}") = "features_tracking", "src\applications\features_tracking\features_tracking.cproj", "{18B9664D-AFD5-4019-94CB-606B5D7EA048}"
 EndProject
+Project("{2857B73E-F847-4B02-9238-064979017E93}") = "visual_odometry", "src\applications\visual_odometry\visual_odometry.cproj", "{3F231BCB-9455-4CCA-8DF1-F7AFFC382133}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +25,10 @@ Global
 		{268920A3-842A-405F-8593-8DAFD7E355C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{268920A3-842A-405F-8593-8DAFD7E355C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{268920A3-842A-405F-8593-8DAFD7E355C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F231BCB-9455-4CCA-8DF1-F7AFFC382133}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F231BCB-9455-4CCA-8DF1-F7AFFC382133}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F231BCB-9455-4CCA-8DF1-F7AFFC382133}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F231BCB-9455-4CCA-8DF1-F7AFFC382133}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C35F52B7-2214-4A65-8129-390FE0248E49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C35F52B7-2214-4A65-8129-390FE0248E49}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C35F52B7-2214-4A65-8129-390FE0248E49}.Release|Any CPU.ActiveCfg = Release|Any CPU
