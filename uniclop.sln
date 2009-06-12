@@ -7,12 +7,18 @@ Project("{2857B73E-F847-4B02-9238-064979017E93}") = "video_input", "src\applicat
 EndProject
 Project("{2857B73E-F847-4B02-9238-064979017E93}") = "features_detection", "src\applications\features_detection\features_detection.cproj", "{F0A9FE83-FD07-4492-AE8A-83840AD60032}"
 EndProject
+Project("{2857B73E-F847-4B02-9238-064979017E93}") = "features_tracking", "src\applications\features_tracking\features_tracking.cproj", "{18B9664D-AFD5-4019-94CB-606B5D7EA048}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{18B9664D-AFD5-4019-94CB-606B5D7EA048}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18B9664D-AFD5-4019-94CB-606B5D7EA048}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18B9664D-AFD5-4019-94CB-606B5D7EA048}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18B9664D-AFD5-4019-94CB-606B5D7EA048}.Release|Any CPU.Build.0 = Release|Any CPU
 		{268920A3-842A-405F-8593-8DAFD7E355C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{268920A3-842A-405F-8593-8DAFD7E355C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{268920A3-842A-405F-8593-8DAFD7E355C8}.Release|Any CPU.ActiveCfg = Release|Any CPU

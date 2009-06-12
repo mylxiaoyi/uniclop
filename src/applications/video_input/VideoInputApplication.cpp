@@ -40,7 +40,7 @@ args::options_description VideoInputApplication::get_command_line_options(void) 
 
     args::options_description desc;
 
-    desc.add(ImagesInput<uint8_t>::get_options_description());
+    // desc.add(ImagesInput<uint8_t>::get_options_description());
     desc.add(GstVideoInput::get_options_description());
 
     return desc;
@@ -57,10 +57,10 @@ void VideoInputApplication::init_video_input(args::variables_map &options)
 
 int VideoInputApplication::main_loop(args::variables_map &options)
 {
-	
-	using  boost::gil::copy_pixels;
-	using boost::gil::rgb8_planar_image_t;
-	
+
+    using  boost::gil::copy_pixels;
+    using boost::gil::rgb8_planar_image_t;
+
     printf("VideoInputApplication::main_loop says hello world !\n");
 
     //init_gui(options);
@@ -70,12 +70,12 @@ int VideoInputApplication::main_loop(args::variables_map &options)
 
     GstVideoInput::const_view_t new_image_view = gst_video_input_p->get_new_image();
     BOOST_MPL_ASSERT(( or_< is_same< GstVideoInput::const_view_t, rgb8_image_t::const_view_t >,
-    						is_same< GstVideoInput::const_view_t, rgb8_planar_image_t::const_view_t > ));
+                       is_same< GstVideoInput::const_view_t, rgb8_planar_image_t::const_view_t > ));
 
-	// rgb8_cimg_t adapts cimg and gil::image_view
+    // rgb8_cimg_t adapts cimg and gil::image_view
     rgb8_cimg_t current_image(new_image_view.dimensions());
     current_image = new_image_view; // copy the data
-		  
+
     // FIXME should port ImagesInput to Gil
     // ImagesInput<uint8_t> images_input(options);
     // const CImg<uint8_t> &current_image = images_input.get_new_image();
@@ -88,8 +88,8 @@ int VideoInputApplication::main_loop(args::variables_map &options)
     {
         // const CImg<uint8_t> &current_image = images_input.get_new_image();
         gst_video_input_p->get_new_image();
-      	current_image = new_image_view; // copy the data
-		video_display.display(current_image);
+        current_image = new_image_view; // copy the data
+        video_display.display(current_image);
 
         const float seconds_to_wait = 0.1; // [seconds]
         boost::xtime t_time;

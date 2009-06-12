@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{18B9664D-AFD5-4019-94CB-606B5D7EA048}</ProjectGuid>
+    <Packages>
+      <Packages xmlns="">
+        <Package file="/usr/lib/pkgconfig/gstreamer-0.10.pc" name="GStreamer" IsProject="false" />
+        <Package file="/home/rodrigob/work/eclipse_workspace/uniclop/uniclop_base.md.pc" name="uniclop_base" IsProject="true" />
+        <Package file="/usr/lib/pkgconfig/glib-2.0.pc" name="GLib" IsProject="false" />
+        <Package file="/usr/lib/pkgconfig/glibmm-2.4.pc" name="GLibmm" IsProject="false" />
+        <Package file="/usr/lib/pkgconfig/gstreamer-video-0.10.pc" name="GStreamer Video Library" IsProject="false" />
+      </Packages>
+    </Packages>
+    <Compiler>
+      <Compiler ctype="GppCompiler" xmlns="" />
+    </Compiler>
+    <Language>CPP</Language>
+    <Target>Bin</Target>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug</OutputPath>
+    <Libs>
+      <Libs xmlns="">
+        <Lib>boost_program_options</Lib>
+        <Lib>boost_filesystem</Lib>
+        <Lib>boost_thread</Lib>
+      </Libs>
+    </Libs>
+    <DefineSymbols>DEBUG MONODEVELOP</DefineSymbols>
+    <SourceDirectory>.</SourceDirectory>
+    <OutputName>features_tracking</OutputName>
+    <CompileTarget>Bin</CompileTarget>
+    <Includes>
+      <Includes xmlns="">
+        <Include>${CombineDir}/src</Include>
+      </Includes>
+    </Includes>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release</OutputPath>
+    <DefineSymbols>MONODEVELOP</DefineSymbols>
+    <SourceDirectory>.</SourceDirectory>
+    <OptimizationLevel>3</OptimizationLevel>
+    <OutputName>features_tracking</OutputName>
+    <CompileTarget>Bin</CompileTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="features_tracking.cpp" />
+    <Compile Include="FeaturesTrackingApplication.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="FeaturesTrackingApplication.hpp" />
+  </ItemGroup>
+</Project>

@@ -68,7 +68,7 @@ class IFeaturesDetector
 public:
     typedef F features_type;
 
-    virtual const vector<F> &detect_features(const CImg<uint8_t> &image) = 0;
+    virtual const vector<F> &detect_features(const gray8c_view_t& image) = 0;
 
     IFeaturesDetector()
     {

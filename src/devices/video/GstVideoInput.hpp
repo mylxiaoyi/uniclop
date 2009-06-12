@@ -36,7 +36,7 @@ class GstVideoInput
 public:
     // RGB 8 bits interleaved image type
     typedef rgb8_image_t image_t;
-	typedef image_t::const_view_t const_view_t;
+    typedef image_t::const_view_t const_view_t;
 
 private:
     GstPipeline *pipeline;

@@ -169,11 +169,11 @@ void GstVideoInput::setup_video_input_pipeline(const string &video_sink_name)
 
 
     videosink_capabilities = gst_caps_new_simple(
-                         "video/x-raw-yuv",
-                         "width", G_TYPE_INT, width, "height", G_TYPE_INT, height, 
-                         //"framerate", GST_TYPE_FRACTION, 15, 1,
-						 "bpp", G_TYPE_INT, depth, "depth", G_TYPE_INT, depth, 
-						 NULL);
+                                 "video/x-raw-yuv",
+                                 "width", G_TYPE_INT, width, "height", G_TYPE_INT, height,
+                                 //"framerate", GST_TYPE_FRACTION, 15, 1,
+                                 "bpp", G_TYPE_INT, depth, "depth", G_TYPE_INT, depth,
+                                 NULL);
 
     // Camera -> Tee
     link_ok = gst_element_link_filtered(camera_source, tee, videosink_capabilities);
@@ -195,10 +195,10 @@ void GstVideoInput::setup_video_input_pipeline(const string &video_sink_name)
 
 
     color_space_capabilities = gst_caps_new_simple(
-    	"video/x-raw-rgb", 
-   		"bpp", G_TYPE_INT, depth, "depth", G_TYPE_INT, depth, 		
-   		 "width", G_TYPE_INT, width, "height", G_TYPE_INT, height, 		 
-    	NULL);
+                                   "video/x-raw-rgb",
+                                   "bpp", G_TYPE_INT, depth, "depth", G_TYPE_INT, depth,
+                                   "width", G_TYPE_INT, width, "height", G_TYPE_INT, height,
+                                   NULL);
 
     // Tee -> Queue -> ColorSpace -> Fakesink
     link_ok = gst_element_link(tee, fakesink_queue);
@@ -269,32 +269,34 @@ void GstVideoInput::on_new_frame(GstElement *element, GstBuffer * buffer, GstPad
     // create buffer view
     const uint8_t *data_p = (uint8_t *) GST_BUFFER_DATA(buffer);
     assert(depth == 24);
-    const ptrdiff_t row_size = width*3; 
-	const size_t buffer_size = GST_BUFFER_SIZE(buffer);
-	const size_t height =  buffer_size / row_size;
+    const ptrdiff_t row_size = width*3;
+    const size_t buffer_size = GST_BUFFER_SIZE(buffer);
+    const size_t height =  buffer_size / row_size;
 
     typedef boost::gil::rgb8c_view_t buffer_view_t;
     typedef boost::gil::rgb8c_ptr_t buffer_pixel_ptr_t;
-                
-	buffer_view_t buffer_view =
-        boost::gil::interleaved_view<boost::gil::rgb8c_ptr_t>(static_cast<size_t>(width), height,
-        	reinterpret_cast<buffer_pixel_ptr_t>(data_p), row_size);
 
-	
-    if(current_image_p.get() == NULL) {
-	    // lazy initialization
-	    current_image_p.reset(new GstVideoInput::image_t(width, height));
-	    current_image_view = boost::gil::const_view(*current_image_p);
+    buffer_view_t buffer_view =
+        boost::gil::interleaved_view<boost::gil::rgb8c_ptr_t>(static_cast<size_t>(width), height,
+                reinterpret_cast<buffer_pixel_ptr_t>(data_p), row_size);
+
+
+    if (current_image_p.get() == NULL)
+    {
+        // lazy initialization
+        current_image_p.reset(new GstVideoInput::image_t(width, height));
+        current_image_view = boost::gil::const_view(*current_image_p);
     }
 
 
-	if(false) {
-		// just for debugging
-		gint pad_width, pad_height;
-		gst_video_get_size(pad, &pad_width, &pad_height);
-		printf("Buffer_size / (height * 3) == %i. Pad size (%i, %i)\n", buffer_size / row_size, pad_width, pad_height);
-	}
-	
+    if (false)
+    {
+        // just for debugging
+        gint pad_width, pad_height;
+        gst_video_get_size(pad, &pad_width, &pad_height);
+        printf("Buffer_size / (height * 3) == %i. Pad size (%i, %i)\n", buffer_size / row_size, pad_width, pad_height);
+    }
+
     {
         // copy the buffer into *current_image_p
         //boost::lock_guard<boost::mutex>
