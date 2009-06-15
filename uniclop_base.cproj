@@ -66,6 +66,12 @@
     <Compile Include="src\helpers\rgb8_cimg_t.cpp" />
     <Compile Include="src\algorithms\features\features_matching.cpp" />
     <Compile Include="src\algorithms\model_estimation\model_estimation.cpp" />
+    <Compile Include="src\algorithms\model_estimation\models\FundamentalMatrixModel.cpp" />
+    <Compile Include="src\algorithms\model_estimation\models\HomographyModel.cpp" />
+    <Compile Include="src\algorithms\model_estimation\estimators\Ensemble.cpp" />
+    <Compile Include="src\algorithms\model_estimation\estimators\PROSAC.cpp" />
+    <Compile Include="src\algorithms\model_estimation\estimators\RANSAC.cpp" />
+    <Compile Include="src\algorithms\model_estimation\estimators\OneDimensionalKMeans.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\applications\AbstractApplication.hpp" />
@@ -78,10 +84,20 @@
     <None Include="src\algorithms\features\features_matching.hpp" />
     <None Include="src\algorithms\model_estimation\model_estimation.hpp" />
     <None Include="src\algorithms\features\FeaturesTracks.hpp" />
+    <None Include="src\algorithms\model_estimation\IParametricModel.hpp" />
+    <None Include="src\algorithms\model_estimation\IModelEstimator.hpp" />
+    <None Include="src\algorithms\model_estimation\models\FundamentalMatrixModel.hpp" />
+    <None Include="src\algorithms\model_estimation\models\HomographyModel.hpp" />
+    <None Include="src\algorithms\model_estimation\estimators\RANSAC.hpp" />
+    <None Include="src\algorithms\model_estimation\estimators\PROSAC.hpp" />
+    <None Include="src\algorithms\model_estimation\estimators\Ensemble.hpp" />
+    <None Include="src\algorithms\model_estimation\estimators\OneDimensionalKMeans.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="src\applications\video_input/" />
     <Folder Include="src\algorithms\features\sift\jift/" />
     <Folder Include="src\helpers/" />
+    <Folder Include="src\algorithms\model_estimation\models/" />
+    <Folder Include="src\algorithms\model_estimation\estimators/" />
   </ItemGroup>
 </Project>
