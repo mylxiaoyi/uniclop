@@ -1,11 +1,11 @@
 
 
 #if !defined(FUNDAMENTAL_MATRIX_MODEL_HEADER)
-#defined FUNDAMENTAL_MATRIX_MODEL_HEADER
+#define FUNDAMENTAL_MATRIX_MODEL_HEADER
 
 // class FundamentalMatrixModel
 
-#include "../IParaMetricModel.hpp"
+#include "../IParametricModel.hpp"
 
 namespace uniclop
 {
@@ -16,6 +16,7 @@ namespace model_estimation
 namespace models
 {
 
+using namespace uniclop::algorithms::model_estimation;
 
 // need a model for fundamental matrix and for homography projections (at least)
 

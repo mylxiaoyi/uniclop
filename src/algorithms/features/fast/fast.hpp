@@ -7,20 +7,12 @@
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 // Headers
 
-#include "algorithms/features/features_detection.hpp"
+#include "FASTFeature.hpp"
 
-#include <boost/gil/typedefs.hpp>
-
-// forward declaration to avoid including directly CImg.h
-namespace cimg_library
-{
-template<typename T> struct CImg;
-}
-using namespace cimg_library;
 
 #include <vector>
-
 #include <boost/cstdint.hpp>
+#include <boost/gil/typedefs.hpp>
 
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 // Function prototypes declaration
@@ -31,8 +23,7 @@ namespace algorithms
 {
 namespace features
 {
-
-namespace FAST
+namespace fast
 {
 
 using namespace std;

@@ -1,20 +1,14 @@
-
-#if !defined(FEATURES_MATCHING_HEADER_INCLUDED)
-#define FEATURES_MATCHING_HEADER_INCLUDED
+#if !defined(IFEATURES_MATCHER_HEADER_INCLUDED)
+#define IFEATURES_MATCHER_HEADER_INCLUDED
 
 // Noisy features matching
 
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 // Headers
 
-// #include "features_detection.hpp" // do we need IFeature ?
 
 #include <vector>
-using namespace std;
-
-#include <boost/program_options.hpp>
-namespace args = boost::program_options;
-
+#include <stdexcept>
 
 namespace uniclop
 {
@@ -22,6 +16,8 @@ namespace algorithms
 {
 namespace features
 {
+
+using namespace std;
 
 
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
@@ -93,54 +89,8 @@ public:
     ///< changing the features_vector content could invalidate the pointers !
 };
 
-class FASTFeature; // forward declaration
-
-/**
- will return an ordered list of ScoredMatches
-    implement the fast matching algorithm for FAST features as
-    described in Edward Rosten thesis
-
-*/
-class FASTFeaturesMatcher : IFeaturesMatcher<FASTFeature>
-{
-
-    vector< ScoredMatch<FASTFeature> > matchings;
-public:
-
-    static args::options_description get_options_description();
-
-    FASTFeaturesMatcher(args::variables_map &options);
-    ~FASTFeaturesMatcher();
-
-    vector< ScoredMatch<FASTFeature> >& match(
-        const vector<FASTFeature>& features_list_a,
-        const vector<FASTFeature>& features_list_b);
-};
-
-template<typename F>
-class SimpleFeaturesMatcher: IFeaturesMatcher<F>
-{
-    // will return an ordered list of ScoredMatches
-
-    // dead simple implementation O(N**2) that takes the num_near_features nearest features
-
-    vector< ScoredMatch<F> > matchings;
-
-    float _max_distance;
-    int _num_near_features;
-    // for each feature, search the num_near_features nearest with respect to a distance threshold
-public:
-
-    static args::options_description get_options_description();
-
-    SimpleFeaturesMatcher(args::variables_map &options);
-    ~SimpleFeaturesMatcher();
-
-    vector< ScoredMatch<F> >& match(const vector<F>& features_list_a, const vector<F>& features_list_b);
-};
-
 }
 }
 }
 
-#endif // #if !defined(FEATURES_MATCHING_HEADER_INCLUDED)
+#endif // IFEATURES_MATCHER_HEADER_INCLUDED

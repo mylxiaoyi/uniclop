@@ -8,9 +8,9 @@
 // Headers
 
 #include "fast.hpp"
-#include <boost/gil/gil_all.hpp>
 
-#include <CImg/CImg.h>
+#include <typeinfo>
+#include <boost/gil/image.hpp>
 
 namespace uniclop
 {
@@ -18,11 +18,9 @@ namespace algorithms
 {
 namespace features
 {
-namespace FAST
+namespace fast
 {
 
-
-using namespace cimg_library;
 
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 // Functions definition

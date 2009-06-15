@@ -2,12 +2,8 @@
 
 #include "devices/video/GstVideoInput.hpp"
 
-#include "algorithms/features/features_detection.hpp"
-
-
 #include <boost/thread/xtime.hpp>
 #include <boost/thread/thread.hpp>
-
 
 #include <cstdio>
 #include <iostream>
@@ -31,7 +27,6 @@ using boost::gil::copy_and_convert_pixels;
 using boost::gil::const_view;
 using boost::gil::gray8_image_t;
 
-using uniclop::algorithms::features::FASTFeature;
 
 
 string FeaturesDetectionApplication::get_application_title() const

@@ -61,37 +61,30 @@
     <Compile Include="src\applications\AbstractApplication.cpp" />
     <Compile Include="src\devices\video\ImagesInput.cpp" />
     <Compile Include="src\algorithms\features\fast\fast.cpp" />
-    <Compile Include="src\algorithms\features\features_detection.cpp" />
     <Compile Include="src\devices\video\GstVideoInput.cpp" />
     <Compile Include="src\helpers\rgb8_cimg_t.cpp" />
-    <Compile Include="src\algorithms\features\features_matching.cpp" />
-    <Compile Include="src\algorithms\model_estimation\model_estimation.cpp" />
-    <Compile Include="src\algorithms\model_estimation\models\FundamentalMatrixModel.cpp" />
-    <Compile Include="src\algorithms\model_estimation\models\HomographyModel.cpp" />
-    <Compile Include="src\algorithms\model_estimation\estimators\Ensemble.cpp" />
-    <Compile Include="src\algorithms\model_estimation\estimators\PROSAC.cpp" />
-    <Compile Include="src\algorithms\model_estimation\estimators\RANSAC.cpp" />
-    <Compile Include="src\algorithms\model_estimation\estimators\OneDimensionalKMeans.cpp" />
+    <Compile Include="src\algorithms\features\fast\FASTFeaturesMatcher.cpp" />
+    <Compile Include="src\algorithms\features\fast\FASTFeature.cpp" />
+    <Compile Include="src\algorithms\features\SimpleFeaturesMatcher.cpp" />
+    <Compile Include="src\algorithms\features\fast\SimpleFAST.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\applications\AbstractApplication.hpp" />
     <None Include="src\devices\video\ImagesInput.hpp" />
     <None Include="src\algorithms\features\fast\fast.hpp" />
-    <None Include="src\algorithms\features\features_detection.hpp" />
     <None Include="src\devices\video\GstVideoInput.hpp" />
     <None Include="src\helpers\rgb8_cimg_t.hpp" />
     <None Include="src\helpers\for_each.hpp" />
-    <None Include="src\algorithms\features\features_matching.hpp" />
-    <None Include="src\algorithms\model_estimation\model_estimation.hpp" />
     <None Include="src\algorithms\features\FeaturesTracks.hpp" />
     <None Include="src\algorithms\model_estimation\IParametricModel.hpp" />
     <None Include="src\algorithms\model_estimation\IModelEstimator.hpp" />
-    <None Include="src\algorithms\model_estimation\models\FundamentalMatrixModel.hpp" />
-    <None Include="src\algorithms\model_estimation\models\HomographyModel.hpp" />
-    <None Include="src\algorithms\model_estimation\estimators\RANSAC.hpp" />
-    <None Include="src\algorithms\model_estimation\estimators\PROSAC.hpp" />
-    <None Include="src\algorithms\model_estimation\estimators\Ensemble.hpp" />
-    <None Include="src\algorithms\model_estimation\estimators\OneDimensionalKMeans.hpp" />
+    <None Include="src\algorithms\features\fast\FASTFeaturesMatcher.hpp" />
+    <None Include="src\algorithms\features\fast\FASTFeature.hpp" />
+    <None Include="src\algorithms\features\IFeature.hpp" />
+    <None Include="src\algorithms\features\IFeaturesDetector.hpp" />
+    <None Include="src\algorithms\features\IFeaturesMatcher.hpp" />
+    <None Include="src\algorithms\features\SimpleFeaturesMatcher.hpp" />
+    <None Include="src\algorithms\features\fast\SimpleFAST.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="src\applications\video_input/" />

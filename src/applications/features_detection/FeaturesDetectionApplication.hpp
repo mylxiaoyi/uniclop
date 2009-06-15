@@ -4,14 +4,12 @@
 
 #include "applications/AbstractApplication.hpp"
 
-#include "algorithms/features/features_detection.hpp"
-
-#include <boost/scoped_ptr.hpp>
+#include "algorithms/features/fast/SimpleFAST.hpp"
 
 #include "devices/video/GstVideoInput.hpp"
 
 #include <vector>
-
+#include <boost/scoped_ptr.hpp>
 
 
 namespace cimg_library
@@ -37,8 +35,8 @@ namespace features_detection
 {
 
 using uniclop::devices::video::GstVideoInput;
-using uniclop::algorithms::features::SimpleFAST;
-using uniclop::algorithms::features::FASTFeature;
+using uniclop::algorithms::features::fast::SimpleFAST;
+using uniclop::algorithms::features::fast::FASTFeature;
 
 namespace program_options =  boost::program_options;
 using boost::scoped_ptr;
