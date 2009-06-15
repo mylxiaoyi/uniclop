@@ -6,7 +6,8 @@
 #include "model_estimation.hpp"
 
 // extra implementation specific headers ---
-#include "features_detection.hpp"
+#include "algorithms/features/features_detection.hpp"
+
 #include "kmeans.hpp"
 
 // Boost http://boost.org
@@ -15,7 +16,6 @@
 
 // Cimg http://cimg.sf.net
 #include <CImg/CImg.h>
-using namespace cimg_library;
 
 // RANSAC implementation requires VXL installed
 // with the RREL and GEL/vpgl contributions
@@ -32,6 +32,14 @@ using namespace cimg_library;
 #include <vpgl/vpgl_fm_compute_8_point.h>
 
 
+namespace uniclop
+{
+namespace algorithms
+{
+namespace model_estimation
+{
+
+using namespace cimg_library;
 
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 // Class FundamentalMatrixModel: IParametricModel< ScoredMatch<F> > methods implementation
@@ -1059,5 +1067,5 @@ template class RANSAC< ScoredMatch<FASTFeature> >;
 template class RANSAC< ScoredMatch<SIFTFeature> >;
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 
-
+}}}
 

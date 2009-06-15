@@ -15,6 +15,15 @@ using namespace std;
 #include <boost/program_options.hpp>
 namespace args = boost::program_options;
 
+
+namespace uniclop
+{
+namespace algorithms
+{
+namespace features
+{
+	
+	
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 // Classes definition
 
@@ -27,7 +36,8 @@ public:
 
     const F *feature_a, *feature_b;
     ///< warning: keeping pointers to a vector element is dangereous since
-    ///< the vector memory area will change as his content grows
+    ///< the vector memory area will change as its content grows
+    ///< should only keep pointers to std::list
 
     float distance;
     ///< distance between features A and B (given a metric)
@@ -85,12 +95,15 @@ public:
 
 class FASTFeature; // forward declaration
 
+/**
+ will return an ordered list of ScoredMatches
+    implement the fast matching algorithm for FAST features as
+    described in Edward Rosten thesis
+
+*/
 class FASTFeaturesMatcher : IFeaturesMatcher<FASTFeature>
 {
-    // will return an ordered list of ScoredMatches
-    // implement the fast matching algorithm for FAST features as
-    // described in Edward Rosten thesis
-
+   
     vector< ScoredMatch<FASTFeature> > matchings;
 public:
 
@@ -126,5 +139,6 @@ public:
     vector< ScoredMatch<F> >& match(const vector<F>& features_list_a, const vector<F>& features_list_b);
 };
 
+}}}
 
 #endif // #if !defined(FEATURES_MATCHING_HEADER_INCLUDED)

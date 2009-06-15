@@ -64,6 +64,8 @@
     <Compile Include="src\algorithms\features\features_detection.cpp" />
     <Compile Include="src\devices\video\GstVideoInput.cpp" />
     <Compile Include="src\helpers\rgb8_cimg_t.cpp" />
+    <Compile Include="src\algorithms\features\features_matching.cpp" />
+    <Compile Include="src\algorithms\model_estimation\model_estimation.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\applications\AbstractApplication.hpp" />
@@ -73,6 +75,9 @@
     <None Include="src\devices\video\GstVideoInput.hpp" />
     <None Include="src\helpers\rgb8_cimg_t.hpp" />
     <None Include="src\helpers\for_each.hpp" />
+    <None Include="src\algorithms\features\features_matching.hpp" />
+    <None Include="src\algorithms\model_estimation\model_estimation.hpp" />
+    <None Include="src\algorithms\features\FeaturesTracks.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="src\applications\video_input/" />

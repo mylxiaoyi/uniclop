@@ -11,6 +11,15 @@
 // implementation specific headers
 #include <iostream> // cout definition
 #include <limits> // to use numeric_limits<float>::max() and similars
+
+
+namespace uniclop
+{
+namespace algorithms
+{
+namespace features
+{
+	
 using namespace std;
 
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
@@ -201,7 +210,8 @@ vector< ScoredMatch<T> >& SimpleFeaturesMatcher<T>::match(
 class FASTFeature; // forward declaration
 template class SimpleFeaturesMatcher<FASTFeature>;
 
-class SIFTFeature; // forward declaration
-template class SimpleFeaturesMatcher<SIFTFeature>;
+//class SIFTFeature; // forward declaration
+//template class SimpleFeaturesMatcher<SIFTFeature>;
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 
+}}}

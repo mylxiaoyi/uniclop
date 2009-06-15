@@ -9,8 +9,16 @@
 
 #include "devices/video/GstVideoInput.hpp"
 
+#include "algorithms/features/FeaturesTracks.hpp" 
+
 namespace uniclop
 {
+	
+	namespace algorithms {
+	namespace features {
+		class FASTFeaturesMatcher;
+	}
+	}
 namespace applications
 {
 namespace features_tracking
@@ -25,6 +33,12 @@ class FeaturesTrackingApplication: public AbstractApplication
 {
 
     scoped_ptr<GstVideoInput> gst_video_input_p;
+    
+    // FIXME need to fix IFeaturesMatcher class design so we can use IFeaturesMatcher
+    // instead of this specific matcher 
+    scoped_ptr<FASTFeaturesMatcher> features_matcher_p;
+
+	FeaturesTracks features_tracks;
 
 public:
     string get_application_title() const;

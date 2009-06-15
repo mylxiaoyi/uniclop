@@ -11,14 +11,11 @@
 #include <limits> // to use numeric_limits<float>::max() and similars
 #include <vector>
 #include <algorithm>
-using namespace std;
 
 // Boost http://boost.org
 #include <boost/program_options.hpp>
-namespace args = boost::program_options;
 
 #include <boost/numeric/ublas/vector.hpp>
-namespace ublas = boost::numeric::ublas;
 
 #include <boost/random.hpp>
 
@@ -29,10 +26,22 @@ namespace cimg_library
 template<typename T> struct CImg;
 struct CImgDisplay;
 }
+
+#include "algorithms/features/features_matching.hpp"
+
+namespace uniclop
+{
+namespace algorithms
+{
+namespace model_estimation
+{
+
 using namespace cimg_library;
-
-#include "features_matching.hpp"
-
+using namespace std;
+namespace args = boost::program_options;
+namespace ublas = boost::numeric::ublas;
+	
+	
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 // Interfaces definition
 
@@ -511,6 +520,7 @@ public:
 }
 ; // end helper class KurtosisIncrementalEstimator<>
 
+}}}
 
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 

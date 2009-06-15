@@ -1,14 +1,34 @@
 
 
 
+/*
+OLD DESCRIPTION
+Implementation of an efficient features matcher based on
+FAST features detection and matching by Edward Rosten and Tom Drummond
+PROSAC robust estimation by Ondřej Chum and Jiří Matas
+*/
 
-
+// ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
+// Headers
 
 #include "FeaturesTrackingApplication.hpp"
-
-
 #include "devices/video/GstVideoInput.hpp"
 
+#include <CImg/CImg.h>
+
+// Boost http://boost.org
+#include <boost/program_options.hpp>
+#include <boost/scoped_ptr.hpp>
+#include <boost/numeric/ublas/io.hpp>
+
+// C++ standard includes
+#include <iostream> // cout definition
+
+#include "images_input.hpp"
+#include "algorithms/features/features_detection.hpp"
+#include "algorithms/features/features_matching.hpp"
+#include "algorithms/model_estimation/model_estimation.hpp"
+// #include "dense_ensemble_estimation.hpp"
 
 namespace uniclop
 {
@@ -16,6 +36,10 @@ namespace applications
 {
 namespace features_tracking
 {
+
+using namespace std;
+using namespace cimg_library;
+namespace args = boost::program_options;
 
 
 string FeaturesTrackingApplication::get_application_title() const
@@ -28,6 +52,8 @@ program_options::options_description FeaturesTrackingApplication::get_command_li
     program_options::options_description desc;
 
     desc.add(GstVideoInput::get_options_description());
+    desc.add(FASTFeaturesMatcher::get_options_description());
+
 
     return desc;
 }
@@ -36,6 +62,12 @@ int FeaturesTrackingApplication::main_loop(program_options::variables_map &optio
 {
 
     printf("FeaturesTrackingApplication::main_loop says hello world !\n");
+    
+    // init video input
+    gst_video_input_p.reset(new GstVideoInput(options));
+
+
+	features_matcher_p.reset(new FASTFeaturesMatcher());
 
     return 0;
 }
@@ -47,57 +79,13 @@ int FeaturesTrackingApplication::main_loop(program_options::variables_map &optio
 }
 
 
-
 /*
-Implementation of an efficient features matcher based on
-FAST features detection and matching by Edward Rosten and Tom Drummond
-PROSAC robust estimation by Ondřej Chum and Jiří Matas
-*/
-
-
-/*
-
-
-// ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
-// Headers
-
-#define PROGRAM_TITLE "Features matching demonstration. R.Benenson 2007."
-
-// Cimg http://cimg.sf.net
-#if defined(_MSC_VER)
-#define cimg_imagemagick_path "C:\\ImageMagick-6.3.5-Q16\\convert.exe"
-#endif
-
-#include <CImg/CImg.h>
-using namespace cimg_library;
-
-// Boost http://boost.org
-#include <boost/program_options.hpp>
-namespace args = boost::program_options;
-#include <boost/scoped_ptr.hpp>
-#include <boost/numeric/ublas/io.hpp>
-
-// C++ standard includes
-#include <iostream> // cout definition
-using namespace std;
-
-
-#include "images_input.hpp"
-#include "features_detection.hpp"
-#include "features_matching.hpp"
-#include "model_estimation.hpp"
-#include "dense_ensemble_estimation.hpp"
-
-
-
-// ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
-// Demonstration application
 
 template<typename F>
 int main_loop(args::variables_map &options, IFeaturesDetector<F> &features_detector);
 // part of the code needs to be templated...
 
-int main(int argc, char *argv[])
+int features_matching_main(int argc, char *argv[])
 {
     // demonstration application search features of a template into a changing image
     try

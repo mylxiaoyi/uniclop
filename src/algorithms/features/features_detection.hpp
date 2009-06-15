@@ -7,27 +7,13 @@
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 // Headers
 
-// forward declaration to avoid including directly CImg.h
-namespace cimg_library
-{
-template<typename T> struct CImg;
-}
-using namespace cimg_library;
-
 #include <vector>
-using namespace std;
 
-// Boost http://boost.org
 #include <boost/cstdint.hpp>
-using boost::uint8_t;
-
 #include <boost/program_options.hpp>
-namespace args = boost::program_options;
-
 #include <boost/scoped_ptr.hpp>
-
 #include <boost/gil/typedefs.hpp>
-using boost::gil::gray8c_view_t;
+
 
 
 namespace uniclop
@@ -36,6 +22,12 @@ namespace algorithms
 {
 namespace features
 {
+
+using namespace std;
+	
+namespace args = boost::program_options;
+using boost::uint8_t;
+using boost::gil::gray8c_view_t;
 
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 // Interfaces definition

@@ -7,22 +7,12 @@
 
 #include "fast/fast.hpp"
 
-
-
-// Cimg http://cimg.sf.net
-#include <CImg/CImg.h>
-
-
 namespace uniclop
 {
 namespace algorithms
 {
 namespace features
 {
-
-
-using namespace cimg_library;
-
 
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 // class FASTFeature methods implementation
