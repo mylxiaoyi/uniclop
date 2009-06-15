@@ -19,7 +19,7 @@ namespace algorithms
 {
 namespace features
 {
-	
+
 using namespace std;
 
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
@@ -214,4 +214,6 @@ template class SimpleFeaturesMatcher<FASTFeature>;
 //template class SimpleFeaturesMatcher<SIFTFeature>;
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 
-}}}
+}
+}
+}

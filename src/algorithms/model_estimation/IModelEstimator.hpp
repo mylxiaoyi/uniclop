@@ -42,6 +42,8 @@ public:
 };
 
 
-}}}
+}
+}
+}
 
 #endif // IMODEL_ESTIMATOR_HEADER

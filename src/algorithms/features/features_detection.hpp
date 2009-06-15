@@ -24,7 +24,7 @@ namespace features
 {
 
 using namespace std;
-	
+
 namespace args = boost::program_options;
 using boost::uint8_t;
 using boost::gil::gray8c_view_t;

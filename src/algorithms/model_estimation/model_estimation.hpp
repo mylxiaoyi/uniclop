@@ -44,7 +44,7 @@ using namespace cimg_library;
 using namespace std;
 namespace args = boost::program_options;
 namespace ublas = boost::numeric::ublas;
-	
+
 using namespace uniclop::algorithms::features;
 
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
@@ -65,7 +65,9 @@ using namespace uniclop::algorithms::features;
 
 /
 
-}}}
+}
+}
+}
 
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 

@@ -114,19 +114,20 @@ int FeaturesDetectionApplication::main_loop(program_options::variables_map &opti
 
 void FeaturesDetectionApplication::draw_features(const vector<FASTFeature> &features, rgb8_cimg_t &rgb_image)
 {
-	
-	printf("Found %i FASTFeatures\n", features.size());
-	
-	const uint8_t point_color[3] = {255, 155, 0}; // red
-		   
-	vector<FASTFeature>::const_iterator features_it;
-	for_each(features_it, features) {
-	
-		static_cast<rgb8_cimg_t::cimg_t>(rgb_image).draw_point(features_it->x, features_it->y, point_color);
-		
-	}
-	
-	
+
+    printf("Found %i FASTFeatures\n", features.size());
+
+    const uint8_t point_color[3] = {255, 155, 0}; // red
+
+    vector<FASTFeature>::const_iterator features_it;
+    for_each(features_it, features)
+    {
+
+        static_cast<rgb8_cimg_t::cimg_t>(rgb_image).draw_point(features_it->x, features_it->y, point_color);
+
+    }
+
+
     /*
        // draw results --
         if (show_matching_result)

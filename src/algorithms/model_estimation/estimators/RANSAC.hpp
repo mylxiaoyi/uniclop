@@ -11,7 +11,8 @@ namespace algorithms
 {
 namespace model_estimation
 {
-namespace estimators {
+namespace estimators
+{
 
 template<typename T> // T is the data type
 class RANSAC: public IModelEstimator<T>
@@ -43,6 +44,9 @@ public:
     const vector< bool > & get_is_inlier();
 };
 
-}}}}
+}
+}
+}
+}
 
 #endif // RANSAC_HEADER

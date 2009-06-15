@@ -10,7 +10,7 @@
  *
  * This is a very efficient version of kmeans that is specialized for
  * 1-dimensional data.  We can run very quickly by keeping only the
- * indices of class boundaries.  
+ * indices of class boundaries.
  *
  * class 1 = 0
  * class 2 = n_1
@@ -126,7 +126,7 @@ unsigned int OneDimensionalKMeans::find_boundary(const vector<double> &data,
 bool OneDimensionalKMeans::changed( const vector<unsigned int> &a, const vector<unsigned int> &b)
 {
     //vector<unsigned int>::const_iterator a_it, b_it;
-    if(a.size() != b.size() )
+    if (a.size() != b.size() )
         throw runtime_error("changed(...) arguments does not match expected sizes");
 
     unsigned int i;
@@ -252,7 +252,7 @@ void OneDimensionalKMeans::compute( vector<double> &data, const unsigned int k)
         iteration++;
     } // end of 'while ( changed(prev, split, k) )'
 
-    if(true) printf( "Converged in %d interations\n", iteration );
+    if (true) printf( "Converged in %d interations\n", iteration );
 
     /**
      * Divide the mean sums by the proper denominator

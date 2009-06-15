@@ -9,7 +9,8 @@ namespace algorithms
 {
 namespace model_estimation
 {
-namespace models {
+namespace models
+{
 
 
 
@@ -53,7 +54,10 @@ public:
 }
 ; // end of class HomographyModel declaration
 
-}}}}
+}
+}
+}
+}
 
 #endif // HOMOGRAPHY_MODEL_HEADER
 

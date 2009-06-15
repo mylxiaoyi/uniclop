@@ -14,8 +14,9 @@
 
 
 
-namespace cimg_library {
-	class rgb8_cimg_t;
+namespace cimg_library
+{
+class rgb8_cimg_t;
 }
 
 namespace uniclop

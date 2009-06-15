@@ -22,8 +22,8 @@ namespace algorithms
 {
 namespace features
 {
-	
-	
+
+
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 // Classes definition
 
@@ -103,7 +103,7 @@ class FASTFeature; // forward declaration
 */
 class FASTFeaturesMatcher : IFeaturesMatcher<FASTFeature>
 {
-   
+
     vector< ScoredMatch<FASTFeature> > matchings;
 public:
 
@@ -139,6 +139,8 @@ public:
     vector< ScoredMatch<F> >& match(const vector<F>& features_list_a, const vector<F>& features_list_b);
 };
 
-}}}
+}
+}
+}
 
 #endif // #if !defined(FEATURES_MATCHING_HEADER_INCLUDED)

@@ -13,7 +13,8 @@ namespace algorithms
 {
 namespace model_estimation
 {
-namespace models {
+namespace models
+{
 
 
 // need a model for fundamental matrix and for homography projections (at least)
@@ -58,7 +59,10 @@ public:
 ; // end of class FundamentalMatrixModel declaration
 
 
-}}}}
+}
+}
+}
+}
 
 
 #endif // !defined(FUNDAMENTAL_MATRIX_MODEL_HEADER)

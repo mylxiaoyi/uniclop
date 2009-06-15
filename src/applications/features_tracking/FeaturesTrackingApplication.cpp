@@ -62,12 +62,12 @@ int FeaturesTrackingApplication::main_loop(program_options::variables_map &optio
 {
 
     printf("FeaturesTrackingApplication::main_loop says hello world !\n");
-    
+
     // init video input
     gst_video_input_p.reset(new GstVideoInput(options));
 
 
-	features_matcher_p.reset(new FASTFeaturesMatcher());
+    features_matcher_p.reset(new FASTFeaturesMatcher());
 
     return 0;
 }

@@ -30,8 +30,8 @@ public:
 
     typedef rgb8_planar_image_t::view_t view_t;
     view_t view;
-	
-	typedef CImg<uint8_t> cimg_t;
+
+    typedef CImg<uint8_t> cimg_t;
 
     rgb8_cimg_t(const int width, const int height);
     rgb8_cimg_t(const boost::gil::point2<int> &size);

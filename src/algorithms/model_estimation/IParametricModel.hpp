@@ -25,7 +25,7 @@ namespace model_estimation
 
 using namespace std;
 namespace ublas = boost::numeric::ublas;
-	
+
 
 
 // Interfaces definition
@@ -68,7 +68,9 @@ public:
     }
 };
 
-}}}
+}
+}
+}
 
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 
