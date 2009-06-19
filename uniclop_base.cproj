@@ -79,6 +79,7 @@
     <Compile Include="src\algorithms\model_estimation\estimators\RANSAC.cpp" />
     <Compile Include="src\algorithms\model_estimation\estimators\OneDimensionalKMeans.cpp" />
     <Compile Include="src\algorithms\model_estimation\estimators\Ensemble.cpp" />
+    <Compile Include="src\algorithms\features\FeaturesTracks.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\applications\AbstractApplication.hpp" />
@@ -105,6 +106,7 @@
     <None Include="src\algorithms\model_estimation\estimators\RANSAC.hpp" />
     <None Include="src\algorithms\model_estimation\estimators\OneDimensionalKMeans.hpp" />
     <None Include="src\algorithms\model_estimation\estimators\Ensemble.hpp" />
+    <None Include="src\algorithms\model_estimation\model_estimation.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="src\applications\video_input/" />

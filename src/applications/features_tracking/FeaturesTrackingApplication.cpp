@@ -2,10 +2,7 @@
 
 
 /*
-OLD DESCRIPTION
-Implementation of an efficient features matcher based on
-FAST features detection and matching by Edward Rosten and Tom Drummond
-PROSAC robust estimation by Ondřej Chum and Jiří Matas
+Simple application that shows on screen tracks of detected feature points
 */
 
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
@@ -16,19 +13,13 @@ PROSAC robust estimation by Ondřej Chum and Jiří Matas
 
 #include <CImg/CImg.h>
 
-// Boost http://boost.org
-#include <boost/program_options.hpp>
 #include <boost/scoped_ptr.hpp>
 #include <boost/numeric/ublas/io.hpp>
 
-// C++ standard includes
 #include <iostream> // cout definition
 
-#include "images_input.hpp"
-#include "algorithms/features/features_detection.hpp"
-#include "algorithms/features/features_matching.hpp"
 #include "algorithms/model_estimation/model_estimation.hpp"
-// #include "dense_ensemble_estimation.hpp"
+
 
 namespace uniclop
 {
@@ -39,26 +30,24 @@ namespace features_tracking
 
 using namespace std;
 using namespace cimg_library;
-namespace args = boost::program_options;
-
 
 string FeaturesTrackingApplication::get_application_title() const
 {
     return "Features tracking. A simple test application. Uniclop 2009";
 
 }
-program_options::options_description FeaturesTrackingApplication::get_command_line_options(void) const
+args::options_description FeaturesTrackingApplication::get_command_line_options(void) const
 {
-    program_options::options_description desc;
+    args::options_description desc;
 
     desc.add(GstVideoInput::get_options_description());
-    desc.add(FASTFeaturesMatcher::get_options_description());
+    desc.add(fast::FASTFeaturesMatcher::get_options_description());
 
 
     return desc;
 }
 
-int FeaturesTrackingApplication::main_loop(program_options::variables_map &options)
+int FeaturesTrackingApplication::main_loop(args::variables_map &options)
 {
 
     printf("FeaturesTrackingApplication::main_loop says hello world !\n");
@@ -67,7 +56,7 @@ int FeaturesTrackingApplication::main_loop(program_options::variables_map &optio
     gst_video_input_p.reset(new GstVideoInput(options));
 
 
-    features_matcher_p.reset(new FASTFeaturesMatcher());
+    features_matcher_p.reset(new fast::FASTFeaturesMatcher(options));
 
     return 0;
 }

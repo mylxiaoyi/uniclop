@@ -7,9 +7,12 @@
 
 #include <boost/scoped_ptr.hpp>
 
+
 #include "devices/video/GstVideoInput.hpp"
 
 #include "algorithms/features/FeaturesTracks.hpp"
+#include "algorithms/features/fast/FASTFeaturesMatcher.hpp"
+
 
 namespace uniclop
 {
@@ -17,19 +20,22 @@ namespace uniclop
 namespace algorithms
 {
 namespace features
-{
-class FASTFeaturesMatcher;
-}
+{ namespace fast { 
+class FASTFeaturesMatcher; 
+}}
 }
 namespace applications
 {
 namespace features_tracking
 {
-
-using uniclop::devices::video::GstVideoInput;
-namespace program_options =  boost::program_options;
-using boost::scoped_ptr;
 using namespace std;
+
+using namespace uniclop::applications::args;
+using namespace uniclop::algorithms::features;
+
+using boost::scoped_ptr;
+using uniclop::devices::video::GstVideoInput;
+
 
 class FeaturesTrackingApplication: public AbstractApplication
 {
@@ -38,14 +44,14 @@ class FeaturesTrackingApplication: public AbstractApplication
 
     // FIXME need to fix IFeaturesMatcher class design so we can use IFeaturesMatcher
     // instead of this specific matcher
-    scoped_ptr<FASTFeaturesMatcher> features_matcher_p;
+    scoped_ptr<fast::FASTFeaturesMatcher> features_matcher_p;
 
     FeaturesTracks features_tracks;
 
 public:
     string get_application_title() const;
-    program_options::options_description get_command_line_options(void) const;
-    int main_loop(program_options::variables_map &options);
+    args::options_description get_command_line_options(void) const;
+    int main_loop(args::variables_map &options);
 
 private:
 
