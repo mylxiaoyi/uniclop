@@ -18,7 +18,7 @@ using namespace std;
 namespace args = boost::program_options;
 
 template<typename F>
-class SimpleFeaturesMatcher: IFeaturesMatcher<F>
+class SimpleFeaturesMatcher: public IFeaturesMatcher<F>
 {
     // will return an ordered list of ScoredMatches
 

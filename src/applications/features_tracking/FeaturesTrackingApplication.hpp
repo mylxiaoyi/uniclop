@@ -11,8 +11,15 @@
 #include "devices/video/GstVideoInput.hpp"
 
 #include "algorithms/features/FeaturesTracks.hpp"
-#include "algorithms/features/fast/FASTFeaturesMatcher.hpp"
 
+#include "algorithms/features/fast/SimpleFAST.hpp"
+#include "algorithms/features/IFeaturesMatcher.hpp"
+#include "algorithms/features/IFeaturesDetector.hpp"
+
+
+namespace cimg_library {
+class rgb8_cimg_t;
+}
 
 namespace uniclop
 {
@@ -24,10 +31,12 @@ namespace features
 class FASTFeaturesMatcher; 
 }}
 }
+
 namespace applications
 {
 namespace features_tracking
 {
+	
 using namespace std;
 
 using namespace uniclop::applications::args;
@@ -44,8 +53,10 @@ class FeaturesTrackingApplication: public AbstractApplication
 
     // FIXME need to fix IFeaturesMatcher class design so we can use IFeaturesMatcher
     // instead of this specific matcher
-    scoped_ptr<fast::FASTFeaturesMatcher> features_matcher_p;
-
+    typedef fast::SimpleFAST::features_type features_type; 
+    scoped_ptr<IFeaturesDetector< features_type > > features_detector_p;
+    scoped_ptr<IFeaturesMatcher< features_type > > features_matcher_p;
+  	
     FeaturesTracks features_tracks;
 
 public:
@@ -54,8 +65,10 @@ public:
     int main_loop(args::variables_map &options);
 
 private:
-
+    void draw_tracks(const FeaturesTracks &tracks, cimg_library::rgb8_cimg_t &image);
+    
 };
+
 
 }
 }

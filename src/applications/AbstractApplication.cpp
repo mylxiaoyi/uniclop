@@ -4,6 +4,9 @@
 #include <fstream>
 #include <iostream>
 
+#include <boost/thread/xtime.hpp>
+#include <boost/thread/thread.hpp>
+
 namespace uniclop
 {
 namespace applications
@@ -83,6 +86,19 @@ args::variables_map AbstractApplication::parse_arguments(int argc, char *argv[])
 
     return options;
 }
+
+
+	void AbstractApplication::wait_some_seconds(const float seconds_to_wait) {
+		
+        boost::xtime t_time;
+        boost::xtime_get(&t_time, boost::TIME_UTC);
+        t_time.nsec += (1000 * 1000) * seconds_to_wait;
+        boost::thread::sleep(t_time);
+        
+	return;	
+	}
+
+
 
 }
 }

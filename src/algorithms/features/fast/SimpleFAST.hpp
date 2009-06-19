@@ -46,6 +46,7 @@ class SimpleFAST : public IFeaturesDetector<FASTFeature>
     vector<FASTFeature> detected_features, best_features;
     int barrier;
 public:
+
     static args::options_description get_options_description();
 
     SimpleFAST(args::variables_map &options);

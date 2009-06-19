@@ -40,6 +40,8 @@ class FeaturesTracks: public std::list<FeatureTrack>
 
 public:
 
+	typedef FeatureTrack track_t;
+
    FeaturesTracks();
    ~FeaturesTracks();
 

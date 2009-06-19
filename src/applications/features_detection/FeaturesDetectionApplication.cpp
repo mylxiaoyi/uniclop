@@ -2,9 +2,6 @@
 
 #include "devices/video/GstVideoInput.hpp"
 
-#include <boost/thread/xtime.hpp>
-#include <boost/thread/thread.hpp>
-
 #include <cstdio>
 #include <iostream>
 #include <stdexcept>
@@ -55,11 +52,9 @@ int FeaturesDetectionApplication::main_loop(program_options::variables_map &opti
     //init_gui(options);
     //run_gui();
 
-// initialization ---
+	// initialization ---
     gst_video_input_p.reset(new GstVideoInput(options));
     features_detector_p.reset(new SimpleFAST(options));
-
-
 
     // video output ---
     GstVideoInput::const_view_t new_image_view = gst_video_input_p->get_new_image();
@@ -93,12 +88,9 @@ int FeaturesDetectionApplication::main_loop(program_options::variables_map &opti
 
         video_display.display(current_image);
 
-        // add a delay ---
-        const float seconds_to_wait = 0.1; // [seconds]
-        boost::xtime t_time;
-        boost::xtime_get(&t_time, boost::TIME_UTC);
-        t_time.nsec += (1000 * 1000) * seconds_to_wait;
-        boost::thread::sleep(t_time);
+        // add a delay ---	
+        wait_some_seconds(0.1); // [seconds]
+
 
     }
     while (video_display.is_closed == false);

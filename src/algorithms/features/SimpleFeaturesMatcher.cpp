@@ -174,7 +174,6 @@ vector< ScoredMatch<T> >& SimpleFeaturesMatcher<T>::match(
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 // Force the compilation of the following types
 // for some strange reason, in linux, this hast to be at the end of the defitions (?!)
-class FASTFeature; // forward declaration
 template class SimpleFeaturesMatcher<FASTFeature>;
 
 //class SIFTFeature; // forward declaration

@@ -37,6 +37,9 @@ public:
     virtual args::options_description get_command_line_options(void) const = 0;
     virtual int main_loop(args::variables_map &options) = 0;
 
+protected:
+	void wait_some_seconds(const float);
+
 };
 
 }
