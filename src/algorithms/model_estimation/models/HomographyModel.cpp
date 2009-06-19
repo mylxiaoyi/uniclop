@@ -5,13 +5,8 @@
 // RANSAC implementation requires VXL installed
 // with the RREL and GEL/vpgl contributions
 
-#include <vxl/vcl/vcl_exception.h>
 #include <vxl/vcl/vcl_iostream.h>
-#include <vxl/vcl/vcl_cassert.h>
-#include <vxl/vcl/vcl_cmath.h>
 
-#include <vxl/core/vnl/vnl_vector.h>
-#include <vxl/core/vnl/vnl_matrix.h>
 #include <vxl/core/vnl/vnl_math.h>
 
 #include <vxl/core/vgl/algo/vgl_homg_operators_2d.h>
@@ -35,7 +30,6 @@ namespace model_estimation
 namespace models
 {
 
-using namespace std;
 
 // Class HomographyModel:IParametricModel< ScoredMatch<F> > methods implementation
 

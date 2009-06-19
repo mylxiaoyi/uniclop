@@ -10,7 +10,10 @@ Rahul Raguram, Jan-Michael Frahm, Marc Pollefeys
 provides 50x faster results than RANSAC and about 2x~3x faster results than PROSAC
 */
 
+#include "../IModelEstimator.hpp"
+#include "../IParametricModel.hpp"
 
+#include <boost/program_options.hpp>
 
 
 namespace uniclop
@@ -21,6 +24,9 @@ namespace model_estimation
 {
 namespace estimators
 {
+
+using namespace uniclop::algorithms::model_estimation;
+namespace args = ::boost::program_options;
 
 template<typename T> // T is the data type
 class ARRSAC: public IModelEstimator<T>
@@ -41,6 +47,7 @@ public:
     const vector< bool > & get_is_inlier();
 };
 
+}
 }
 }
 }

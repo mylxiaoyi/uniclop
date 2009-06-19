@@ -1,6 +1,9 @@
 
 #include "PROSAC.hpp"
 
+#include "algorithms/features/ScoredMatch.hpp"
+#include "algorithms/features/fast/FASTFeature.hpp"
+
 
 namespace uniclop
 {
@@ -11,14 +14,13 @@ namespace model_estimation
 namespace estimators
 {
 
+using namespace uniclop::algorithms::features;
 
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 // Class PROSAC methods implementation
 
-
-
 template<typename T>
-args::options_description PROSAC<T>::get_options_description()
+::boost::program_options::options_description PROSAC<T>::get_options_description()
 {
 
     args::options_description desc("PROSAC options");
@@ -60,8 +62,8 @@ const vector< bool > &  PROSAC<T>::get_is_inlier()
 
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 
-template class PROSAC< ScoredMatch<FASTFeature> >;
-template class PROSAC< ScoredMatch<SIFTFeature> >;
+template class PROSAC< ScoredMatch< fast::FASTFeature >  >;
+//template class PROSAC< ScoredMatch<SIFTFeature> >;
 
 
 }

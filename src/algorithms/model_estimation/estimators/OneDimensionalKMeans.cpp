@@ -32,10 +32,21 @@
  * Lucas Scharenbroich
  */
 
-#include "kmeans.hpp"
+#include "OneDimensionalKMeans.hpp"
 #include <algorithm>
 #include <functional>
 #include <stdexcept>
+
+namespace uniclop
+{
+namespace algorithms
+{
+namespace model_estimation
+{
+namespace estimators
+{
+	
+	
 using namespace std;
 
 // class OneDimensionalKMeans methods implementation
@@ -280,3 +291,5 @@ const vector<unsigned int> &OneDimensionalKMeans::get_permutations()
     return perm;
 }
 
+
+}}}}

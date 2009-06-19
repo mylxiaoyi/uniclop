@@ -1,20 +1,26 @@
 
 
 #include "FundamentalMatrixModel.hpp"
+#include "algorithms/features/ScoredMatch.hpp"
 
 // RANSAC implementation requires VXL installed
 // with the RREL and GEL/vpgl contributions
 
-//#include <vxl/core/vnl/vnl_math.h>
-//#include <vxl/vcl/vcl_iostream.h>
-//#include <vxl/vcl/vcl_cassert.h>
-//#include <vxl/vcl/vcl_cmath.h>
+#include <vxl/vcl/vcl_iostream.h>
+
+#include <vxl/core/vnl/vnl_math.h>
+
 #include <vxl/core/vgl/algo/vgl_homg_operators_2d.h>
-#include <vxl/contrib/rpl/rrel/rrel_ran_sam_search.h>
+
 #include <vxl/contrib/rpl/rrel/rrel_muset_obj.h>
+#include <vxl/contrib/rpl/rrel/rrel_ran_sam_search.h>
 #include <vxl/contrib/rpl/rrel/rrel_homography2d_est.h>
+
+#include <vxl/contrib/gel/mrc/vpgl/vpgl_fundamental_matrix.h>
 #include <vxl/contrib/gel/mrc/vpgl/algo/vpgl_fm_compute_ransac.h>
 #include <vxl/contrib/gel/mrc/vpgl/algo/vpgl_fm_compute_8_point.h>
+
+#include <boost/numeric/ublas/io.hpp>
 
 namespace uniclop
 {

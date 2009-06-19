@@ -7,6 +7,17 @@
 // an adaptation of the code wrote by Lucas Scharenbroich (2005)
 
 #include <vector>
+
+namespace uniclop
+{
+namespace algorithms
+{
+namespace model_estimation
+{
+namespace estimators
+{
+	
+	
 using namespace std;
 
 
@@ -36,6 +47,8 @@ private:
                                double x, double y );
 
 };
+
+}}}}
 
 //
 //#include <stdio.h>

@@ -12,6 +12,11 @@ A new robust matching method is proposed. The Progressive Sample Consensus (PROS
 
 */
 
+#include "../IModelEstimator.hpp"
+#include "../IParametricModel.hpp"
+
+#include <boost/program_options.hpp>
+
 
 namespace uniclop
 {
@@ -21,6 +26,10 @@ namespace model_estimation
 {
 namespace estimators
 {
+
+using namespace uniclop::algorithms::model_estimation;
+namespace args = ::boost::program_options;
+
 
 template<typename T> // T is the data type
 class PROSAC: public IModelEstimator<T>
@@ -41,6 +50,7 @@ public:
     const vector< bool > & get_is_inlier();
 };
 
+}
 }
 }
 }

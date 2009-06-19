@@ -1,6 +1,8 @@
 
 #include "ARRSAC.hpp"
 
+#include "algorithms/features/ScoredMatch.hpp"
+#include "algorithms/features/fast/FASTFeature.hpp"
 
 namespace uniclop
 {
@@ -11,6 +13,7 @@ namespace model_estimation
 namespace estimators
 {
 
+using namespace uniclop::algorithms::features;
 
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 // Class ARRSAC methods implementation
@@ -60,8 +63,8 @@ const vector< bool > &  ARRSAC<T>::get_is_inlier()
 
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 
-template class ARRSAC< ScoredMatch<FASTFeature> >;
-template class ARRSAC< ScoredMatch<SIFTFeature> >;
+template class ARRSAC< ScoredMatch< fast::FASTFeature >  >;
+//template class ARRSAC< ScoredMatch<SIFTFeature> >;
 
 
 }

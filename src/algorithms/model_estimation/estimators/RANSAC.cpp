@@ -2,11 +2,11 @@
 
 #include "RANSAC.hpp"
 
+#include "algorithms/features/ScoredMatch.hpp"
+#include "algorithms/features/fast/FASTFeature.hpp"
 
-
-// extra implementation specific headers ---
-#include "algorithms/features/features_detection.hpp"
-
+#include "algorithms/model_estimation/models/HomographyModel.hpp"
+#include "algorithms/model_estimation/models/FundamentalMatrixModel.hpp"
 
 // Boost http://boost.org
 #include <boost/numeric/ublas/io.hpp>
@@ -15,14 +15,17 @@
 // RANSAC implementation requires VXL installed
 // with the RREL and GEL/vpgl contributions
 
-#include <vxl/core/vnl/vnl_math.h>
 #include <vxl/vcl/vcl_iostream.h>
-#include <vxl/vcl/vcl_cassert.h>
-#include <vxl/vcl/vcl_cmath.h>
+
+#include <vxl/core/vnl/vnl_math.h>
+
 #include <vxl/core/vgl/algo/vgl_homg_operators_2d.h>
-#include <vxl/contrib/rpl/rrel/rrel_ran_sam_search.h>
+
 #include <vxl/contrib/rpl/rrel/rrel_muset_obj.h>
+#include <vxl/contrib/rpl/rrel/rrel_ran_sam_search.h>
 #include <vxl/contrib/rpl/rrel/rrel_homography2d_est.h>
+
+#include <vxl/contrib/gel/mrc/vpgl/vpgl_fundamental_matrix.h>
 #include <vxl/contrib/gel/mrc/vpgl/algo/vpgl_fm_compute_ransac.h>
 #include <vxl/contrib/gel/mrc/vpgl/algo/vpgl_fm_compute_8_point.h>
 
@@ -35,7 +38,7 @@ namespace model_estimation
 namespace estimators
 {
 
-
+using namespace uniclop::algorithms::model_estimation::models;
 
 // Class RANSAC methods implementation
 
@@ -222,8 +225,8 @@ const vector< bool > &  RANSAC<T>::get_is_inlier()
 
 
 
-template class RANSAC< ScoredMatch<FASTFeature> >;
-template class RANSAC< ScoredMatch<SIFTFeature> >;
+template class RANSAC< ScoredMatch< features::fast::FASTFeature> >;
+//template class RANSAC< ScoredMatch<SIFTFeature> >;
 
 }
 }

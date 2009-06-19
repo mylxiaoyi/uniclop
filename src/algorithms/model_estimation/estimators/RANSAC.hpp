@@ -1,9 +1,14 @@
-
-
 #if !defined(RANSAC_HEADER)
 #define RANSAC_HEADER
 
 // RANSAC estimator
+
+
+#include "../IModelEstimator.hpp"
+#include "../IParametricModel.hpp"
+
+#include <boost/program_options.hpp>
+
 
 namespace uniclop
 {
@@ -13,6 +18,9 @@ namespace model_estimation
 {
 namespace estimators
 {
+
+using namespace uniclop::algorithms::model_estimation;
+namespace args = boost::program_options;
 
 template<typename T> // T is the data type
 class RANSAC: public IModelEstimator<T>

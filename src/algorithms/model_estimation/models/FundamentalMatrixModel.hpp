@@ -11,12 +11,19 @@ namespace uniclop
 {
 namespace algorithms
 {
+	
+		namespace features {
+		template<typename F>
+class ScoredMatch;
+	}
+	
 namespace model_estimation
 {
 namespace models
 {
 
 using namespace uniclop::algorithms::model_estimation;
+using uniclop::algorithms::features::ScoredMatch;
 
 // need a model for fundamental matrix and for homography projections (at least)
 

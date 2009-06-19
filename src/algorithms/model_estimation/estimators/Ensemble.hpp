@@ -2,6 +2,12 @@
 #if !defined(ENSEMBLE_HEADER)
 #define ENSEMBLE_HEADER
 
+#include "../IParametricModel.hpp"
+#include "../IModelEstimator.hpp"
+
+#include <boost/random.hpp>
+#include <boost/program_options.hpp>
+
 namespace uniclop
 {
 namespace algorithms
@@ -11,6 +17,8 @@ namespace model_estimation
 namespace estimators
 {
 
+using namespace uniclop::algorithms::model_estimation;
+namespace args = ::boost::program_options;
 
 template<typename T> class KurtosisIncrementalEstimator; // forward declaration
 template<typename T> class HistogramKurtosis; // forward declaration

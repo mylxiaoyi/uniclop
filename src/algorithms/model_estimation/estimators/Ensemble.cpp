@@ -1,12 +1,12 @@
 
 #include "Ensemble.hpp"
+#include "algorithms/features/ScoredMatch.hpp"
+#include "algorithms/features/fast/FASTFeature.hpp"
 
+#include "algorithms/model_estimation/models/HomographyModel.hpp"
+#include "algorithms/model_estimation/models/FundamentalMatrixModel.hpp"
 
-
-// extra implementation specific headers ---
-#include "algorithms/features/features_detection.hpp"
-
-#include "kmeans.hpp"
+#include "OneDimensionalKMeans.hpp"
 
 // Boost http://boost.org
 #include <boost/numeric/ublas/io.hpp>
@@ -18,16 +18,20 @@
 // RANSAC implementation requires VXL installed
 // with the RREL and GEL/vpgl contributions
 
-#include <vxl/core/vnl/vnl_math.h>
 #include <vxl/vcl/vcl_iostream.h>
-#include <vxl/vcl/vcl_cassert.h>
-#include <vxl/vcl/vcl_cmath.h>
+
+#include <vxl/core/vnl/vnl_math.h>
+
 #include <vxl/core/vgl/algo/vgl_homg_operators_2d.h>
-#include <vxl/contrib/rpl/rrel/rrel_ran_sam_search.h>
+
 #include <vxl/contrib/rpl/rrel/rrel_muset_obj.h>
+#include <vxl/contrib/rpl/rrel/rrel_ran_sam_search.h>
 #include <vxl/contrib/rpl/rrel/rrel_homography2d_est.h>
+
+#include <vxl/contrib/gel/mrc/vpgl/vpgl_fundamental_matrix.h>
 #include <vxl/contrib/gel/mrc/vpgl/algo/vpgl_fm_compute_ransac.h>
 #include <vxl/contrib/gel/mrc/vpgl/algo/vpgl_fm_compute_8_point.h>
+
 
 
 namespace uniclop
@@ -39,11 +43,253 @@ namespace model_estimation
 namespace estimators
 {
 
+using uniclop::algorithms::features::ScoredMatch;
+using namespace uniclop::algorithms::model_estimation::models;
+
+using namespace cimg_library;
 
 // Class EnsembleMethod methods implementation
 
 // implementation of the W. Zhang and J. Kosecka "Ensemble method for robust estimation"
 // http://www.cs.gmu.edu/%7Ekosecka/Publications/EnsembleMethod.pdf
+
+
+// ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
+// Helper classes KurtosisIncrementalEstimator and HistogramKurtosis
+
+template<typename T = double> // T: double or float
+class KurtosisIncrementalEstimator
+{
+    // based on information available at
+    // http://en.wikipedia.org/wiki/Kurtosis
+    // http://en.wikipedia.org/wiki/Moment_about_the_mean
+    // http://mathcentral.uregina.ca/QQ/database/QQ.09.02/carlos1.html
+
+    T min_value, max_value;
+
+    int n;
+    long double mean, central_moment2, central_moment4;
+    // kurtosis computation is numerically unstable
+    // so we would like to use the largest representation available
+    // central_moment2 is also knowns as variance
+
+public:
+    KurtosisIncrementalEstimator(T _min_value = 0, T _max_value = numeric_limits<T>::max())
+    {
+        // min_value and max_value define the bound of the values that will be
+        // actually used to compute the Kurtosis
+        // when using the Ensemble method we want to reject the too low errors, and the too large errors
+
+        min_value = _min_value;
+        max_value = _max_value;
+
+        n = 0;
+        mean = 0.0;
+        central_moment2= 0.0;
+        central_moment4 = 0.0;
+        return;
+    }
+
+    KurtosisIncrementalEstimator(const KurtosisIncrementalEstimator<T> &k)
+    {
+        min_value = k.min_value;
+        max_value = k.max_value;
+
+        n = 0;
+        mean = 0.0;
+        central_moment2= 0.0;
+        central_moment4 = 0.0;
+        return;
+    }
+
+    ~KurtosisIncrementalEstimator()
+    {
+        return;
+    }
+
+    void add_value(T x)
+    {
+        if (x < min_value || x > max_value) return;
+        // we omit values out of the range of interest
+
+        T delta1 = (x - mean);
+        T delta2 = delta1 / static_cast<T>(n + 1);
+        mean += delta2;
+        central_moment2 += n*delta2*delta2 + delta1*delta1;
+        central_moment4 += n*delta2*delta2*delta2*delta2 + delta1*delta1*delta1*delta1;
+        n += 1;
+        return;
+    }
+
+    T get_kurtosis() const
+    {
+
+        T kurtosis = -3.0;
+        if (n > 0)
+            kurtosis += static_cast<T>((n*central_moment4/(central_moment2*central_moment2)));
+        return kurtosis;
+    }
+
+}
+; // end helper class KurtosisIncrementalEstimator<>
+
+
+
+
+
+// T: double or float
+template<typename T = double>
+class HistogramKurtosis
+{
+    // Do an histogram and compute the kurtosis based on all but the first bin
+
+    T min_value, max_value, delta_value;
+    vector<int> bins;
+
+    int n;
+    long double mean, central_moment2, central_moment4;
+    // central_moment2 is also knowns as variance
+
+public:
+    HistogramKurtosis(float _min_value, float _max_value, int num_bins)
+    {
+        min_value = _min_value;
+        max_value = _max_value;
+        delta_value = (max_value - min_value) / num_bins;
+        bins.resize(num_bins);
+        fill(bins.begin(), bins.end(), 0);
+
+        n = 0;
+        mean = 0.0;
+        central_moment2= 0.0;
+        central_moment4 = 0.0;
+        return;
+    }
+
+    HistogramKurtosis(const HistogramKurtosis &hk)
+    {
+        min_value = hk.min_value;
+        max_value = hk.max_value;
+        delta_value = hk.delta_value;
+        bins.resize(hk.bins.size());
+        fill(bins.begin(), bins.end(), 0);
+
+        n = 0;
+        mean = 0.0;
+        central_moment2= 0.0;
+        central_moment4 = 0.0;
+    }
+
+    ~HistogramKurtosis()
+    {
+        return;
+    }
+
+    void add_value(T x)
+    {
+
+        if (x < min_value || x >= max_value) return;
+        // we omit values out of the range of interest
+
+
+        const int num_bin = static_cast<int>(floor((x - min_value) / delta_value));
+        if (num_bin < 0)
+        { // this should neve happen, but still is a safety check
+            throw runtime_error("HistogramKurtosis::add_value internal error");
+        }
+
+        if (num_bin >= static_cast<int>(bins.size()) ) return; // safety check
+        bins[num_bin] += 1;
+
+        T delta1 = (x - mean);
+        T delta2 = delta1 / static_cast<T>(n + 1);
+        mean += delta2;
+        central_moment2 += n*delta2*delta2 + delta1*delta1;
+        central_moment4 += n*delta2*delta2*delta2*delta2 + delta1*delta1*delta1*delta1;
+        n += 1;
+        return;
+    }
+
+    T get_kurtosis() //const
+    {
+
+        if (false)
+        {
+            // iterate over the bins to compute, mean, second central moment and fourth central moment
+
+            // incremental mean estimation is stable
+            // the central moments are not, so we recompute them
+            central_moment2 = 0.0;
+            central_moment4 = 0.0;
+
+            vector<int>::const_iterator bins_it;
+            T t_value = 0.0;
+            for (bins_it = (bins.begin() + 1), t_value = delta_value + delta_value*0.5;
+                    bins_it != bins.end();
+                    ++bins_it, t_value += delta_value)
+            {
+                const float weight = static_cast<float>(*bins_it) / n;
+                //long double delta = t_value - mean;
+                long double delta = t_value; // <<< just for testing
+                central_moment2 += weight*delta*delta;
+                central_moment4 += weight*delta*delta*delta*delta;
+            }
+
+            return (central_moment4/(central_moment2*central_moment2)) - 3.0;
+        }
+        else if (true)
+        {
+            // test hack for the LineModel scenario
+            // <<< works quite fine
+            int max_delta = 0;
+
+            unsigned int i;
+            for (i = 0; i < (bins.size() - 1); i+=1)
+            {
+                const int delta = bins[i + 1] - bins[i];
+                if (delta > max_delta)
+                    max_delta = delta;
+            }
+
+            return static_cast<T>(max_delta);
+        }
+        else
+        {
+            // (ultra dirty) test hack for the HomographyModel scenario
+            //return static_cast<T>(mean);
+
+            int max_bin_value = 0;
+            unsigned int max_bin_index = 0;
+
+            unsigned int i;
+            for (i = 0; i < (bins.size() - 1); i+=1)
+            {
+                if (bins[i] > max_bin_value)
+                {
+                    max_bin_value = bins[i];
+                    max_bin_index = i;
+                }
+            }
+            return static_cast<T>(max_bin_index);
+        }
+
+    }
+
+    const vector<int> &get_bins() const
+    {
+        return bins;
+    }
+
+
+    static void display_histogram(const float kurtosis,
+                                  const vector<int> &bins, const int bins_max_value, CImgDisplay &image_display);
+    // helper method that draws an histogram
+
+}
+; // end helper class HistogramKurtosis<>
+
+
+// ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 
 template<typename T>
 args::options_description EnsembleMethod<T>::get_options_description()
@@ -396,6 +642,48 @@ void EnsembleMethod<T>::retrieve_random_indexes(const vector< T > &data, const u
 
     return;
 }
+
+// ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
+// Force the compilation of the following types
+// for some strange reason, in linux, this has to be at the end of the defitions (?!)
+
+
+template void HistogramKurtosis<double>::display_histogram
+(const float, const vector<int> &, const int , CImgDisplay &);
+
+template<typename F> class ScoredMatch; // forward declaration
+
+template<>
+void EnsembleMethod< ScoredMatch<features::fast::FASTFeature> >::retrieve_random_indexes
+(const vector< ScoredMatch<features::fast::FASTFeature> > &data, const unsigned int num_indexes,
+ vector<int> &indexes)
+{
+    return retrieve_random_matches_indexes(data, num_indexes, indexes);
+}
+
+/*template<>
+void EnsembleMethod< ScoredMatch<features::sift::SIFTFeature> >::retrieve_random_indexes
+(const vector< ScoredMatch<features::sift::SIFTFeature> > &data, const unsigned int num_indexes,
+ vector<int> &indexes)
+{
+    return retrieve_random_matches_indexes(data, num_indexes, indexes);
+}*/
+
+template<>
+void EnsembleMethod< boost::tuple<float, float> >::retrieve_random_indexes
+(const vector< boost::tuple<float, float> > &data, const unsigned int num_indexes,
+ vector<int> &indexes)
+{
+    return retrieve_random_matches_indexes(data, num_indexes, indexes);
+}
+
+template class EnsembleMethod< ScoredMatch<features::fast::FASTFeature> >;
+// template class EnsembleMethod< ScoredMatch<SIFTFeature> >;
+template class EnsembleMethod< boost::tuple<float, float> >;
+
+
+
+
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 // class HistogramKurtosis methods implementation
 
@@ -429,291 +717,13 @@ void HistogramKurtosis<T>::display_histogram(const float kurtosis,
 
     histogram_image.draw_graph(histogram_data, yellow, 1);
 
-    histogram_image.draw_text(50,5,blue,NULL,font_size,1.0,"kurtosis == %f", kurtosis);
+    histogram_image.draw_text(50,5,"kurtosis == %f",blue,NULL,font_size,1.0, kurtosis);
 
     image_display.resize(histogram_image);
     image_display.display(histogram_image);
 
     return;
 }
-
-// ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
-// Force the compilation of the following types
-// for some strange reason, in linux, this has to be at the end of the defitions (?!)
-
-class FASTFeature; // forward declaration
-class SIFTFeature; // forward declaration
-
-template class FundamentalMatrixModel<FASTFeature>;
-template class FundamentalMatrixModel<SIFTFeature>;
-
-template class HomographyModel<FASTFeature>;
-template class HomographyModel<SIFTFeature>;
-
-template void HistogramKurtosis<double>::display_histogram
-(const float, const vector<int> &, const int , CImgDisplay &);
-
-template<typename F> class ScoredMatch; // forward declaration
-
-template<>
-void EnsembleMethod< ScoredMatch<FASTFeature> >::retrieve_random_indexes
-(const vector< ScoredMatch<FASTFeature> > &data, const unsigned int num_indexes,
- vector<int> &indexes)
-{
-    return retrieve_random_matches_indexes(data, num_indexes, indexes);
-}
-
-template<>
-void EnsembleMethod< ScoredMatch<SIFTFeature> >::retrieve_random_indexes
-(const vector< ScoredMatch<SIFTFeature> > &data, const unsigned int num_indexes,
- vector<int> &indexes)
-{
-    return retrieve_random_matches_indexes(data, num_indexes, indexes);
-}
-
-template<>
-void EnsembleMethod< boost::tuple<float, float> >::retrieve_random_indexes
-(const vector< boost::tuple<float, float> > &data, const unsigned int num_indexes,
- vector<int> &indexes)
-{
-    return retrieve_random_matches_indexes(data, num_indexes, indexes);
-}
-
-template class EnsembleMethod< ScoredMatch<FASTFeature> >;
-template class EnsembleMethod< ScoredMatch<SIFTFeature> >;
-template class EnsembleMethod< boost::tuple<float, float> >;
-
-
-// ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
-// Helper class
-
-template<typename T = double> // T: double or float
-class KurtosisIncrementalEstimator
-{
-    // based on information available at
-    // http://en.wikipedia.org/wiki/Kurtosis
-    // http://en.wikipedia.org/wiki/Moment_about_the_mean
-    // http://mathcentral.uregina.ca/QQ/database/QQ.09.02/carlos1.html
-
-    T min_value, max_value;
-
-    int n;
-    long double mean, central_moment2, central_moment4;
-    // kurtosis computation is numerically unstable
-    // so we would like to use the largest representation available
-    // central_moment2 is also knowns as variance
-
-public:
-    KurtosisIncrementalEstimator(T _min_value = 0, T _max_value = numeric_limits<T>::max())
-    {
-        // min_value and max_value define the bound of the values that will be
-        // actually used to compute the Kurtosis
-        // when using the Ensemble method we want to reject the too low errors, and the too large errors
-
-        min_value = _min_value;
-        max_value = _max_value;
-
-        n = 0;
-        mean = 0.0;
-        central_moment2= 0.0;
-        central_moment4 = 0.0;
-        return;
-    }
-
-    KurtosisIncrementalEstimator(const KurtosisIncrementalEstimator<T> &k)
-    {
-        min_value = k.min_value;
-        max_value = k.max_value;
-
-        n = 0;
-        mean = 0.0;
-        central_moment2= 0.0;
-        central_moment4 = 0.0;
-        return;
-    }
-
-    ~KurtosisIncrementalEstimator()
-    {
-        return;
-    }
-
-    void add_value(T x)
-    {
-        if (x < min_value || x > max_value) return;
-        // we omit values out of the range of interest
-
-        T delta1 = (x - mean);
-        T delta2 = delta1 / static_cast<T>(n + 1);
-        mean += delta2;
-        central_moment2 += n*delta2*delta2 + delta1*delta1;
-        central_moment4 += n*delta2*delta2*delta2*delta2 + delta1*delta1*delta1*delta1;
-        n += 1;
-        return;
-    }
-
-    T get_kurtosis() const
-    {
-
-        T kurtosis = -3.0;
-        if (n > 0)
-            kurtosis += static_cast<T>((n*central_moment4/(central_moment2*central_moment2)));
-        return kurtosis;
-    }
-
-}
-; // end helper class KurtosisIncrementalEstimator<>
-
-
-// T: double or float
-template<typename T = double>
-class HistogramKurtosis
-{
-    // Do an histogram and compute the kurtosis based on all but the first bin
-
-    T min_value, max_value, delta_value;
-    vector<int> bins;
-
-    int n;
-    long double mean, central_moment2, central_moment4;
-    // central_moment2 is also knowns as variance
-
-public:
-    HistogramKurtosis(float _min_value, float _max_value, int num_bins)
-    {
-        min_value = _min_value;
-        max_value = _max_value;
-        delta_value = (max_value - min_value) / num_bins;
-        bins.resize(num_bins);
-        fill(bins.begin(), bins.end(), 0);
-
-        n = 0;
-        mean = 0.0;
-        central_moment2= 0.0;
-        central_moment4 = 0.0;
-        return;
-    }
-
-    HistogramKurtosis(const HistogramKurtosis &hk)
-    {
-        min_value = hk.min_value;
-        max_value = hk.max_value;
-        delta_value = hk.delta_value;
-        bins.resize(hk.bins.size());
-        fill(bins.begin(), bins.end(), 0);
-
-        n = 0;
-        mean = 0.0;
-        central_moment2= 0.0;
-        central_moment4 = 0.0;
-    }
-
-    ~HistogramKurtosis()
-    {
-        return;
-    }
-
-    void add_value(T x)
-    {
-
-        if (x < min_value || x >= max_value) return;
-        // we omit values out of the range of interest
-
-
-        const int num_bin = static_cast<int>(floor((x - min_value) / delta_value));
-        if (num_bin < 0)
-        { // this should neve happen, but still is a safety check
-            throw runtime_error("HistogramKurtosis::add_value internal error");
-        }
-
-        if (num_bin >= static_cast<int>(bins.size()) ) return; // safety check
-        bins[num_bin] += 1;
-
-        T delta1 = (x - mean);
-        T delta2 = delta1 / static_cast<T>(n + 1);
-        mean += delta2;
-        central_moment2 += n*delta2*delta2 + delta1*delta1;
-        central_moment4 += n*delta2*delta2*delta2*delta2 + delta1*delta1*delta1*delta1;
-        n += 1;
-        return;
-    }
-
-    T get_kurtosis() //const
-    {
-
-        if (false)
-        {
-            // iterate over the bins to compute, mean, second central moment and fourth central moment
-
-            // incremental mean estimation is stable
-            // the central moments are not, so we recompute them
-            central_moment2 = 0.0;
-            central_moment4 = 0.0;
-
-            vector<int>::const_iterator bins_it;
-            T t_value = 0.0;
-            for (bins_it = (bins.begin() + 1), t_value = delta_value + delta_value*0.5;
-                    bins_it != bins.end();
-                    ++bins_it, t_value += delta_value)
-            {
-                const float weight = static_cast<float>(*bins_it) / n;
-                //long double delta = t_value - mean;
-                long double delta = t_value; // <<< just for testing
-                central_moment2 += weight*delta*delta;
-                central_moment4 += weight*delta*delta*delta*delta;
-            }
-
-            return (central_moment4/(central_moment2*central_moment2)) - 3.0;
-        }
-        else if (true)
-        {
-            // test hack for the LineModel scenario
-            // <<< works quite fine
-            int max_delta = 0;
-
-            unsigned int i;
-            for (i = 0; i < (bins.size() - 1); i+=1)
-            {
-                const int delta = bins[i + 1] - bins[i];
-                if (delta > max_delta)
-                    max_delta = delta;
-            }
-
-            return static_cast<T>(max_delta);
-        }
-        else
-        {
-            // (ultra dirty) test hack for the HomographyModel scenario
-            //return static_cast<T>(mean);
-
-            int max_bin_value = 0;
-            unsigned int max_bin_index = 0;
-
-            unsigned int i;
-            for (i = 0; i < (bins.size() - 1); i+=1)
-            {
-                if (bins[i] > max_bin_value)
-                {
-                    max_bin_value = bins[i];
-                    max_bin_index = i;
-                }
-            }
-            return static_cast<T>(max_bin_index);
-        }
-
-    }
-
-    const vector<int> &get_bins() const
-    {
-        return bins;
-    }
-
-
-    static void display_histogram(const float kurtosis,
-                                  const vector<int> &bins, const int bins_max_value, CImgDisplay &image_display);
-    // helper method that draws an histogram
-
-}
-; // end helper class KurtosisIncrementalEstimator<>
 
 
 }
