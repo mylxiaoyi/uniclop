@@ -1,21 +1,30 @@
 
 #include "HomographyModel.hpp"
-
+#include "algorithms/features/ScoredMatch.hpp"
 
 // RANSAC implementation requires VXL installed
 // with the RREL and GEL/vpgl contributions
 
-#include <vxl/core/vnl/vnl_math.h>
+#include <vxl/vcl/vcl_exception.h>
 #include <vxl/vcl/vcl_iostream.h>
 #include <vxl/vcl/vcl_cassert.h>
 #include <vxl/vcl/vcl_cmath.h>
+
+#include <vxl/core/vnl/vnl_vector.h>
+#include <vxl/core/vnl/vnl_matrix.h>
+#include <vxl/core/vnl/vnl_math.h>
+
 #include <vxl/core/vgl/algo/vgl_homg_operators_2d.h>
-#include <vxl/contrib/rpl/rrel/rrel_ran_sam_search.h>
+
 #include <vxl/contrib/rpl/rrel/rrel_muset_obj.h>
+#include <vxl/contrib/rpl/rrel/rrel_ran_sam_search.h>
 #include <vxl/contrib/rpl/rrel/rrel_homography2d_est.h>
+
+#include <vxl/contrib/gel/mrc/vpgl/vpgl_fundamental_matrix.h>
 #include <vxl/contrib/gel/mrc/vpgl/algo/vpgl_fm_compute_ransac.h>
 #include <vxl/contrib/gel/mrc/vpgl/algo/vpgl_fm_compute_8_point.h>
 
+#include <boost/numeric/ublas/io.hpp>
 
 namespace uniclop
 {
@@ -26,9 +35,9 @@ namespace model_estimation
 namespace models
 {
 
+using namespace std;
 
-/ Class HomographyModel:
-IParametricModel< ScoredMatch<F> > methods implementation
+// Class HomographyModel:IParametricModel< ScoredMatch<F> > methods implementation
 
 // based on vxl rrel_homography2d_est, HMatrix2D and HMatrix2DCompute
 
@@ -69,7 +78,7 @@ void HomographyModel<F>::estimate_from_minimal_set(const vector< ScoredMatch<F> 
         throw runtime_error("Not enough points to estimate the HomographyModel parameters");
 
     vnl_matrix< double > A(9, 9, 0.0);
-    for ( unsigned int i=0; i<get_num_points_to_estimate(); i+=1 )
+    for ( int i=0; i < get_num_points_to_estimate(); i+=1 )
     { // for i = 0,1,2,3
         vgl_homg_point_2d<double> from_point(data_points[i].feature_a->x, data_points[i].feature_a->y);
         vgl_homg_point_2d<double> to_point(data_points[i].feature_b->x, data_points[i].feature_b->y);
@@ -136,8 +145,10 @@ void HomographyModel<F>::estimate_from_minimal_set(const vector< ScoredMatch<F> 
         parameters[i] = params[i]; // copy the result
     }
 
-    if ( false ) cout << "HomographyModel parameters: " << parameters << endl;
-
+   if ( false ) {
+	    cout << "HomographyModel parameters: " << parameters << endl;
+   }
+   
     return;
 } // end of 'HomographyModel<F>::estimate_from_minimal_set'
 
@@ -229,8 +240,9 @@ void HomographyModel<F>::compute_residuals
             del_y = trans_pt[ 1 ] / trans_pt[ 2 ] - to_point[ 1 ] / to_point[ 2 ];
             inv_del_x = inv_trans_pt[ 0 ] / inv_trans_pt[ 2 ] -from_point[ 0 ] / from_point[ 2 ];
             inv_del_y = inv_trans_pt[ 1 ] / inv_trans_pt[ 2 ] - from_point[ 1 ] / from_point[ 2 ];
-            *residuals_it = vcl_sqrt( vnl_math_sqr(del_x)     + vnl_math_sqr(del_y)
-                                      + vnl_math_sqr(inv_del_x) + vnl_math_sqr(inv_del_y) );
+            const double t_value = vnl_math_sqr(del_x) + vnl_math_sqr(del_y)
+                                      + vnl_math_sqr(inv_del_x) + vnl_math_sqr(inv_del_y);
+            *residuals_it = vcl_sqrt( t_value );
         }
 
 

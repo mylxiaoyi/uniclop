@@ -36,6 +36,10 @@
     <Includes>
       <Includes>
         <Include>${CombineDir}/src</Include>
+        <Include>/usr/local/include/vxl/core</Include>
+        <Include>/usr/local/include/vxl/vcl</Include>
+        <Include>/usr/local/include/vxl/contrib/rpl</Include>
+        <Include>/usr/local/include/vxl/contrib/gel</Include>
       </Includes>
     </Includes>
     <Libs>
@@ -48,6 +52,7 @@
     <EnvironmentVariables>
       <EnvironmentVariables />
     </EnvironmentVariables>
+    <ExtraCompilerArguments />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\Release</OutputPath>
@@ -67,6 +72,7 @@
     <Compile Include="src\algorithms\features\fast\FASTFeature.cpp" />
     <Compile Include="src\algorithms\features\SimpleFeaturesMatcher.cpp" />
     <Compile Include="src\algorithms\features\fast\SimpleFAST.cpp" />
+    <Compile Include="src\algorithms\model_estimation\models\HomographyModel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\applications\AbstractApplication.hpp" />
@@ -85,6 +91,8 @@
     <None Include="src\algorithms\features\IFeaturesMatcher.hpp" />
     <None Include="src\algorithms\features\SimpleFeaturesMatcher.hpp" />
     <None Include="src\algorithms\features\fast\SimpleFAST.hpp" />
+    <None Include="src\algorithms\model_estimation\models\HomographyModel.hpp" />
+    <None Include="src\algorithms\features\ScoredMatch.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="src\applications\video_input/" />

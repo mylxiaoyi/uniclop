@@ -3,15 +3,26 @@
 #if !defined(HOMOGRAPHY_MODEL_HEADER)
 #define HOMOGRAPHY_MODEL_HEADER
 
+
+#include "../IParametricModel.hpp"
+
+
 namespace uniclop
 {
 namespace algorithms
 {
+	namespace features {
+		template<typename F>
+class ScoredMatch;
+	}
+	
 namespace model_estimation
 {
 namespace models
 {
 
+using namespace uniclop::algorithms::model_estimation;
+using uniclop::algorithms::features::ScoredMatch;
 
 
 // class HomographyModel
