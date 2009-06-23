@@ -52,7 +52,6 @@
     <EnvironmentVariables>
       <EnvironmentVariables />
     </EnvironmentVariables>
-    <ExtraCompilerArguments />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\Release</OutputPath>
@@ -107,6 +106,7 @@
     <None Include="src\algorithms\model_estimation\estimators\OneDimensionalKMeans.hpp" />
     <None Include="src\algorithms\model_estimation\estimators\Ensemble.hpp" />
     <None Include="src\algorithms\model_estimation\model_estimation.hpp" />
+    <None Include="src\devices\video\IVideoInput.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="src\applications\video_input/" />

@@ -10,20 +10,17 @@
 
 namespace uniclop
 {
-namespace algorithms
-{
-namespace model_estimation
-{
+
 
 namespace ublas = boost::numeric::ublas;
 
 
-template<typename T>
+
 class IModelEstimator // T is the input data type
 {
 
 public:
-    virtual const ublas::vector<float> &estimate_model_parameters(const std::vector<T> &) = 0;
+    virtual const ublas::vector<float> &estimate_model_parameters(const std::vector< ScoredMatch > &) = 0;
     // given a set of matches, returns an vector with the estimated parameters
 
     virtual const std::vector< bool > & get_is_inlier() = 0;
@@ -41,8 +38,6 @@ public:
 };
 
 
-}
-}
 }
 
 #endif // IMODEL_ESTIMATOR_HEADER

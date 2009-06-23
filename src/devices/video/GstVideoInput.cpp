@@ -328,6 +328,9 @@ GstVideoInput::const_view_t &GstVideoInput::get_new_image()
 
     image_is_new = false;
     return  current_image_view;
+    
+     copy_and_convert_pixels(current_image.view, boost::gil::view(gray_image));
+      
 }
 
 

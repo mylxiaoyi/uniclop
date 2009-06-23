@@ -23,14 +23,11 @@ using namespace std;
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 // Classes definition
 
-template<typename F>
 class ScoredMatch
 {
 public:
 
-    typedef F feature_type;
-
-    const F *feature_a, *feature_b;
+    const IFeature *feature_a, *feature_b;
     ///< warning: keeping pointers to a vector element is dangereous since
     ///< the vector memory area will change as its content grows
     ///< should only keep pointers to std::list

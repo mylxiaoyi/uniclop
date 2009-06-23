@@ -26,8 +26,7 @@ using uniclop::algorithms::features::ScoredMatch;
 
 
 // class HomographyModel
-template<typename F> // F feature type
-class HomographyModel: public IParametricModel< ScoredMatch<F> >
+class HomographyModel: public IParametricModel< ScoredMatch >
 {
     // based on code from VXL RREL rrel_homography2d_est
 
@@ -44,10 +43,10 @@ public:
     unsigned int get_num_points_to_estimate() const;
     // m: is the number of points required to estimate the parameters of the model
 
-    void estimate_from_minimal_set(const vector< ScoredMatch<F> > &data_points);
+    void estimate_from_minimal_set(const vector< ScoredMatch > &data_points);
     // given m points estimate the parameters vector
 
-    void estimate(const vector< ScoredMatch<F> > &data_points); // given n>m points, estimate the parameters vector
+    void estimate(const vector< ScoredMatch > &data_points); // given n>m points, estimate the parameters vector
 
     const ublas::vector<float>& get_parameters() const;
     // get current estimate of the parameters
@@ -56,7 +55,7 @@ public:
     // set an initial guess of the parameters
     // (useful when the model use iterative methods to estimate his parameters)
 
-    void compute_residuals (const vector< ScoredMatch<F> > &data_points, vector<float> &residuals) const;
+    void compute_residuals (const vector< ScoredMatch > &data_points, vector<float> &residuals) const;
     // residuals -> errors
     // Compute the residuals relative to the given parameter vector.
 

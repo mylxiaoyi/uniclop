@@ -270,7 +270,6 @@ void FeaturesTrackingApplication::draw_tracks(const FeaturesTracks &tracks, rgb8
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 
 
-/*
 
 template<typename F>
 int main_loop(args::variables_map &options, IFeaturesDetector<F> &features_detector);
@@ -729,6 +728,6 @@ int main_loop(args::variables_map &options, IFeaturesDetector<FeatureType> &feat
     return 0;
 }
 
-*/
+
 
 

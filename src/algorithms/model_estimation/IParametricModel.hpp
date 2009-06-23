@@ -29,7 +29,6 @@ namespace ublas = boost::numeric::ublas;
 
 
 // Interfaces definition
-template<typename T> // T the data type (int, double, vector<double>, IFeature<>, etc... )
 class IParametricModel
 {
 
@@ -41,10 +40,10 @@ public:
     virtual unsigned int get_num_points_to_estimate() const = 0;
     // m: is the number of points required to estimate the parameters of the model
 
-    virtual  void estimate_from_minimal_set(const vector<T> &data_points) = 0;
+    virtual  void estimate_from_minimal_set(const vector< ScoredMatch > &data_points) = 0;
     // given m points estimate the parameters vector
 
-    virtual void estimate(const vector<T> &data_points) = 0; // given n>m points, estimate the parameters vector
+    virtual void estimate(const vector< ScoredMatch > &data_points) = 0; // given n>m points, estimate the parameters vector
 
     virtual const ublas::vector<float>& get_parameters() const = 0;
     // get current estimate of the parameters
@@ -53,7 +52,7 @@ public:
     // set an initial guess of the parameters
     // (useful when the model use iterative methods to estimate his parameters)
 
-    virtual void compute_residuals (const vector<T> &data_points, vector<float> &residuals) const = 0;
+    virtual void compute_residuals (const vector< ScoredMatch > &data_points, vector<float> &residuals) const = 0;
     // residuals -> errors
     // Compute the residuals relative to the given parameter vector.
 

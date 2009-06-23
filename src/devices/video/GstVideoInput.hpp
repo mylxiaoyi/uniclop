@@ -30,7 +30,7 @@ using boost::scoped_ptr;
 /**
 GStreamer video input class
 */
-class GstVideoInput
+class GstVideoInput: public IVideoInput
 {
 
 public:
