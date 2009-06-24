@@ -16,8 +16,6 @@
 namespace uniclop
 {
 
-using uniclop::algorithms::features::IFeature;
-
 using namespace std;
 
 using boost::uint8_t;

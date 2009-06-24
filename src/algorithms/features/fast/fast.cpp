@@ -14,10 +14,7 @@
 
 namespace uniclop
 {
-namespace algorithms
-{
-namespace features
-{
+
 namespace fast
 {
 
@@ -2880,8 +2877,6 @@ cont:
     return;
 }
 
-}
-}
 }
 }
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=

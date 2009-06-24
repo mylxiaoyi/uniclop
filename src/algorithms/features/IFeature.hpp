@@ -12,12 +12,12 @@ namespace uniclop
 
 // T is the class of the children
 
+template<typename T>
 class IFeature
 {
 public:
     int x,y; ///< position
 
-	template<typename T>
     virtual float distance(const T& another_feature) const;
     ///< measure distance to another feature of his own type
     ///< will raise a runtime error if the given feature type is not its own

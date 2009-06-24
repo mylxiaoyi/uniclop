@@ -2,6 +2,9 @@
 #if !defined(GST_VIDEO_INPUT_HEADER)
 #define GST_VIDEO_INPUT_HEADER
 
+
+#include "IVideoInput.hpp"
+
 #include <string>
 
 #include <boost/program_options.hpp>

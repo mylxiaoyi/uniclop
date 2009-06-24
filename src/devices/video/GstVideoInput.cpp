@@ -23,6 +23,7 @@ namespace uniclop
 
 using namespace cimg_library;
 using boost::uint8_t;
+using namespace boost::gil;
 
 program_options::options_description GstVideoInput::get_options_description()
 {
