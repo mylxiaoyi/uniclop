@@ -39,12 +39,6 @@
 
 namespace uniclop
 {
-namespace algorithms
-{
-namespace model_estimation
-{
-namespace estimators
-{
 	
 	
 using namespace std;
@@ -292,4 +286,4 @@ const vector<unsigned int> &OneDimensionalKMeans::get_permutations()
 }
 
 
-}}}}
+}

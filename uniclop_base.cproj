@@ -79,6 +79,7 @@
     <Compile Include="src\algorithms\model_estimation\estimators\OneDimensionalKMeans.cpp" />
     <Compile Include="src\algorithms\model_estimation\estimators\Ensemble.cpp" />
     <Compile Include="src\algorithms\features\FeaturesTracks.cpp" />
+    <Compile Include="src\algorithms\two_view_geometry\EssentialMatrix.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\applications\AbstractApplication.hpp" />
@@ -107,6 +108,7 @@
     <None Include="src\algorithms\model_estimation\estimators\Ensemble.hpp" />
     <None Include="src\algorithms\model_estimation\model_estimation.hpp" />
     <None Include="src\devices\video\IVideoInput.hpp" />
+    <None Include="src\algorithms\two_view_geometry\EssentialMatrix.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="src\applications\video_input/" />

@@ -10,12 +10,6 @@
 
 namespace uniclop
 {
-namespace algorithms
-{
-namespace model_estimation
-{
-namespace estimators
-{
 	
 	
 using namespace std;
@@ -48,7 +42,7 @@ private:
 
 };
 
-}}}}
+}
 
 //
 //#include <stdio.h>

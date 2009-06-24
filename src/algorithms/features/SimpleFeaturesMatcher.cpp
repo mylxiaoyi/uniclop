@@ -17,12 +17,7 @@
 
 namespace uniclop
 {
-namespace algorithms
-{
-namespace features
-{
 
-using uniclop::algorithms::features::fast::FASTFeature;
 using namespace std;
 
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
@@ -180,6 +175,5 @@ template class SimpleFeaturesMatcher<FASTFeature>;
 //template class SimpleFeaturesMatcher<SIFTFeature>;
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 
-}
-}
+
 }

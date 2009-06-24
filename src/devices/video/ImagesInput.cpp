@@ -6,7 +6,6 @@
 
 // Cimg http://cimg.sf.net
 #include <CImg/CImg.h>
-using namespace cimg_library;
 
 // OpenCv http://opencvlibrary.sf.net
 #include <opencv/cv.h>
@@ -23,10 +22,8 @@ using namespace cimg_library;
 
 namespace uniclop
 {
-namespace devices
-{
-namespace video
-{
+
+using namespace cimg_library;
 
 using namespace std;
 using boost::uint8_t;
@@ -357,6 +354,4 @@ template class ImagesInput<uint8_t>;
 
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 
-}
-}
 }

@@ -5,12 +5,6 @@
 
 namespace uniclop
 {
-namespace algorithms
-{
-namespace features
-{
-namespace fast
-{
 
 using namespace std;
 
@@ -51,7 +45,4 @@ vector< ScoredMatch<FASTFeature> >& FASTFeaturesMatcher::match(
 
 
 
-}
-}
-}
 }

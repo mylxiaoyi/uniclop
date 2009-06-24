@@ -7,14 +7,7 @@
 
 namespace uniclop
 {
-namespace algorithms
-{
-namespace model_estimation
-{
-namespace estimators
-{
 
-using namespace uniclop::algorithms::features;
 
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 // Class PROSAC methods implementation
@@ -65,8 +58,4 @@ const vector< bool > &  PROSAC<T>::get_is_inlier()
 template class PROSAC< ScoredMatch< fast::FASTFeature >  >;
 //template class PROSAC< ScoredMatch<SIFTFeature> >;
 
-
-}
-}
-}
 }

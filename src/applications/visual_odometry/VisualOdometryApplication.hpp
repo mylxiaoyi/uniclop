@@ -11,10 +11,6 @@
 
 namespace uniclop
 {
-namespace applications
-{
-namespace visual_odometry
-{
 
 using uniclop::devices::video::GstVideoInput;
 namespace program_options =  boost::program_options;
@@ -35,7 +31,5 @@ private:
 
 };
 
-}
-}
 }
 #endif // !defined(VISUAL_ODOMETRY_APPLICATION_HEADER)

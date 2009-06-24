@@ -23,11 +23,6 @@
 
 namespace uniclop
 {
-namespace applications
-{
-namespace visual_odometry
-{
-
 
 int vtk_main(); // forward declaration see bottom of file
 
@@ -197,8 +192,6 @@ int vtk_main()
 }
 
 
-}
-}
 }
 
 

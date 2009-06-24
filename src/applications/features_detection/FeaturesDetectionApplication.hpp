@@ -20,23 +20,7 @@ class rgb8_cimg_t;
 namespace uniclop
 {
 
-namespace devices
-{
-namespace video
-{
 class GstVideoInput;
-}
-}
-
-
-namespace applications
-{
-namespace features_detection
-{
-
-using uniclop::devices::video::GstVideoInput;
-using uniclop::algorithms::features::fast::SimpleFAST;
-using uniclop::algorithms::features::fast::FASTFeature;
 
 namespace program_options =  boost::program_options;
 using boost::scoped_ptr;
@@ -60,8 +44,6 @@ private:
 
 };
 
-}
-}
 }
 
 #endif // FEATURES_DETECTION_APPLICATION_HEADER

@@ -20,10 +20,6 @@
 
 namespace uniclop
 {
-namespace applications
-{
-namespace video_input
-{
 
 using namespace uniclop::devices::video;
 using namespace cimg_library;
@@ -104,6 +100,5 @@ int VideoInputApplication::main_loop(args::variables_map &options)
 }
 
 
-} // end of namespace video_input
-}
-}
+} // end of namespace uniclop
+

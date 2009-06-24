@@ -9,26 +9,12 @@
 
 namespace uniclop
 {
-namespace algorithms
-{
-	
-		namespace features {
-		template<typename F>
 class ScoredMatch;
-	}
-	
-namespace model_estimation
-{
-namespace models
-{
-
-using namespace uniclop::algorithms::model_estimation;
-using uniclop::algorithms::features::ScoredMatch;
 
 // need a model for fundamental matrix and for homography projections (at least)
 
 template<typename F> // F feature type
-class FundamentalMatrixModel: public IParametricModel< ScoredMatch<F> >
+class FundamentalMatrixModel: public IParametricModel
 {
     // based on code from VXL RREL rrel_fm_problem
 

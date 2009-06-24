@@ -23,12 +23,6 @@
 
 namespace uniclop
 {
-namespace algorithms
-{
-namespace model_estimation
-{
-namespace models
-{
 
 
 // Class HomographyModel:IParametricModel< ScoredMatch<F> > methods implementation
@@ -249,7 +243,4 @@ void HomographyModel<F>::compute_residuals
 
 
 
-}
-}
-}
 }

@@ -32,10 +32,6 @@ Simple application that shows on screen tracks of detected feature points
 
 namespace uniclop
 {
-namespace applications
-{
-namespace features_tracking
-{
 
 using namespace std;
 using namespace cimg_library;
@@ -263,8 +259,6 @@ void FeaturesTrackingApplication::draw_tracks(const FeaturesTracks &tracks, rgb8
 }
 
 
-}
-}
 }
 
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=

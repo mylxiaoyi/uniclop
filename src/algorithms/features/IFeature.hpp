@@ -6,10 +6,6 @@
 
 namespace uniclop
 {
-namespace algorithms
-{
-namespace features
-{
 
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 // Interfaces definition
@@ -36,8 +32,6 @@ public:
     }
 };
 
-}
-}
 }
 
 #endif // IFEATURE_HEADER_INCLUDED

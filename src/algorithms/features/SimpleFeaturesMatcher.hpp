@@ -9,22 +9,17 @@
 
 namespace uniclop
 {
-namespace algorithms
-{
-namespace features
-{
 
 using namespace std;
 namespace args = boost::program_options;
 
-template<typename F>
 class SimpleFeaturesMatcher: public IFeaturesMatcher<F>
 {
     // will return an ordered list of ScoredMatches
 
     // dead simple implementation O(N**2) that takes the num_near_features nearest features
 
-    vector< ScoredMatch<F> > matchings;
+    vector< ScoredMatch > matchings;
 
     float _max_distance;
     int _num_near_features;
@@ -36,11 +31,9 @@ public:
     SimpleFeaturesMatcher(args::variables_map &options);
     ~SimpleFeaturesMatcher();
 
-    vector< ScoredMatch<F> >& match(const vector<F>& features_list_a, const vector<F>& features_list_b);
+    vector< ScoredMatch >& match(const vector<F>& features_list_a, const vector<F>& features_list_b);
 };
 
-}
-}
 }
 
 

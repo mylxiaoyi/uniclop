@@ -9,8 +9,6 @@
 
 namespace uniclop
 {
-namespace applications
-{
 
 AbstractApplication::AbstractApplication()
 {
@@ -100,5 +98,4 @@ args::variables_map AbstractApplication::parse_arguments(int argc, char *argv[])
 
 
 
-}
 }

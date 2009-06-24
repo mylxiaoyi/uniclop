@@ -12,12 +12,6 @@
 
 namespace uniclop
 {
-namespace algorithms
-{
-namespace model_estimation
-{
-namespace estimators
-{
 
 using namespace uniclop::algorithms::model_estimation;
 namespace args = boost::program_options;
@@ -52,9 +46,6 @@ public:
     const vector< bool > & get_is_inlier();
 };
 
-}
-}
-}
 }
 
 #endif // RANSAC_HEADER

@@ -9,12 +9,6 @@
 
 namespace uniclop
 {
-namespace algorithms
-{
-namespace features
-{
-namespace fast
-{
 
 
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
@@ -53,18 +47,14 @@ const vector<FASTFeature> & SimpleFAST::detect_features(const gray8c_view_t& vie
     // no need to clear the vectors features it is done inside the functions
 
     // find corners
-    corner_detect(view, barrier, detected_features);
+    fast::corner_detect(view, barrier, detected_features);
 
     // keep the best ones
-    nonmax(view, barrier, detected_features, best_features);
+    fast::nonmax(view, barrier, detected_features, best_features);
 
     return best_features;
 }
 
 
 
-
-}
-}
-}
 }

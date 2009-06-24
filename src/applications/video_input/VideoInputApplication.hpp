@@ -8,14 +8,9 @@
 
 namespace uniclop
 {
-namespace applications
-{
-namespace video_input
-{
 
 namespace args = boost::program_options;
 using namespace std;
-using uniclop::devices::video::GstVideoInput;
 
 
 class VideoInputApplication : public AbstractApplication
@@ -33,8 +28,6 @@ private:
 
 };
 
-}
-}
 }
 
 #endif /* VIDEOINPUTAPPLICATION_HPP_ */

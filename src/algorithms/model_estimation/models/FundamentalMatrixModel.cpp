@@ -24,12 +24,6 @@
 
 namespace uniclop
 {
-namespace algorithms
-{
-namespace model_estimation
-{
-namespace models
-{
 
 
 
@@ -165,9 +159,4 @@ void FundamentalMatrixModel<F>::compute_residuals
 } // end of method FundamentalMatrixModel<F>::compute_residuals
 
 
-
-
-}
-}
-}
 }

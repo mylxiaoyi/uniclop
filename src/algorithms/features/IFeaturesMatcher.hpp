@@ -14,10 +14,6 @@
 
 namespace uniclop
 {
-namespace algorithms
-{
-namespace features
-{
 
 using namespace std;
 
@@ -36,8 +32,6 @@ public:
     ///< changing the features_vector content could invalidate the pointers !
 };
 
-}
-}
 }
 
 #endif // IFEATURES_MATCHER_HEADER_INCLUDED

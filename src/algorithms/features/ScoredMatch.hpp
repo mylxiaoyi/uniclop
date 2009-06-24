@@ -12,11 +12,6 @@
 
 namespace uniclop
 {
-namespace algorithms
-{
-namespace features
-{
-
 using namespace std;
 
 
@@ -75,9 +70,6 @@ public:
 
 };
 
-
-}
-}
 }
 
 #endif // SCORED_MATCH_HEADER_INCLUDED

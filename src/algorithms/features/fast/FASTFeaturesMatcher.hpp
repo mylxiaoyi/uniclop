@@ -15,14 +15,8 @@
 
 namespace uniclop
 {
-namespace algorithms
-{
-namespace features
-{
-namespace fast
-{
-
-using namespace std;
+	
+	using namespace std;
 namespace args = boost::program_options;
 
 class FASTFeature; // forward declaration
@@ -50,9 +44,6 @@ public:
 };
 
 
-}
-}
-}
 }
 
 #endif // FAST_FEATURES_MATCHER_HEADER_INCLUDED

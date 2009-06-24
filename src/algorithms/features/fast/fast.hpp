@@ -19,10 +19,6 @@
 
 namespace uniclop
 {
-namespace algorithms
-{
-namespace features
-{
 namespace fast
 {
 
@@ -65,9 +61,7 @@ FAST::nonmax(image, 30, corners, good_corners);
 */
 
 } // end of namespace FAST
-}
-}
-}
+} // end of namespace uniclop
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 
 #endif // #if !defined(FAST_HEADER_INCLUDED)

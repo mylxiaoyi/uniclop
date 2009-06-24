@@ -12,12 +12,7 @@
 
 namespace uniclop
 {
-namespace applications
-{
-namespace features_detection
-{
 
-using namespace uniclop::devices::video;
 using namespace cimg_library;
 using boost::gil::color_converted_view;
 using boost::gil::copy_and_convert_pixels;
@@ -223,6 +218,4 @@ void FeaturesDetectionApplication::draw_features(const vector<FASTFeature> &feat
     return;
 }
 
-}
-}
 }

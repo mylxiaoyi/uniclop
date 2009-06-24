@@ -20,14 +20,7 @@ A new robust matching method is proposed. The Progressive Sample Consensus (PROS
 
 namespace uniclop
 {
-namespace algorithms
-{
-namespace model_estimation
-{
-namespace estimators
-{
-
-using namespace uniclop::algorithms::model_estimation;
+	
 namespace args = ::boost::program_options;
 
 
@@ -50,9 +43,6 @@ public:
     const vector< bool > & get_is_inlier();
 };
 
-}
-}
-}
 }
 
 #endif // PROSAC_HEADER

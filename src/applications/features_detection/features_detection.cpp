@@ -6,8 +6,8 @@
 
 int main(int argc, char *argv[])
 {
-    using uniclop::applications::AbstractApplication;
-    using uniclop::applications::features_detection::FeaturesDetectionApplication;
+    using uniclop::AbstractApplication;
+    using uniclop::FeaturesDetectionApplication;
     boost::scoped_ptr<AbstractApplication> application_p(new FeaturesDetectionApplication());
     return application_p->main(argc, argv);
 }

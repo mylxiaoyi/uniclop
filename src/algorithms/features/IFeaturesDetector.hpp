@@ -18,10 +18,6 @@
 
 namespace uniclop
 {
-namespace algorithms
-{
-namespace features
-{
 
 using namespace std;
 
@@ -55,8 +51,6 @@ public:
 };
 
 
-}
-}
 }
 
 #endif // IFEATURES_DETECTOR_HEADER_INCLUDED

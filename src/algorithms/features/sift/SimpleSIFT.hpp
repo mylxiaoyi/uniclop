@@ -31,7 +31,7 @@ namespace args = boost::program_options;
 #include <boost/scoped_ptr.hpp>
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 
-
+namespace uniclop {
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 // SIFT Features detection
 
@@ -71,3 +71,6 @@ public:
 
     const vector<SIFTFeature> &detect_features(const CImg<uint8_t> &image);
 };
+
+
+}

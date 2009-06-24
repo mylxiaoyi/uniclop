@@ -10,12 +10,6 @@
 
 namespace uniclop
 {
-namespace algorithms
-{
-namespace model_estimation
-{
-namespace estimators
-{
 
 using namespace uniclop::algorithms::model_estimation;
 namespace args = ::boost::program_options;
@@ -64,9 +58,6 @@ protected:
                                          vector<int> &indexes);
 };
 
-}
-}
-}
 }
 
 #endif // ENSEMBLE_HEADER

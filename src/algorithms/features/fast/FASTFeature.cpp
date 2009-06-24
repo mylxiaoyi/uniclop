@@ -4,12 +4,6 @@
 
 namespace uniclop
 {
-namespace algorithms
-{
-namespace features
-{
-namespace fast
-{
 
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 // class FASTFeature methods implementation
@@ -66,8 +60,5 @@ float FASTFeature::distance(const FASTFeature &f) const
 }
 
 
-}
-}
-}
 }
 

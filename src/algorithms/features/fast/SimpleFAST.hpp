@@ -19,12 +19,6 @@
 
 namespace uniclop
 {
-namespace algorithms
-{
-namespace features
-{
-namespace fast
-{
 
 
 using uniclop::algorithms::features::IFeaturesDetector;
@@ -56,9 +50,6 @@ public:
 };
 
 
-}
-}
-}
 }
 
 #endif // #if !defined(SIMPLE_FAST_HEADER_INCLUDED)

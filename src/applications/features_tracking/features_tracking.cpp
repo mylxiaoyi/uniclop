@@ -6,8 +6,8 @@
 
 int main(int argc, char *argv[])
 {
-    using uniclop::applications::features_tracking::FeaturesTrackingApplication;
-    using uniclop::applications::AbstractApplication;
+    using uniclop::FeaturesTrackingApplication;
+    using uniclop::AbstractApplication;
 
     boost::scoped_ptr<AbstractApplication> application_p(new FeaturesTrackingApplication());
     return application_p->main(argc, argv);

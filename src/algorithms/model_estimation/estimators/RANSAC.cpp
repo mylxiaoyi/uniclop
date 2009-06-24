@@ -31,14 +31,6 @@
 
 namespace uniclop
 {
-namespace algorithms
-{
-namespace model_estimation
-{
-namespace estimators
-{
-
-using namespace uniclop::algorithms::model_estimation::models;
 
 // Class RANSAC methods implementation
 
@@ -228,7 +220,4 @@ const vector< bool > &  RANSAC<T>::get_is_inlier()
 template class RANSAC< ScoredMatch< features::fast::FASTFeature> >;
 //template class RANSAC< ScoredMatch<SIFTFeature> >;
 
-}
-}
-}
 }

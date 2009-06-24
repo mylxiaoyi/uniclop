@@ -15,12 +15,6 @@
 
 namespace uniclop
 {
-namespace algorithms
-{
-namespace features
-{
-namespace fast
-{
 
 using uniclop::algorithms::features::IFeature;
 
@@ -59,9 +53,6 @@ public:
 };
 
 
-}
-}
-}
 }
 
 #endif // FAST_FEATURE_HEADER_INCLUDED

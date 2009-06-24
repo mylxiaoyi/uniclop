@@ -9,24 +9,9 @@
 
 namespace uniclop
 {
-namespace algorithms
-{
-	namespace features {
-		template<typename F>
-class ScoredMatch;
-	}
-	
-namespace model_estimation
-{
-namespace models
-{
-
-using namespace uniclop::algorithms::model_estimation;
-using uniclop::algorithms::features::ScoredMatch;
-
 
 // class HomographyModel
-class HomographyModel: public IParametricModel< ScoredMatch >
+class HomographyModel: public IParametricModel
 {
     // based on code from VXL RREL rrel_homography2d_est
 
@@ -64,9 +49,6 @@ public:
 }
 ; // end of class HomographyModel declaration
 
-}
-}
-}
 }
 
 #endif // HOMOGRAPHY_MODEL_HEADER

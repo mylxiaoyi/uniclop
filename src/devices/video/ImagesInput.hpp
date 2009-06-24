@@ -4,10 +4,8 @@
 
 #include <string>
 #include <vector>
-using namespace std;
 
 #include <boost/program_options.hpp>
-namespace args = boost::program_options;
 
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 // Headers
@@ -15,18 +13,14 @@ namespace args = boost::program_options;
 
 // Cimg http://cimg.sf.net
 #include <CImg/CImg.h>
-using namespace cimg_library;
 
 struct CvCapture; // forward declaration to avoid including all of OpenCv
 
 namespace uniclop
 {
-namespace devices
-{
-namespace video
-{
 
-
+using namespace std;	
+namespace args = boost::program_options;
 using namespace cimg_library;
 
 
@@ -68,9 +62,8 @@ private:
 
 };
 
-}
-}
+
 }
 
 
-#endif // #if !defined(IMAGES_INPUT_HEADER_INCLUDED)
+#endif // !defined(IMAGES_INPUT_HEADER_INCLUDED)

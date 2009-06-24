@@ -24,27 +24,10 @@ class rgb8_cimg_t;
 namespace uniclop
 {
 
-namespace algorithms
-{
-namespace features
-{ namespace fast { 
 class FASTFeaturesMatcher; 
-}}
-}
-
-namespace applications
-{
-namespace features_tracking
-{
 	
 using namespace std;
-
-using namespace uniclop::applications::args;
-using namespace uniclop::algorithms::features;
-
 using boost::scoped_ptr;
-using uniclop::devices::video::GstVideoInput;
-
 
 class FeaturesTrackingApplication: public AbstractApplication
 {
@@ -70,7 +53,5 @@ private:
 };
 
 
-}
-}
 }
 #endif // !defined(FEATURES_TRACKING_APPLICATION_HEADER)

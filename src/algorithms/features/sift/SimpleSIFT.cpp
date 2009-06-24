@@ -11,7 +11,13 @@
 
 // Cimg http://cimg.sf.net
 #include <CImg/CImg.h>
+
+
+namespace uniclop {
+	
+	
 using namespace cimg_library;
+
 
 
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
@@ -115,3 +121,6 @@ const vector<SIFTFeature> & SimpleSIFT::detect_features(const CImg<uint8_t> &ima
 
     return jift_features_detector_p->descriptor();
 }
+
+
+} // end of namespace uniclop

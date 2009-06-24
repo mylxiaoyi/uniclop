@@ -18,14 +18,7 @@ provides 50x faster results than RANSAC and about 2x~3x faster results than PROS
 
 namespace uniclop
 {
-namespace algorithms
-{
-namespace model_estimation
-{
-namespace estimators
-{
 
-using namespace uniclop::algorithms::model_estimation;
 namespace args = ::boost::program_options;
 
 template<typename T> // T is the data type
@@ -47,9 +40,6 @@ public:
     const vector< bool > & get_is_inlier();
 };
 
-}
-}
-}
 }
 
 

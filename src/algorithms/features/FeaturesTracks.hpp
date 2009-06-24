@@ -10,10 +10,6 @@
 
 namespace uniclop
 {
-namespace algorithms
-{
-namespace features
-{
 
 /**
 The track of a single feature.
@@ -50,8 +46,6 @@ public:
 
 
 
-}
-}
 }
 
 

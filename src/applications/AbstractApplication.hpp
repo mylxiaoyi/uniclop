@@ -9,8 +9,6 @@
 
 namespace uniclop
 {
-namespace applications
-{
 
 namespace args = boost::program_options;
 using namespace std;
@@ -42,7 +40,6 @@ protected:
 
 };
 
-}
 }
 
 #endif /* ABSTRACTAPPLICATION_HPP_ */

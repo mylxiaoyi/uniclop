@@ -36,15 +36,6 @@
 
 namespace uniclop
 {
-namespace algorithms
-{
-namespace model_estimation
-{
-namespace estimators
-{
-
-using uniclop::algorithms::features::ScoredMatch;
-using namespace uniclop::algorithms::model_estimation::models;
 
 using namespace cimg_library;
 
@@ -726,8 +717,5 @@ void HistogramKurtosis<T>::display_histogram(const float kurtosis,
 }
 
 
-}
-}
-}
 }
 

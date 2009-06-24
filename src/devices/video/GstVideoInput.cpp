@@ -20,10 +20,6 @@
 
 namespace uniclop
 {
-namespace devices
-{
-namespace video
-{
 
 using namespace cimg_library;
 using boost::uint8_t;
@@ -334,6 +330,4 @@ GstVideoInput::const_view_t &GstVideoInput::get_new_image()
 }
 
 
-}
-}
 }

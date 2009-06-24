@@ -6,12 +6,6 @@
 
 namespace uniclop
 {
-namespace algorithms
-{
-namespace model_estimation
-{
-namespace estimators
-{
 
 using namespace uniclop::algorithms::features;
 
@@ -67,7 +61,4 @@ template class ARRSAC< ScoredMatch< fast::FASTFeature >  >;
 //template class ARRSAC< ScoredMatch<SIFTFeature> >;
 
 
-}
-}
-}
 }

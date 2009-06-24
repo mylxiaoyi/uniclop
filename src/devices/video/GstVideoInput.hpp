@@ -17,11 +17,7 @@
 
 namespace uniclop
 {
-namespace devices
-{
-namespace video
-{
-
+	
 using std::string;
 namespace program_options = boost::program_options;
 using boost::gil::rgb8_image_t;
@@ -72,8 +68,6 @@ private:
     void on_new_frame(GstElement *element, GstBuffer * buffer, GstPad* pad);
 };
 
-}
-}
 }
 
 
