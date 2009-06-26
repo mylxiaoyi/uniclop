@@ -1,10 +1,5 @@
 
-
 #include "GstVideoInput.hpp"
-
-
-#include <boost/gil/gil_all.hpp>
-#include <boost/cstdint.hpp>
 
 #include <stdexcept>
 
@@ -17,6 +12,9 @@
 #include <gst/video/video.h>
 
 #include <CImg/CImg.h>
+
+#include <boost/gil/gil_all.hpp>
+#include <boost/cstdint.hpp>
 
 namespace uniclop
 {
@@ -312,9 +310,23 @@ void GstVideoInput::on_new_frame(GstElement *element, GstBuffer * buffer, GstPad
     return;
 }
 
+	const point2<int> &GstVideoInput::get_image_dimensions() {
+		
+		return	current_image_view.dimensions();
+	}
 
-GstVideoInput::const_view_t &GstVideoInput::get_new_image()
-{
+   void get_new_image(rgb8_view_t &view){
+	get_new_image<rgb8_view_t > (view);
+	return;   
+   }
+
+   void get_new_image(gray8_view_t &view){
+	get_new_image<gray8_view_t > (view);
+	return;   
+   }
+
+	template<typename ImageView>
+	void GstVideoInput::get_new_image(ImageView &view) {
     //boost::unique_lock<boost::mutex>
     boost::mutex::scoped_lock lock(current_image_mutex);
     while (image_is_new == false)
@@ -323,12 +335,10 @@ GstVideoInput::const_view_t &GstVideoInput::get_new_image()
         new_image_condition.wait(lock);
     }
 
-    image_is_new = false;
-    return  current_image_view;
-    
-// FIXME     copy_and_convert_pixels(current_image.view, boost::gil::view(gray_image));
-      
-}
+	copy_and_convert_pixels(current_image_view, view);
 
+    image_is_new = false;
+	return;	
+	}
 
 }

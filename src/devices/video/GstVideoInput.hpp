@@ -54,12 +54,19 @@ public:
     GstVideoInput(program_options::variables_map &options);
     ~GstVideoInput();
 
-    /**
-    Blocking call to retrieve a new image
-    */
-    const_view_t &get_new_image();
+// IVideoInput interface
+//@{
+   void get_new_image(rgb8_view_t &);
+
+   void get_new_image(gray8_view_t &);
+	const point2<int> &get_image_dimensions();
+	// @}
 
 private:
+
+	template<typename ImageView>
+	void get_new_image(ImageView &);
+	
     void parse_options(program_options::variables_map &options);
 
     void setup_video_input_pipeline(const string &video_sink_name);
