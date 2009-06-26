@@ -282,8 +282,7 @@ public:
 
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 
-template<typename T>
-args::options_description EnsembleMethod<T>::get_options_description()
+args::options_description EnsembleMethod::get_options_description()
 {
 
     args::options_description desc("EnsembleMethod options");
@@ -297,8 +296,7 @@ args::options_description EnsembleMethod<T>::get_options_description()
 }
 
 
-template<typename T>
-EnsembleMethod<T>::EnsembleMethod(args::variables_map &options, IParametricModel<T> &model)
+EnsembleMethod::EnsembleMethod(args::variables_map &options, IParametricModel &model)
 {
 
     // default min/max values
@@ -316,31 +314,28 @@ EnsembleMethod<T>::EnsembleMethod(args::variables_map &options, IParametricModel
     return;
 }
 
-template<typename T>
-EnsembleMethod<T>::~EnsembleMethod()
+EnsembleMethod::~EnsembleMethod()
 {
     // nothing to do here
     return;
 }
 
-template<typename T>
-void EnsembleMethod<T>::set_min_max_values(double _min_error_value, double _max_error_value)
+void EnsembleMethod::set_min_max_values(double _min_error_value, double _max_error_value)
 {
     min_error_value = _min_error_value;
     max_error_value = _max_error_value;
     return;
 }
 
-template<typename T>
-const ublas::vector<float> &EnsembleMethod<T>::estimate_model_parameters(const vector< T > &matches)
+const ublas::vector<float> &EnsembleMethod::estimate_model_parameters(const vector< ScoredMatch > &matches)
 {
     // estimate the kurtosis of the each data point ---
     vector<int> indexes;
     vector<int>::const_iterator indexes_it;
-    vector< T > sample_set(model_p->get_num_points_to_estimate());
-    typename vector< T >::iterator sample_set_it;
+    vector< ScoredMatch > sample_set(model_p->get_num_points_to_estimate());
+    vector< ScoredMatch >::iterator sample_set_it;
 
-    typename vector< T >::const_iterator matches_it;
+    vector< ScoredMatch >::const_iterator matches_it;
 
     vector<float> residuals(matches.size());
     vector<float>::const_iterator residuals_it;
@@ -435,7 +430,7 @@ const ublas::vector<float> &EnsembleMethod<T>::estimate_model_parameters(const v
 
     // tag inliers and outliers -
     is_inlier.resize(kurtosis_values.size());
-    vector< T > inliers_subset;
+    vector< ScoredMatch > inliers_subset;
 
     vector<unsigned int>::const_iterator permutations_it;
     unsigned int permutations_index;
@@ -502,22 +497,20 @@ const ublas::vector<float> &EnsembleMethod<T>::estimate_model_parameters(const v
     return model_p->get_parameters();
 }
 
-template<typename T>
-const vector< bool > &  EnsembleMethod<T>::get_is_inlier()
+const vector< bool > &  EnsembleMethod::get_is_inlier()
 {
     return is_inlier;
 }
 
 
 // helper search class
-template<typename T>
 class compare_matches_unary_predicate // : UnaryPredicate<int>
 {
-    const vector< T > &data;
-    const T &match;
+    const vector< ScoredMatch > &data;
+    const ScoredMatch &match;
 
 public:
-    compare_matches_unary_predicate(const vector< T > &_data, const unsigned int match_index)
+    compare_matches_unary_predicate(const vector< ScoredMatch > &_data, const unsigned int match_index)
             : data(_data), match(_data[match_index])
     {
         return;
@@ -527,18 +520,17 @@ public:
 
 };
 
-template<typename T>
-bool compare_matches_unary_predicate<T>::operator()(int index) const
+bool compare_matches_unary_predicate::operator()(int index) const
 { // we want to ensure that we have different
 
     if (index >= static_cast<int>(data.size()) )
         throw runtime_error("compare_matches_unary_predicate::operator() index out of range");
 
-    const T &m = this->data[index];
+    const ScoredMatch &m = this->data[index];
     return (match.feature_a == m.feature_a) || (match.feature_b == m.feature_b);
 }
 
-
+/*
 template<>
 bool compare_matches_unary_predicate< boost::tuple<float, float> >::operator()(int index) const
 {
@@ -563,13 +555,12 @@ bool compare_matches_unary_predicate<float>::operator()(int index) const
     throw runtime_error("This method should never be called");
 }
 
-
+*/
 
 // helper function used for
 // partial specialization of retrieve_random_indexes when comparing scored matches
-template<typename T>
-void EnsembleMethod<T>::retrieve_random_matches_indexes
-(const vector< T > &data, const unsigned int num_indexes, vector<int> &indexes)
+void EnsembleMethod::retrieve_random_matches_indexes
+(const vector< ScoredMatch > &data, const unsigned int num_indexes, vector<int> &indexes)
 {
     // we expect T to be ScoredMatch<F>
 
@@ -587,10 +578,10 @@ void EnsembleMethod<T>::retrieve_random_matches_indexes
         const unsigned int t_index = get_random_index();
 
         if (t_index >= data.size() ) // sanity check
-            throw runtime_error("EnsembleMethod<T>::retrieve_random_matches_indexes index out of range");
+            throw runtime_error("EnsembleMethod::retrieve_random_matches_indexes index out of range");
 
         if ( std::find_if(indexes.begin(), indexes.end(),
-                          compare_matches_unary_predicate<T>(data, t_index) ) == indexes.end())
+                          compare_matches_unary_predicate(data, t_index) ) == indexes.end())
         { // the index was not listed, we can add it
             indexes.push_back(t_index);
         }
@@ -604,8 +595,7 @@ void EnsembleMethod<T>::retrieve_random_matches_indexes
 }
 
 // generic case
-template<typename T>
-void EnsembleMethod<T>::retrieve_random_indexes(const vector< T > &data, const unsigned int num_indexes,
+void EnsembleMethod::retrieve_random_indexes(const vector< ScoredMatch > &data, const unsigned int num_indexes,
         vector<int> &indexes)
 {
 
@@ -628,7 +618,7 @@ void EnsembleMethod<T>::retrieve_random_indexes(const vector< T > &data, const u
 
         counter+=1;
         if ( counter > 10*max_index_value)
-            throw runtime_error("EnsembleMethod<T>::retrieve_random_indexes dataset ill conditioned");
+            throw runtime_error("EnsembleMethod::retrieve_random_indexes dataset ill conditioned");
     } // end of 'while not enough indexes have been retrieved'
 
     return;
@@ -641,36 +631,6 @@ void EnsembleMethod<T>::retrieve_random_indexes(const vector< T > &data, const u
 
 template void HistogramKurtosis<double>::display_histogram
 (const float, const vector<int> &, const int , CImgDisplay &);
-
-template<typename F> class ScoredMatch; // forward declaration
-
-template<>
-void EnsembleMethod< ScoredMatch<features::fast::FASTFeature> >::retrieve_random_indexes
-(const vector< ScoredMatch<features::fast::FASTFeature> > &data, const unsigned int num_indexes,
- vector<int> &indexes)
-{
-    return retrieve_random_matches_indexes(data, num_indexes, indexes);
-}
-
-/*template<>
-void EnsembleMethod< ScoredMatch<features::sift::SIFTFeature> >::retrieve_random_indexes
-(const vector< ScoredMatch<features::sift::SIFTFeature> > &data, const unsigned int num_indexes,
- vector<int> &indexes)
-{
-    return retrieve_random_matches_indexes(data, num_indexes, indexes);
-}*/
-
-template<>
-void EnsembleMethod< boost::tuple<float, float> >::retrieve_random_indexes
-(const vector< boost::tuple<float, float> > &data, const unsigned int num_indexes,
- vector<int> &indexes)
-{
-    return retrieve_random_matches_indexes(data, num_indexes, indexes);
-}
-
-template class EnsembleMethod< ScoredMatch<features::fast::FASTFeature> >;
-// template class EnsembleMethod< ScoredMatch<SIFTFeature> >;
-template class EnsembleMethod< boost::tuple<float, float> >;
 
 
 

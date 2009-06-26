@@ -12,12 +12,9 @@
 
 namespace uniclop
 {
-
-using namespace uniclop::algorithms::model_estimation;
 namespace args = boost::program_options;
 
-template<typename T> // T is the data type
-class RANSAC: public IModelEstimator<T>
+class RANSAC: public IModelEstimator
 { // given a model and list of scorematches will estimate the best parameters of the model
 
     ublas::vector<float> estimated_model_parameters;
@@ -37,11 +34,11 @@ public:
 
     static args::options_description get_options_description();
 
-    RANSAC(args::variables_map &options, IParametricModel<T> &);
+    RANSAC(args::variables_map &options, IParametricModel &);
 
     ~RANSAC();
 
-    const ublas::vector<float> &estimate_model_parameters(const vector< T > &);
+    const ublas::vector<float> &estimate_model_parameters(const vector< ScoredMatch > &);
 
     const vector< bool > & get_is_inlier();
 };

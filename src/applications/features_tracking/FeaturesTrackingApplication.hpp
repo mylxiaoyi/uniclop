@@ -36,8 +36,8 @@ class FeaturesTrackingApplication: public AbstractApplication
 
     // FIXME need to fix IFeaturesMatcher class design so we can use IFeaturesMatcher
     // instead of this specific matcher
-    typedef fast::SimpleFAST::features_type features_type; 
-    scoped_ptr<IFeaturesDetector< features_type > > features_detector_p;
+    typedef SimpleFAST::features_type features_type; 
+    scoped_ptr<IFeaturesDetector< features_type, GstVideoInput::const_view_t > > features_detector_p;
     scoped_ptr<IFeaturesMatcher< features_type > > features_matcher_p;
   	
     FeaturesTracks features_tracks;

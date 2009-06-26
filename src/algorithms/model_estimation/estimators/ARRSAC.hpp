@@ -20,9 +20,9 @@ namespace uniclop
 {
 
 namespace args = ::boost::program_options;
+class ScoredMatch;
 
-template<typename T> // T is the data type
-class ARRSAC: public IModelEstimator<T>
+class ARRSAC: public IModelEstimator
 { // given a model and list of scorematches will estimate the best parameters of the model
 
     ublas::vector<float> estimated_model_parameters;
@@ -31,11 +31,11 @@ public:
 
     static args::options_description get_options_description();
 
-    ARRSAC(args::variables_map &options, IParametricModel<T> &);
+    ARRSAC(args::variables_map &options, IParametricModel &);
 
     ~ARRSAC();
 
-    const ublas::vector<float> &estimate_model_parameters(const vector< T > &);
+    const ublas::vector<float> &estimate_model_parameters(const vector< ScoredMatch > &);
 
     const vector< bool > & get_is_inlier();
 };

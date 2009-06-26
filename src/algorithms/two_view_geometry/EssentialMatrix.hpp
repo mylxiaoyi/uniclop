@@ -12,9 +12,10 @@ public:
     ~EssentialMatrix();
     
     // void compute_rotation_translation(vector match, matrix R, vector t);
-}
+};
 
-}
+} // end of namespace uniclop
+
 
 #endif //  ESSENTIAL_MATRIX_HEADER
 

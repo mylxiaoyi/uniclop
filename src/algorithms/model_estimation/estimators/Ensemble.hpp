@@ -11,14 +11,14 @@
 namespace uniclop
 {
 
-using namespace uniclop::algorithms::model_estimation;
 namespace args = ::boost::program_options;
+
+class ScoredMatch;
 
 template<typename T> class KurtosisIncrementalEstimator; // forward declaration
 template<typename T> class HistogramKurtosis; // forward declaration
 
-template<typename T> // T is the data type
-class EnsembleMethod: public  IModelEstimator<T>
+class EnsembleMethod: public  IModelEstimator
 { // implementation of the W. Zhang and J. Kosecka "Ensemble method for robust estimation"
     // http://www.cs.gmu.edu/%7Ekosecka/Publications/EnsembleMethod.pdf
 
@@ -33,14 +33,14 @@ public:
 
     static args::options_description get_options_description();
 
-    EnsembleMethod(args::variables_map &options, IParametricModel<T> &model);
+    EnsembleMethod(args::variables_map &options, IParametricModel &model);
 
     ~EnsembleMethod();
 
     void set_min_max_values(double min_error_value, double max_error_value);
     // range of residual values used to estimate the kurtosis
 
-    const ublas::vector<float> &estimate_model_parameters(const vector< T > &);
+    const ublas::vector<float> &estimate_model_parameters(const vector< ScoredMatch > &);
 
     const vector< bool > & get_is_inlier();
 
@@ -48,13 +48,13 @@ protected:
     double min_error_value, max_error_value;
 
     int num_samples;
-    IParametricModel<T>  *model_p;
+    IParametricModel  *model_p;
     boost::mt19937 random_generator; // pseudo-random number generators
 
-    void retrieve_random_indexes(const vector< T > &data,
+    void retrieve_random_indexes(const vector< ScoredMatch > &data,
                                  const unsigned int num_indexes, vector<int> &indexes);
 
-    void retrieve_random_matches_indexes(const vector<T> &data, const unsigned int num_indexes,
+    void retrieve_random_matches_indexes(const vector<ScoredMatch> &data, const unsigned int num_indexes,
                                          vector<int> &indexes);
 };
 

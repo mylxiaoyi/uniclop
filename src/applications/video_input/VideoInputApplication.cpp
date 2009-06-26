@@ -21,7 +21,6 @@
 namespace uniclop
 {
 
-using namespace uniclop::devices::video;
 using namespace cimg_library;
 using boost::uint8_t;
 

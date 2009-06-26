@@ -7,15 +7,11 @@
 namespace uniclop
 {
 
-using namespace uniclop::algorithms::features;
 
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 // Class ARRSAC methods implementation
 
-
-
-template<typename T>
-args::options_description ARRSAC<T>::get_options_description()
+args::options_description ARRSAC::get_options_description()
 {
 
     args::options_description desc("ARRSAC options");
@@ -29,36 +25,28 @@ args::options_description ARRSAC<T>::get_options_description()
 }
 
 
-template<typename T>
-ARRSAC<T>::ARRSAC(args::variables_map &options, IParametricModel<T> &)
+ARRSAC::ARRSAC(args::variables_map &options, IParametricModel &)
 {
     throw runtime_error("ARRSAC model estimation is not yet implemented");
     return;
 }
 
-template<typename T>
-ARRSAC<T>::~ARRSAC()
+ARRSAC::~ARRSAC()
 {
     return;
 }
 
-template<typename T>
-const ublas::vector<float> &ARRSAC<T>::estimate_model_parameters(const vector< T > &)
+const ublas::vector<float> &ARRSAC::estimate_model_parameters(const vector< ScoredMatch > &)
 {
     return estimated_model_parameters;
 }
 
-template<typename T>
-const vector< bool > &  ARRSAC<T>::get_is_inlier()
+const vector< bool > &  ARRSAC::get_is_inlier()
 {
     return is_inlier;
 }
 
 
-// ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
-
-template class ARRSAC< ScoredMatch< fast::FASTFeature >  >;
-//template class ARRSAC< ScoredMatch<SIFTFeature> >;
 
 
 }

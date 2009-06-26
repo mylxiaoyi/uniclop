@@ -34,8 +34,8 @@ namespace uniclop
 
 // Class RANSAC methods implementation
 
-template<typename T>
-args::options_description RANSAC<T>::get_options_description()
+
+args::options_description RANSAC::get_options_description()
 {
 
     args::options_description desc("RANSAC options");
@@ -52,8 +52,8 @@ args::options_description RANSAC<T>::get_options_description()
 }
 
 
-template<typename T>
-RANSAC<T>::RANSAC(args::variables_map &options, IParametricModel<T> &model)
+
+RANSAC::RANSAC(args::variables_map &options, IParametricModel &model)
         :outlier_thresh_(1),max_outlier_frac_(0.9),
         desired_prob_good_(0.99), max_pops_(1), gen_all_(false), trace_level_(0)
 {
@@ -64,30 +64,30 @@ RANSAC<T>::RANSAC(args::variables_map &options, IParametricModel<T> &model)
     if (options.count("ransac.trace_level"))
         trace_level_ = options["ransac.trace_level"].as<int>();
 
-    FundamentalMatrixModel< typename T::feature_type > *fundamental_matrix_p = NULL;
-    fundamental_matrix_p = dynamic_cast< FundamentalMatrixModel< typename T::feature_type > * >(&model);
+    FundamentalMatrixModel *fundamental_matrix_p = NULL;
+    fundamental_matrix_p = dynamic_cast< FundamentalMatrixModel* >(&model);
     use_fundamental_matrix_model = (fundamental_matrix_p != NULL);
 
-    HomographyModel< typename T::feature_type > *homography_p = NULL;
-    homography_p = dynamic_cast< HomographyModel< typename T::feature_type > * >(&model);
+    HomographyModel *homography_p = NULL;
+    homography_p = dynamic_cast< HomographyModel* >(&model);
     use_homography_model = (homography_p != NULL);
 
     if (!use_fundamental_matrix_model && !use_homography_model)
-        throw runtime_error("Current implementation of RANSAC<T> only "\
+        throw runtime_error("Current implementation of RANSAC only "\
                             "supports the fundamental_matrix model and the homography model");
 
     return;
 }
 
-template<typename T>
-RANSAC<T>::~RANSAC()
+
+RANSAC::~RANSAC()
 {
     return;
 }
 
 
-template<typename T>
-const ublas::vector<float> &  RANSAC<T>::estimate_model_parameters(const vector< T > &matches)
+
+const ublas::vector<float> &  RANSAC::estimate_model_parameters(const vector< ScoredMatch > &matches)
 {
 
 
@@ -98,11 +98,11 @@ const ublas::vector<float> &  RANSAC<T>::estimate_model_parameters(const vector<
     vcl_vector< vgl_homg_point_2d<double> > to_features_hp;
 
     vgl_point_2d<double> t_vgl_point_2d;
-    typename vector< T >::const_iterator matches_it;
+    vector< ScoredMatch >::const_iterator matches_it;
 
     for (matches_it = matches.begin(); matches_it != matches.end(); ++matches_it)
     {
-        // we suppose that the datatype T is a ScoredMatch<T>
+        // we suppose that the datatype T is a ScoredMatch
         t_vgl_point_2d.set(matches_it->feature_a->x, matches_it->feature_a->y);
         from_features.push_back(t_vgl_point_2d);
         from_features_hp.push_back(vgl_homg_point_2d<double>(t_vgl_point_2d));
@@ -206,18 +206,11 @@ const ublas::vector<float> &  RANSAC<T>::estimate_model_parameters(const vector<
 
 } // end of 'RANSAC<>::estimate_model_parameters'
 
-template<typename T>
-const vector< bool > &  RANSAC<T>::get_is_inlier()
+
+const vector< bool > &  RANSAC::get_is_inlier()
 {
     return is_inlier;
 }
 
 
-// ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
-
-
-
-template class RANSAC< ScoredMatch< features::fast::FASTFeature> >;
-//template class RANSAC< ScoredMatch<SIFTFeature> >;
-
-}
+} // end of namespace uniclop
