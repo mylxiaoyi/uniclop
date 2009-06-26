@@ -12,7 +12,6 @@
 namespace uniclop
 {
 
-using uniclop::devices::video::GstVideoInput;
 namespace program_options =  boost::program_options;
 using boost::scoped_ptr;
 using namespace std;

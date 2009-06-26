@@ -1,9 +1,5 @@
 
 
-
-
-
-
 #include "VisualOdometryApplication.hpp"
 
 

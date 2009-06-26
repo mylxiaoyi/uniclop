@@ -16,6 +16,8 @@
 #include "algorithms/features/IFeaturesMatcher.hpp"
 #include "algorithms/features/IFeaturesDetector.hpp"
 
+#include <boost/gil/typedefs.hpp>
+
 
 namespace cimg_library {
 class rgb8_cimg_t;
@@ -28,6 +30,7 @@ class FASTFeaturesMatcher;
 	
 using namespace std;
 using boost::scoped_ptr;
+using boost::gil::gray8c_view_t;
 
 class FeaturesTrackingApplication: public AbstractApplication
 {
@@ -37,7 +40,7 @@ class FeaturesTrackingApplication: public AbstractApplication
     // FIXME need to fix IFeaturesMatcher class design so we can use IFeaturesMatcher
     // instead of this specific matcher
     typedef SimpleFAST::features_type features_type; 
-    scoped_ptr<IFeaturesDetector< features_type, GstVideoInput::const_view_t > > features_detector_p;
+    scoped_ptr<IFeaturesDetector< features_type, gray8c_view_t > > features_detector_p;
     scoped_ptr<IFeaturesMatcher< features_type > > features_matcher_p;
   	
     FeaturesTracks features_tracks;

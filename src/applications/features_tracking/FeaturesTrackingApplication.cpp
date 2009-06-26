@@ -52,11 +52,9 @@ args::options_description FeaturesTrackingApplication::get_command_line_options(
     args::options_description desc;
 
     desc.add(GstVideoInput::get_options_description());
-    desc.add(fast::SimpleFAST::get_options_description());
-    desc.add(fast::FASTFeaturesMatcher::get_options_description());
+    desc.add(SimpleFAST::get_options_description());
+    desc.add(FASTFeaturesMatcher::get_options_description());
     desc.add(SimpleFeaturesMatcher<features_type>::get_options_description());
-
-
 
     return desc;
 }
@@ -68,10 +66,10 @@ int FeaturesTrackingApplication::main_loop(args::variables_map &options)
 
    // initialization ---
     gst_video_input_p.reset(new GstVideoInput(options));
-	features_detector_p.reset(new fast::SimpleFAST(options));
+	features_detector_p.reset(new SimpleFAST(options));
 
 	features_matcher_p.reset(new  SimpleFeaturesMatcher<features_type>(options));
-    //features_matcher_p.reset(new fast::FASTFeaturesMatcher(options));
+    //features_matcher_p.reset(new FASTFeaturesMatcher(options));
 
 	// video output ---
     GstVideoInput::const_view_t new_image_view = gst_video_input_p->get_new_image();
@@ -86,7 +84,7 @@ int FeaturesTrackingApplication::main_loop(args::variables_map &options)
     gray8_image_t gray_image(new_image_view.dimensions());
   
     // main loop ---
-	vector<fast::FASTFeature> previous_features; 
+	vector<FASTFeature> previous_features; 
 
     do
     {
@@ -98,11 +96,11 @@ int FeaturesTrackingApplication::main_loop(args::variables_map &options)
         copy_and_convert_pixels(current_image.view, boost::gil::view(gray_image));
 
         // compute features
-       	const vector<fast::FASTFeature> &current_features =
-            features_detector_p->detect_features((const_view(gray_image)));
+        const vector<FASTFeature> &current_features =
+                    features_detector_p->detect_features((const_view(gray_image)));
            
         // match with previous features 
-        const  vector< ScoredMatch< fast::FASTFeature > > &matches =
+        const  vector< ScoredMatch > &matches =
 	        features_matcher_p->match(previous_features, current_features);
         
         previous_features = current_features; // copy for next iteration
@@ -259,11 +257,10 @@ void FeaturesTrackingApplication::draw_tracks(const FeaturesTracks &tracks, rgb8
 }
 
 
-}
 
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 
-
+/*
 
 template<typename F>
 int main_loop(args::variables_map &options, IFeaturesDetector<F> &features_detector);
@@ -721,6 +718,10 @@ int main_loop(args::variables_map &options, IFeaturesDetector<FeatureType> &feat
 
     return 0;
 }
+*/
+
+} // end of namespace uniclop
+
 
 
 
