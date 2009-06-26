@@ -13,7 +13,6 @@ class ScoredMatch;
 
 // need a model for fundamental matrix and for homography projections (at least)
 
-template<typename F> // F feature type
 class FundamentalMatrixModel: public IParametricModel
 {
     // based on code from VXL RREL rrel_fm_problem
@@ -31,10 +30,10 @@ public:
     unsigned int get_num_points_to_estimate() const;
     // m: is the number of points required to estimate the parameters of the model
 
-    void estimate_from_minimal_set(const vector< ScoredMatch<F> > &data_points);
+    void estimate_from_minimal_set(const vector< ScoredMatch> &data_points);
     // given m points estimate the parameters vector
 
-    void estimate(const vector< ScoredMatch<F> > &data_points); // given n>m points, estimate the parameters vector
+    void estimate(const vector< ScoredMatch > &data_points); // given n>m points, estimate the parameters vector
 
     const ublas::vector<float>& get_parameters() const;
     // get current estimate of the parameters
@@ -43,7 +42,7 @@ public:
     // set an initial guess of the parameters
     // (useful when the model use iterative methods to estimate his parameters)
 
-    void compute_residuals (const vector< ScoredMatch<F> > &data_points, vector<float> &residuals) const;
+    void compute_residuals (const vector< ScoredMatch > &data_points, vector<float> &residuals) const;
     // residuals -> errors
     // Compute the residuals relative to the given parameter vector.
 
@@ -53,10 +52,7 @@ public:
 ; // end of class FundamentalMatrixModel declaration
 
 
-}
-}
-}
-}
+} // end of namespace uniclop
 
 
 #endif // !defined(FUNDAMENTAL_MATRIX_MODEL_HEADER)

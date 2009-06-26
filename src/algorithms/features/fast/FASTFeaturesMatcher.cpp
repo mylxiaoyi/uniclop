@@ -33,7 +33,7 @@ FASTFeaturesMatcher::~FASTFeaturesMatcher()
     return;
 }
 
-vector< ScoredMatch<FASTFeature> >& FASTFeaturesMatcher::match(
+vector< ScoredMatch >& FASTFeaturesMatcher::match(
     const vector<FASTFeature>& features_list_a,
     const vector<FASTFeature>& features_list_b)
 {

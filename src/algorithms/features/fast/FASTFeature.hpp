@@ -29,7 +29,7 @@ using boost::uint8_t;
 //  FAST features detection implementation
 //  FAST features detection and matching by Edward Rosten and Tom Drummond
 
-class FASTFeature : public IFeature<FASTFeature>
+class FASTFeature : public IFeature
 {
 
 public:
@@ -46,8 +46,10 @@ public:
 
     ///@name IFeature interface
     ///@{
-    float distance(const FASTFeature &f) const;
+    float distance(const IFeature &f) const;
     ///@}
+    
+    float distance(const FASTFeature &f) const;
 };
 
 

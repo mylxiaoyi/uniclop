@@ -25,40 +25,35 @@ namespace uniclop
 {
 
 
-// Class HomographyModel:IParametricModel< ScoredMatch<F> > methods implementation
+// Class HomographyModel:IParametricModel< ScoredMatch> methods implementation
 
 // based on vxl rrel_homography2d_est, HMatrix2D and HMatrix2DCompute
 
-template<typename F>
-HomographyModel<F>::HomographyModel()
+HomographyModel::HomographyModel()
 {
     parameters.resize( get_num_parameters() );
     return;
 }
 
-template<typename F>
-HomographyModel<F>::~HomographyModel()
+
+HomographyModel::~HomographyModel()
 {
     return;
 }
 
-
-template<typename F>
-unsigned int HomographyModel<F>::get_num_parameters() const
+unsigned int HomographyModel::get_num_parameters() const
 { // get the number of free parameters of the model
     return 9;
     // we have only 8 degrees of freedom but it is easier (laziest) to deal with 9 parameters
 }
 
-template<typename F>
-unsigned int HomographyModel<F>::get_num_points_to_estimate() const
+unsigned int HomographyModel::get_num_points_to_estimate() const
 { // m: is the number of points required to estimate the parameters of the model
     return 4;
 }
 
 
-template<typename F>
-void HomographyModel<F>::estimate_from_minimal_set(const vector< ScoredMatch<F> > &data_points)
+void HomographyModel::estimate_from_minimal_set(const vector< ScoredMatch> &data_points)
 { // given m points estimate the parameters vector
 
     // based on vxl rrel_homography2d_est :: fit_from_minimal_set
@@ -117,7 +112,7 @@ void HomographyModel<F>::estimate_from_minimal_set(const vector< ScoredMatch<F> 
 
         }
 
-        throw runtime_error("HomographyModel<F>::estimate_from_minimal_set failed");
+        throw runtime_error("HomographyModel::estimate_from_minimal_set failed");
     }
 
     vnl_vector<double> params = svd.nullvector();
@@ -125,7 +120,7 @@ void HomographyModel<F>::estimate_from_minimal_set(const vector< ScoredMatch<F> 
 
     if (params.size() != parameters.size() )
     {
-        throw runtime_error("HomographyModel<F>::estimate_from_minimal_set internal error");
+        throw runtime_error("HomographyModel::estimate_from_minimal_set internal error");
     }
 
     for ( unsigned int i=0; i<get_num_parameters(); i+=1 )
@@ -138,28 +133,25 @@ void HomographyModel<F>::estimate_from_minimal_set(const vector< ScoredMatch<F> 
    }
    
     return;
-} // end of 'HomographyModel<F>::estimate_from_minimal_set'
+} // end of 'HomographyModel::estimate_from_minimal_set'
 
 
-template<typename F>
-void HomographyModel<F>::estimate(const vector< ScoredMatch<F> > &data_points)
+void HomographyModel::estimate(const vector< ScoredMatch> &data_points)
 { // given n>m points, estimate the parameters vector
 
-    //throw runtime_error("HomographyModel<F>::estimate is not yet implemented");
+    //throw runtime_error("HomographyModel::estimate is not yet implemented");
     // <<< can implement this based on HMatrix2DCompute
-    cout << "HomographyModel<F>::estimate is not yet implemented" << endl;
+    cout << "HomographyModel::estimate is not yet implemented" << endl;
 
     return;
 }
 
-template<typename F>
-const ublas::vector<float>& HomographyModel<F>::get_parameters() const
+const ublas::vector<float>& HomographyModel::get_parameters() const
 { // get current estimate of the parameters
     return parameters;
 }
 
-template<typename F>
-void HomographyModel<F>::set_parameters(const ublas::vector<float> &_parameters)
+void HomographyModel::set_parameters(const ublas::vector<float> &_parameters)
 {
     // set an initial guess of the parameters
     // (useful when the model use iterative methods to estimate his parameters)
@@ -167,9 +159,8 @@ void HomographyModel<F>::set_parameters(const ublas::vector<float> &_parameters)
     return;
 }
 
-template<typename F>
-void HomographyModel<F>::compute_residuals
-(const vector< ScoredMatch<F> > &data_points, vector<float> &residuals) const
+void HomographyModel::compute_residuals
+(const vector< ScoredMatch> &data_points, vector<float> &residuals) const
 {
     // residuals -> errors
     // Compute the residuals relative to the given parameter vector.
@@ -186,15 +177,15 @@ void HomographyModel<F>::compute_residuals
     if ( svd_H.rank() < 3 )
     {
         if (true) cout << "H == " << H << endl;
-        //throw runtime_error("HomographyModel<F>::compute_residuals rank(H) < 3!!");
-        cout << "HomographyModel<F>::compute_residuals rank(H) < 3!!" << endl;
+        //throw runtime_error("HomographyModel::compute_residuals rank(H) < 3!!");
+        cout << "HomographyModel::compute_residuals rank(H) < 3!!" << endl;
     }
     vnl_matrix< double > H_inv( svd_H.inverse() );
 
     residuals.resize(data_points.size());
 
     // compute the residual of each data point
-    typename vector< ScoredMatch<F> >::const_iterator data_points_it;
+    vector< ScoredMatch>::const_iterator data_points_it;
     vector<float>::iterator residuals_it;
 
     vnl_vector< double > from_point( 3 ), to_point( 3 );

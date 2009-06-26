@@ -28,37 +28,32 @@ namespace uniclop
 
 
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
-// Class FundamentalMatrixModel: IParametricModel< ScoredMatch<F> > methods implementation
+// Class FundamentalMatrixModel: IParametricModel< ScoredMatch > methods implementation
 
-template<typename F>
-FundamentalMatrixModel<F>::FundamentalMatrixModel()
+FundamentalMatrixModel::FundamentalMatrixModel()
 {
     parameters.resize( get_num_parameters() );
     return;
 }
 
-template<typename F>
-FundamentalMatrixModel<F>::~FundamentalMatrixModel()
+FundamentalMatrixModel::~FundamentalMatrixModel()
 {
     return;
 }
 
 
-template<typename F>
-unsigned int FundamentalMatrixModel<F>::get_num_parameters() const
+unsigned int FundamentalMatrixModel::get_num_parameters() const
 { // get the number of free parameters of the model
     return 9;
 }
 
-template<typename F>
-unsigned int FundamentalMatrixModel<F>::get_num_points_to_estimate() const
+unsigned int FundamentalMatrixModel::get_num_points_to_estimate() const
 { // m: is the number of points required to estimate the parameters of the model
     return 8;
 }
 
 
-template<typename F>
-void FundamentalMatrixModel<F>::estimate_from_minimal_set(const vector< ScoredMatch<F> > &data_points)
+void FundamentalMatrixModel::estimate_from_minimal_set(const vector< ScoredMatch > &data_points)
 { // given m points estimate the parameters vector
 
     // based on vxl rrel_fm_problem::fit_from_minimal_set
@@ -68,7 +63,7 @@ void FundamentalMatrixModel<F>::estimate_from_minimal_set(const vector< ScoredMa
     vcl_vector< vgl_homg_point_2d<double> > set_pr, set_pl;
     for ( int i = 0; i < 8; i++ )
     {
-        const ScoredMatch<F> data_point = data_points[i];
+        const ScoredMatch data_point = data_points[i];
         set_pr.push_back( vgl_homg_point_2d<double>(data_point.feature_b->x, data_point.feature_b->y) );
         set_pl.push_back( vgl_homg_point_2d<double>(data_point.feature_a->x, data_point.feature_a->y) );
     }
@@ -78,7 +73,7 @@ void FundamentalMatrixModel<F>::estimate_from_minimal_set(const vector< ScoredMa
     bool success = fmc8.compute( set_pr, set_pl, fundamental_matrix );
 
     if ( success == false )
-        throw runtime_error("FundamentalMatrixModel<F>::estimate_from_minimal_set failed");
+        throw runtime_error("FundamentalMatrixModel::estimate_from_minimal_set failed");
 
     // fundamental_matrix_to_parameters( fundamental_matrix, parameters );
     parameters.resize(9);
@@ -92,24 +87,21 @@ void FundamentalMatrixModel<F>::estimate_from_minimal_set(const vector< ScoredMa
     return;
 }
 
-template<typename F>
-void FundamentalMatrixModel<F>::estimate(const vector< ScoredMatch<F> > &data_points)
+void FundamentalMatrixModel::estimate(const vector< ScoredMatch > &data_points)
 { // given n>m points, estimate the parameters vector
 
-    //throw runtime_error("FundamentalMatrixModel<F>::estimate is not yet implemented");
+    //throw runtime_error("FundamentalMatrixModel::estimate is not yet implemented");
     // <<< can implement this based on FMatrixComputeLinear
-    cout << "FundamentalMatrixModel<F>::estimate is not yet implemented" << endl;
+    cout << "FundamentalMatrixModel::estimate is not yet implemented" << endl;
     return;
 }
 
-template<typename F>
-const ublas::vector<float>& FundamentalMatrixModel<F>::get_parameters() const
+const ublas::vector<float>& FundamentalMatrixModel::get_parameters() const
 { // get current estimate of the parameters
     return parameters;
 }
 
-template<typename F>
-void FundamentalMatrixModel<F>::set_parameters(const ublas::vector<float> &_parameters)
+void FundamentalMatrixModel::set_parameters(const ublas::vector<float> &_parameters)
 {
     // set an initial guess of the parameters
     // (useful when the model use iterative methods to estimate his parameters)
@@ -117,9 +109,8 @@ void FundamentalMatrixModel<F>::set_parameters(const ublas::vector<float> &_para
     return;
 }
 
-template<typename F>
-void FundamentalMatrixModel<F>::compute_residuals
-(const vector< ScoredMatch<F> > &data_points, vector<float> &residuals) const
+void FundamentalMatrixModel::compute_residuals
+(const vector< ScoredMatch > &data_points, vector<float> &residuals) const
 {
     // residuals -> errors
     // Compute the residuals relative to the given parameter vector.
@@ -137,7 +128,7 @@ void FundamentalMatrixModel<F>::compute_residuals
     // The residual for each correspondence is the sum of the squared distances from
     // the points to their epipolar lines.
 
-    typename vector< ScoredMatch<F> >::const_iterator data_points_it;
+    vector< ScoredMatch >::const_iterator data_points_it;
     vector<float>::iterator residuals_it;
 
     for (data_points_it = data_points.begin(), residuals_it = residuals.begin();
@@ -156,7 +147,7 @@ void FundamentalMatrixModel<F>::compute_residuals
     } // end of 'for each data point'
 
     return;
-} // end of method FundamentalMatrixModel<F>::compute_residuals
+} // end of method FundamentalMatrixModel::compute_residuals
 
 
 }

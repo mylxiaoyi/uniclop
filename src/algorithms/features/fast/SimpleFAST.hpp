@@ -20,9 +20,6 @@
 namespace uniclop
 {
 
-
-using uniclop::algorithms::features::IFeaturesDetector;
-
 using namespace std;
 
 namespace args = boost::program_options;
@@ -33,7 +30,7 @@ using boost::gil::gray8c_view_t;
 // Interfaces definition
 
 
-class SimpleFAST : public IFeaturesDetector<FASTFeature>
+class SimpleFAST : public IFeaturesDetector<FASTFeature, gray8c_view_t>
 { // simplest implementation of FAST, based on the implementation of Edward Rosten
     // FAST features detection and matching by Edward Rosten and Tom Drummond
 

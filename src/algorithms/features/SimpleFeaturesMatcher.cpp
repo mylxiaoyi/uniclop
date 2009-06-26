@@ -72,7 +72,7 @@ SimpleFeaturesMatcher<T>::~SimpleFeaturesMatcher()
 
 
 template<typename T>
-vector< ScoredMatch<T> >& SimpleFeaturesMatcher<T>::match(
+vector< ScoredMatch >& SimpleFeaturesMatcher<T>::match(
     const vector<T>& features_list_a,
     const vector<T>& features_list_b)
 {
@@ -91,12 +91,12 @@ vector< ScoredMatch<T> >& SimpleFeaturesMatcher<T>::match(
 
         // search for the num_near_features nearest features
 
-        vector< ScoredMatch<T> > candidate_matches(num_near_features);
+        vector< ScoredMatch > candidate_matches(num_near_features);
         // keep the list of candidates for the current feature
 
-        typename vector< ScoredMatch<T> >::iterator candidate_matches_it;
+        typename vector< ScoredMatch >::iterator candidate_matches_it;
 
-        typename vector< ScoredMatch<T> >::iterator worst_candidate_it = candidate_matches.begin();
+        typename vector< ScoredMatch >::iterator worst_candidate_it = candidate_matches.begin();
 
         for (features_it_b = features_list_b.begin();
                 features_it_b != features_list_b.end();
@@ -146,7 +146,7 @@ vector< ScoredMatch<T> >& SimpleFeaturesMatcher<T>::match(
         } // end of 'for each feature in list b'
 
 
-        typename vector< ScoredMatch<T> >::const_iterator const_candidate_matches_it;
+        typename vector< ScoredMatch >::const_iterator const_candidate_matches_it;
 
         // now candidate_matches has the list of putative matches for feature_a
         for (const_candidate_matches_it = candidate_matches.begin();

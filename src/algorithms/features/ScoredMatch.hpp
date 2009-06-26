@@ -7,12 +7,12 @@
 // Headers
 
 
-#include <vector>
+#include "IFeature.hpp"
+
 #include <stdexcept>
 
 namespace uniclop
 {
-using namespace std;
 
 
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
@@ -38,7 +38,7 @@ public:
         return;
     }
 
-    ScoredMatch(const F *a, const F *b)
+    ScoredMatch(const IFeature *a, const IFeature *b)
     {
         feature_a = a;
         feature_b = b;
@@ -63,13 +63,14 @@ public:
     bool operator<(const ScoredMatch &m) const
     {
         if ( distance < 0 || m.distance < 0)
-            throw runtime_error("Comparing an uninitialized ScoredMatch::distance");
+            throw std::runtime_error("Comparing an uninitialized ScoredMatch::distance");
 
         return distance < m.distance;
     }
 
 };
 
-}
+} // end of namespace uniclop
+
 
 #endif // SCORED_MATCH_HEADER_INCLUDED

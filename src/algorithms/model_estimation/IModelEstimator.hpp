@@ -11,10 +11,9 @@
 namespace uniclop
 {
 
-
 namespace ublas = boost::numeric::ublas;
 
-
+class ScoredMatch;
 
 class IModelEstimator // T is the input data type
 {

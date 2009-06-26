@@ -30,7 +30,7 @@ class FASTFeature; // forward declaration
 class FASTFeaturesMatcher : IFeaturesMatcher<FASTFeature>
 {
 
-    vector< ScoredMatch<FASTFeature> > matchings;
+    vector< ScoredMatch > matchings;
 public:
 
     static args::options_description get_options_description();
@@ -38,7 +38,7 @@ public:
     FASTFeaturesMatcher(args::variables_map &options);
     ~FASTFeaturesMatcher();
 
-    vector< ScoredMatch<FASTFeature> >& match(
+    vector< ScoredMatch >& match(
         const vector<FASTFeature>& features_list_a,
         const vector<FASTFeature>& features_list_b);
 };

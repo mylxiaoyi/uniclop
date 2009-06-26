@@ -30,14 +30,13 @@ using boost::gil::gray8c_view_t;
 
 
 // F is the type of feature used
-template<typename F>
+template<typename F, typename ImageView>
 class IFeaturesDetector
 {
     vector<F> detected_features;
 public:
     typedef F features_type;
 
-	template<typename ImageView>
     virtual const vector<F> &detect_features(const ImageView& image) = 0;
 
     IFeaturesDetector()

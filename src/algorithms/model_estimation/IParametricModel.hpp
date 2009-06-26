@@ -22,7 +22,7 @@ namespace uniclop
 using namespace std;
 namespace ublas = boost::numeric::ublas;
 
-
+class ScoredMatch;
 
 // Interfaces definition
 class IParametricModel

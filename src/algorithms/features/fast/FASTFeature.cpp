@@ -2,6 +2,8 @@
 
 #include "FASTFeature.hpp"
 
+#include <stdexcept>
+
 namespace uniclop
 {
 
@@ -13,7 +15,7 @@ FASTFeature::FASTFeature()
     return;
 }
 
-FASTFeature::FASTFeature(const FASTFeature& f) : IFeature<FASTFeature>()
+FASTFeature::FASTFeature(const FASTFeature& f) : IFeature()
 {
     x = f.x;
     y = f.y;
@@ -54,6 +56,18 @@ template <class T> inline float sum_squared_differences(const T* a, const T* b, 
     return SumSquaredDifferences<float,float,T>::sum_squared_differences(a,b,count);
 }
 
+float FASTFeature::distance(const IFeature &f) const {
+
+	const FASTFeature *feature_p = dynamic_cast<const FASTFeature *>(&f);
+	
+	if(feature_p == NULL) {
+		std::runtime_error("FASTFeature::distance received an unexpected feature type");
+	}
+		
+	return distance(*feature_p);
+}
+
+   
 float FASTFeature::distance(const FASTFeature &f) const
 {
     return sum_squared_differences(circle_intensities, f.circle_intensities, 16);

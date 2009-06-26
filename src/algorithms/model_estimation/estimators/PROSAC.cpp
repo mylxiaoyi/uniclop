@@ -12,8 +12,7 @@ namespace uniclop
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 // Class PROSAC methods implementation
 
-template<typename T>
-::boost::program_options::options_description PROSAC<T>::get_options_description()
+::boost::program_options::options_description PROSAC::get_options_description()
 {
 
     args::options_description desc("PROSAC options");
@@ -27,35 +26,26 @@ template<typename T>
 }
 
 
-template<typename T>
-PROSAC<T>::PROSAC(args::variables_map &options, IParametricModel<T> &)
+PROSAC::PROSAC(args::variables_map &options, IParametricModel &)
 {
     throw runtime_error("PROSAC model estimation is not yet implemented");
     return;
 }
 
-template<typename T>
-PROSAC<T>::~PROSAC()
+PROSAC::~PROSAC()
 {
     return;
 }
 
-template<typename T>
-const ublas::vector<float> &PROSAC<T>::estimate_model_parameters(const vector< T > &)
+const ublas::vector<float> &PROSAC::estimate_model_parameters(const vector< ScoredMatch > &)
 {
     return estimated_model_parameters;
 }
 
-template<typename T>
-const vector< bool > &  PROSAC<T>::get_is_inlier()
+const vector< bool > &  PROSAC::get_is_inlier()
 {
     return is_inlier;
 }
 
-
-// ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
-
-template class PROSAC< ScoredMatch< fast::FASTFeature >  >;
-//template class PROSAC< ScoredMatch<SIFTFeature> >;
 
 }

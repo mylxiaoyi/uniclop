@@ -9,7 +9,6 @@
 
 #include "FASTFeature.hpp"
 
-
 #include <vector>
 #include <boost/cstdint.hpp>
 #include <boost/gil/typedefs.hpp>

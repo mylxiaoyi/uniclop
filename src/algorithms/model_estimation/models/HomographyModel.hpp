@@ -5,7 +5,7 @@
 
 
 #include "../IParametricModel.hpp"
-
+#include "algorithms/features/ScoredMatch.hpp"
 
 namespace uniclop
 {
