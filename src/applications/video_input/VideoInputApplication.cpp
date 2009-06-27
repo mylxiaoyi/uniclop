@@ -63,13 +63,10 @@ int VideoInputApplication::main_loop(args::variables_map &options)
 
     init_video_input(options);
 
-    GstVideoInput::const_view_t new_image_view = gst_video_input_p->get_new_image();
-    BOOST_MPL_ASSERT(( or_< is_same< GstVideoInput::const_view_t, rgb8_image_t::const_view_t >,
-                       is_same< GstVideoInput::const_view_t, rgb8_planar_image_t::const_view_t > ));
-
     // rgb8_cimg_t adapts cimg and gil::image_view
-    rgb8_cimg_t current_image(new_image_view.dimensions());
-    current_image = new_image_view; // copy the data
+    rgb8_cimg_t current_image(gst_video_input_p->get_image_dimensions());
+    gst_video_input_p->get_new_image(current_image.view); // copy the data
+
 
     // FIXME should port ImagesInput to Gil
     // ImagesInput<uint8_t> images_input(options);
@@ -81,9 +78,7 @@ int VideoInputApplication::main_loop(args::variables_map &options)
 
     do
     {
-        // const CImg<uint8_t> &current_image = images_input.get_new_image();
-        gst_video_input_p->get_new_image();
-        current_image = new_image_view; // copy the data
+        gst_video_input_p->get_new_image(current_image.view); // copy the data
         video_display.display(current_image);
 
         const float seconds_to_wait = 0.1; // [seconds]

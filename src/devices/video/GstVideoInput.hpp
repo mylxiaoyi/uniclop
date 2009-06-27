@@ -57,7 +57,8 @@ public:
 // IVideoInput interface
 //@{
    void get_new_image(rgb8_view_t &);
-
+ 	void get_new_image(rgb8_planar_view_t &);
+ 
    void get_new_image(gray8_view_t &);
 	const point2<int> &get_image_dimensions();
 	// @}

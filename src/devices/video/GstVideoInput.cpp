@@ -315,13 +315,18 @@ void GstVideoInput::on_new_frame(GstElement *element, GstBuffer * buffer, GstPad
 		return	current_image_view.dimensions();
 	}
 
-   void get_new_image(rgb8_view_t &view){
-	get_new_image<rgb8_view_t > (view);
+   void GstVideoInput::get_new_image(rgb8_view_t &view){
+	get_new_image<rgb8_view_t>(view);
 	return;   
    }
 
-   void get_new_image(gray8_view_t &view){
-	get_new_image<gray8_view_t > (view);
+   void GstVideoInput::get_new_image(rgb8_planar_view_t &view){
+	get_new_image<rgb8_planar_view_t>(view);
+	return;   
+   }
+   
+   void GstVideoInput::get_new_image(gray8_view_t &view){
+	get_new_image<gray8_view_t>(view);
 	return;   
    }
 
