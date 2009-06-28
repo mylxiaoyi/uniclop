@@ -72,16 +72,16 @@ int FeaturesTrackingApplication::main_loop(args::variables_map &options)
     //features_matcher_p.reset(new FASTFeaturesMatcher(options));
 
 	// video output ---
-    GstVideoInput::const_view_t new_image_view = gst_video_input_p->get_new_image();
-    rgb8_cimg_t current_image(new_image_view.dimensions());
-    current_image = new_image_view; // copy the data
+    rgb8_cimg_t current_image(gst_video_input_p->get_image_dimensions());
+    gst_video_input_p->get_new_image(current_image.view); // copy the data
+
 
     CImgDisplay video_display(current_image.dimx(), current_image.dimy(), get_application_title().c_str());
     video_display.show();
     video_display.display(current_image);
 
     // intermediary image --
-    gray8_image_t gray_image(new_image_view.dimensions());
+    gray8_image_t gray_image(current_image.view.dimensions());
   
     // main loop ---
 	vector<FASTFeature> previous_features; 
@@ -89,9 +89,8 @@ int FeaturesTrackingApplication::main_loop(args::variables_map &options)
     do
     {
         // get new image --
-        gst_video_input_p->get_new_image();
-        current_image = new_image_view; // copy the data
-
+        gst_video_input_p->get_new_image(current_image.view); // copy the data
+      
         // color to gray_image
         copy_and_convert_pixels(current_image.view, boost::gil::view(gray_image));
 
