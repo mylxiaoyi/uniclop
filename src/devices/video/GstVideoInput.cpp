@@ -312,6 +312,13 @@ void GstVideoInput::on_new_frame(GstElement *element, GstBuffer * buffer, GstPad
 
 	const point2<int> &GstVideoInput::get_image_dimensions() {
 		
+		 boost::mutex::scoped_lock lock(current_image_mutex);
+    while (image_is_new == false)
+    {
+        // wait until a new image has arrived
+        new_image_condition.wait(lock);
+    }
+    
 		return	current_image_view.dimensions();
 	}
 
