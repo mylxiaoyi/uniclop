@@ -21,6 +21,9 @@ Simple application that shows on screen tracks of detected feature points
 #include <boost/numeric/ublas/io.hpp>
 
 #include "algorithms/model_estimation/model_estimation.hpp"
+#include "algorithms/model_estimation/models/FundamentalMatrixModel.hpp"
+#include "algorithms/model_estimation/models/HomographyModel.hpp"
+
 
 
 #include <cstdio>
@@ -41,6 +44,10 @@ using boost::gil::copy_and_convert_pixels;
 using boost::gil::const_view;
 using boost::gil::gray8_image_t;
 
+// function prototype
+template<typename FeatureType, typename ImageView>
+int main_loop(args::variables_map &options, IFeaturesDetector<FeatureType, ImageView> &features_detector, GstVideoInput &video_input);
+
 
 string FeaturesTrackingApplication::get_application_title() const
 {
@@ -49,27 +56,91 @@ string FeaturesTrackingApplication::get_application_title() const
 }
 args::options_description FeaturesTrackingApplication::get_command_line_options(void) const
 {
-    args::options_description desc;
+    args::options_description desc("FeaturesTrackingApplication options");
+
+desc.add_options()
+	("cimg_info", args::value< vector<string> >()->zero_tokens(),
+         "print some informations about the CImg library and exit")
+
+        ("features_detection_method", args::value<string>()->default_value("FAST"),
+         "choose the features detection method: FAST, Harris or SIFT")
+
+        ("model", args::value<string>()->default_value("homography"),
+         "choose the model to use: homography or fundamental_matrix")
+
+        ("estimation_method", args::value<string>()->default_value("none"),
+         "choose the robust estimation method: none, RANSAC, PROSAC, Ensemble or DenseEnsemble")
+
+        ("show_features_points", args::value<bool>()->default_value(false),
+         "show the detected features")
+
+        ("show_matching_result", args::value<bool>()->default_value(false),
+         "show the matching result (inliers and outliers matches)");
 
     desc.add(GstVideoInput::get_options_description());
     desc.add(SimpleFAST::get_options_description());
     desc.add(FASTFeaturesMatcher::get_options_description());
-    desc.add(SimpleFeaturesMatcher<features_type>::get_options_description());
+    desc.add(SimpleFeaturesMatcher<features_t>::get_options_description());
 
+		//desc.add( ImagesInput<uint8_t>::get_options_description() );
+        //desc.add( SimpleSIFT::get_options_description() );
+        //desc.add( EnsembleMethod< ScoredMatch<FASTFeature> >::get_options_description() );
+        //desc.add( PROSAC< ScoredMatch<FASTFeature> >::get_options_description() );
+        //desc.add( RANSAC< ScoredMatch<FASTFeature> >::get_options_description() );
+        
     return desc;
 }
 
 int FeaturesTrackingApplication::main_loop(args::variables_map &options)
 {
 
+        if ( options.count("cimg_info") )
+        {
+            cimg::info(); // print some information about the environment configuration
+            return 0;
+        }
+        
     printf("FeaturesTrackingApplication::main_loop says hello world !\n");
 
    // initialization ---
     gst_video_input_p.reset(new GstVideoInput(options));
 	features_detector_p.reset(new SimpleFAST(options));
 
-	features_matcher_p.reset(new  SimpleFeaturesMatcher<features_type>(options));
+	features_matcher_p.reset(new  SimpleFeaturesMatcher<features_t>(options));
     //features_matcher_p.reset(new FASTFeaturesMatcher(options));
+
+
+	 // select the features detection method ---
+        // the features type will determinate the features type required
+        // to specialize the rest of the code
+
+        string features_detection_method = "none";
+        if (options.count("features_detection_method")) {
+            features_detection_method = options["features_detection_method"].as<string>();
+        }
+        
+        if (features_detection_method == "FAST")
+        {
+            boost::scoped_ptr< IFeaturesDetector<SimpleFAST::features_t, SimpleFAST::image_view_t> > features_detector_p;
+            features_detector_p.reset( new SimpleFAST(options) );
+            return main_loop/*<SimpleFAST::features_t, SimpleFAST::image_view_t>*/(options, *features_detector_p, *gst_video_input_p);
+        }
+        else if (features_detection_method == "Harris")
+        {
+            throw runtime_error("Harris features detector not yet implemented");
+        }
+        else if (features_detection_method == "SIFT")
+        {
+	        throw runtime_error("SIFT features detector not yet implemented");
+            //boost::scoped_ptr< IFeaturesDetector<SimpleSIFT::features_t> > features_detector_p;
+            //features_detector_p.reset( new SimpleSIFT(options) );
+            //return main_loop(options, *features_detector_p);
+        }
+        else
+        {
+            throw runtime_error("No known features detector selected");
+        }
+
 
 	// video output ---
     rgb8_cimg_t current_image(gst_video_input_p->get_image_dimensions());
@@ -257,114 +328,12 @@ void FeaturesTrackingApplication::draw_tracks(const FeaturesTracks &tracks, rgb8
 
 
 
-// ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 
-/*
-
-template<typename F>
-int main_loop(args::variables_map &options, IFeaturesDetector<F> &features_detector);
-// part of the code needs to be templated...
-
-int features_matching_main(int argc, char *argv[])
-{
-    // demonstration application search features of a template into a changing image
-    try
-    {
-        cout << endl << PROGRAM_TITLE << endl << endl;
-
-        // input arguments --
-        args::options_description desc("Application options");
-
-        desc.add_options()
-        ("help", "produce help message")
-        ("cimg_info", args::value< vector<string> >()->zero_tokens(),
-         "print some informations about the CImg lbirary and exit")
-
-        ("features_detection_method", args::value<string>()->default_value("FAST"),
-         "choose the features detection method: FAST, Harris or SIFT")
-
-        ("model", args::value<string>()->default_value("homography"),
-         "choose the model to use: homography or fundamental_matrix")
-
-        ("estimation_method", args::value<string>()->default_value("none"),
-         "choose the robust estimation method: none, RANSAC, PROSAC, Ensemble or DenseEnsemble")
-
-        ("show_features_points", args::value<bool>()->default_value(false),
-         "show the detected features")
-
-        ("show_matching_result", args::value<bool>()->default_value(false),
-         "show the matching result (inliers and outliers matches)")
-        ;
-
-        desc.add( ImagesInput<uint8_t>::get_options_description() );
-        desc.add( SimpleFAST::get_options_description() );
-        desc.add( SimpleSIFT::get_options_description() );
-        desc.add( FASTFeaturesMatcher::get_options_description() );
-        desc.add( SimpleFeaturesMatcher<FASTFeature>::get_options_description() );
-        desc.add( EnsembleMethod< ScoredMatch<FASTFeature> >::get_options_description() );
-        desc.add( PROSAC< ScoredMatch<FASTFeature> >::get_options_description() );
-        desc.add( RANSAC< ScoredMatch<FASTFeature> >::get_options_description() );
-
-        args::variables_map options;
-        args::store(args::parse_command_line(argc, argv, desc), options);
-        args::notify(options);
-
-        if ( options.count("help") )
-        {
-            cout << desc << endl;
-            return 0;
-        }
-
-        if ( options.count("cimg_info") )
-        {
-            cimg::info(); // print some information about the environment configuration
-            return 0;
-        }
-
-
-
-        // select the features detection method ---
-        // the features type will determinate the features type required
-        // to specialize the rest of the code
-
-        string features_detection_method = "none";
-        if (options.count("features_detection_method"))
-            features_detection_method = options["features_detection_method"].as<string>();
-
-        if (features_detection_method == "FAST")
-        {
-            boost::scoped_ptr< IFeaturesDetector<SimpleFAST::features_type> > features_detector_p;
-            features_detector_p.reset( new SimpleFAST(options) );
-            return main_loop(options, *features_detector_p);
-        }
-        else if (features_detection_method == "Harris")
-        {
-            throw runtime_error("Harris features detector not yet implemented");
-        }
-        else if (features_detection_method == "SIFT")
-        {
-            boost::scoped_ptr< IFeaturesDetector<SimpleSIFT::features_type> > features_detector_p;
-            features_detector_p.reset( new SimpleSIFT(options) );
-            return main_loop(options, *features_detector_p);
-        }
-        else
-        {
-            throw runtime_error("No known features detector selected");
-        }
-
-    } // end of initial 'try'
-    catch (exception &e)
-    {
-        cout << "An exception was raised: " << e.what() << endl;
-    }
-
-    return 0;
-}
 
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 
-template<typename FeatureType>
-int main_loop(args::variables_map &options, IFeaturesDetector<FeatureType> &features_detector)
+template<typename FeatureType, typename ImageView>
+int main_loop(args::variables_map &options, IFeaturesDetector<FeatureType, ImageView> &features_detector, GstVideoInput &video_input)
 {
     // part of the code needs to be templated...
 
@@ -379,10 +348,11 @@ int main_loop(args::variables_map &options, IFeaturesDetector<FeatureType> &feat
 
 
     // get template image --
-    ImagesInput<uint8_t> images_input(options);
-    const CImg<uint8_t> &current_image = images_input.get_new_image();
+    rgb8_cimg_t current_image(video_input.get_image_dimensions());
+    video_input.get_new_image(current_image.view); // copy the data
 
-    const CImg<uint8_t> template_image( current_image ); // copy
+	const rgb8_cimg_t template_image( current_image ); // copy
+   
 
     // obtain features to match with...
     const vector<FeatureType> template_features =
@@ -402,12 +372,11 @@ int main_loop(args::variables_map &options, IFeaturesDetector<FeatureType> &feat
         estimation_method = options["estimation_method"].as<string>();
 
     //FundamentalMatrixModel fundamental_matrix_model(options);
-    typedef ScoredMatch<FeatureType> MatchType;
+    
+    FundamentalMatrixModel fundamental_matrix_model;
+    HomographyModel homography_model;
 
-    FundamentalMatrixModel< FeatureType > fundamental_matrix_model;
-    HomographyModel<FeatureType> homography_model;
-
-    IParametricModel< MatchType > *model_p = NULL;
+    IParametricModel *model_p = NULL;
     string model_name;
     if (options.count("model"))
         model_name = options["model"].as<string>();
@@ -420,19 +389,19 @@ int main_loop(args::variables_map &options, IFeaturesDetector<FeatureType> &feat
     if (model_p == NULL)
         throw runtime_error("No model was specified");
 
-    IParametricModel< MatchType > &model = *model_p;
+    IParametricModel &model = *model_p;
 
-    boost::scoped_ptr< IModelEstimator< MatchType > > estimator_p;
+    boost::scoped_ptr< IModelEstimator > estimator_p;
 
     if (estimation_method == "RANSAC")
-        estimator_p.reset( new RANSAC< MatchType >(options, model) );
+        estimator_p.reset( new RANSAC(options, model) );
 
     else if (estimation_method == "PROSAC")
-        estimator_p.reset( new PROSAC< MatchType >(options, model) );
+        estimator_p.reset( new PROSAC(options, model) );
 
     else if (estimation_method == "Ensemble")
     {
-        EnsembleMethod< MatchType > *t_ensemble_method_p = new EnsembleMethod< MatchType >(options, model);
+        EnsembleMethod *t_ensemble_method_p = new EnsembleMethod(options, model);
 
         // Homography and FundamentalMatrix models compute the residuals
         // as distances in pixels
@@ -442,13 +411,17 @@ int main_loop(args::variables_map &options, IFeaturesDetector<FeatureType> &feat
 
         estimator_p.reset(  t_ensemble_method_p ); // the smart pointer is in charge of deallication
     }
-    else if (estimation_method == "DenseEnsemble")
-        estimator_p.reset( new DenseEnsembleMethod< MatchType >(options, model) );
-
-    if ( estimator_p == NULL && estimation_method != "none")
+    else if (estimation_method == "DenseEnsemble") {
+	     throw runtime_error("DenseEnsembleMethod estimation method is not implemented");
+       // estimator_p.reset( new DenseEnsembleMethod(options, model) );
+    }
+    
+    if ( estimator_p == NULL && estimation_method != "none") {
+	    
         throw runtime_error("No valid estimation method available");
-
-    IModelEstimator< MatchType > &estimator = *estimator_p;
+    }
+    
+    IModelEstimator &estimator = *estimator_p;
     // create the output displays --
 
     CImgDisplay video_display(current_image.dimx(), current_image.dimy(), "Video stream");
@@ -468,13 +441,13 @@ int main_loop(args::variables_map &options, IFeaturesDetector<FeatureType> &feat
     do
     {
         // retrieve new image -
-        CImg<uint8_t> &current_image = images_input.get_new_image();
+        video_input.get_new_image(current_image.view);
 
         // compute features -
-        const vector<FeatureType> &current_features = features_detector.detect_features(current_image);
+        const vector<ScoredMatch> &current_features = features_detector.detect_features(current_image.view);
 
         // obtain features matches candidates -
-        vector< MatchType > & matches =
+        const vector< ScoredMatch > & matches =
             simple_features_matcher.match(template_features, current_features);
 
         sort(matches.begin(), matches.end());
@@ -484,10 +457,10 @@ int main_loop(args::variables_map &options, IFeaturesDetector<FeatureType> &feat
         //const ublas::vector<double> & parameters =
         if (&estimator != NULL)
         {
-            { // DenseEnsembleMethod special code
+         /*   { // DenseEnsembleMethod special code
 
-                DenseEnsembleMethod<MatchType> * dense_ensemble_method_estimator_p = NULL;
-                dense_ensemble_method_estimator_p = dynamic_cast< DenseEnsembleMethod<MatchType> * >(&estimator);
+                DenseEnsembleMethod * dense_ensemble_method_estimator_p = NULL;
+                dense_ensemble_method_estimator_p = dynamic_cast< DenseEnsembleMethod * >(&estimator);
                 if ( dense_ensemble_method_estimator_p != NULL)
                 {
                     float blur_sigma = -1.0f; // negative value indicates no blurring
@@ -500,7 +473,7 @@ int main_loop(args::variables_map &options, IFeaturesDetector<FeatureType> &feat
                     }
                     dense_ensemble_method_estimator_p->set_images_pair(template_image, current_image, blur_sigma);
                 }
-            }
+            } */
 
             // estimate the parameters
             const ublas::vector<float> &p = estimator.estimate_model_parameters(matches);
@@ -564,7 +537,7 @@ int main_loop(args::variables_map &options, IFeaturesDetector<FeatureType> &feat
 
             // draw inliers and outliers -
             // first outliers
-            typename vector< MatchType >::const_iterator matches_it;
+            typename vector< ScoredMatch >::const_iterator matches_it;
             for (matches_it = matches.begin(), is_inlier_it = is_inlier.begin();
                     matches_it != matches.end() && is_inlier_it != is_inlier.end();
                     ++matches_it, ++is_inlier_it)
@@ -637,8 +610,8 @@ int main_loop(args::variables_map &options, IFeaturesDetector<FeatureType> &feat
         // inlier and outlier matches
 
     }
-    while ( (images_input.reached_last_image() == false)
-            && (video_display.is_closed == false || matching_display.is_closed == false));
+    while ( /*(images_input.reached_last_image() == false)
+            &&*/ (video_display.is_closed == false || matching_display.is_closed == false));
 
     if (estimation_method != "Ensemble")
     {
@@ -651,8 +624,8 @@ int main_loop(args::variables_map &options, IFeaturesDetector<FeatureType> &feat
     else
     { // show the last frame AND the kurtosis estimates sources
 
-        EnsembleMethod<MatchType> * ensemble_method_estimator_p = NULL;
-        ensemble_method_estimator_p = dynamic_cast< EnsembleMethod<MatchType> * >(&estimator);
+        EnsembleMethod * ensemble_method_estimator_p = NULL;
+        ensemble_method_estimator_p = dynamic_cast< EnsembleMethod * >(&estimator);
         if ( ensemble_method_estimator_p == NULL)
             throw runtime_error("Estimation method does not compute histograms");
 
@@ -717,7 +690,7 @@ int main_loop(args::variables_map &options, IFeaturesDetector<FeatureType> &feat
 
     return 0;
 }
-*/
+
 
 } // end of namespace uniclop
 
