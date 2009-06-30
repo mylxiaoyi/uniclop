@@ -8,6 +8,10 @@
 #include <boost/random.hpp>
 #include <boost/program_options.hpp>
 
+namespace cimg_library {
+	class CImgDisplay; 
+ }
+ 
 namespace uniclop
 {
 
@@ -32,7 +36,7 @@ public:
     vector<double> kurtosis_values;
 
     static args::options_description get_options_description();
-
+	
     EnsembleMethod(args::variables_map &options, IParametricModel &model);
 
     ~EnsembleMethod();
@@ -57,6 +61,42 @@ protected:
     void retrieve_random_matches_indexes(const vector<ScoredMatch> &data, const unsigned int num_indexes,
                                          vector<int> &indexes);
 };
+
+
+// Helper classes KurtosisIncrementalEstimator and HistogramKurtosis
+
+// T: double or float
+template<typename T = double>
+class HistogramKurtosis
+{
+    // Do an histogram and compute the kurtosis based on all but the first bin
+
+    T min_value, max_value, delta_value;
+    vector<int> bins;
+
+    int n;
+    long double mean, central_moment2, central_moment4;
+    // central_moment2 is also knowns as variance
+
+public:
+    HistogramKurtosis(float _min_value, float _max_value, int num_bins);
+
+    HistogramKurtosis(const HistogramKurtosis &hk);
+    ~HistogramKurtosis();
+    
+    void add_value(const T x);
+    T get_kurtosis(); //const
+    
+    const vector<int> &get_bins() const;
+
+    static void display_histogram(const float kurtosis,
+                                  const vector<int> &bins, const int bins_max_value, cimg_library::CImgDisplay &image_display);
+    // helper method that draws an histogram
+
+}
+; // end helper class HistogramKurtosis<>
+
+
 
 }
 

@@ -47,7 +47,6 @@ using namespace cimg_library;
 
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=
 // Helper classes KurtosisIncrementalEstimator and HistogramKurtosis
-
 template<typename T = double> // T: double or float
 class KurtosisIncrementalEstimator
 {
@@ -127,22 +126,10 @@ public:
 
 
 
+// HistogramKurtosis<> methods implementation ----
 
-// T: double or float
-template<typename T = double>
-class HistogramKurtosis
-{
-    // Do an histogram and compute the kurtosis based on all but the first bin
-
-    T min_value, max_value, delta_value;
-    vector<int> bins;
-
-    int n;
-    long double mean, central_moment2, central_moment4;
-    // central_moment2 is also knowns as variance
-
-public:
-    HistogramKurtosis(float _min_value, float _max_value, int num_bins)
+template<typename T>
+HistogramKurtosis<T>::HistogramKurtosis(float _min_value, float _max_value, int num_bins)
     {
         min_value = _min_value;
         max_value = _max_value;
@@ -156,8 +143,9 @@ public:
         central_moment4 = 0.0;
         return;
     }
-
-    HistogramKurtosis(const HistogramKurtosis &hk)
+    
+template<typename T>
+HistogramKurtosis<T>::HistogramKurtosis(const HistogramKurtosis &hk)
     {
         min_value = hk.min_value;
         max_value = hk.max_value;
@@ -170,13 +158,15 @@ public:
         central_moment2= 0.0;
         central_moment4 = 0.0;
     }
-
-    ~HistogramKurtosis()
+    
+template<typename T>
+HistogramKurtosis<T>::~HistogramKurtosis()
     {
         return;
     }
-
-    void add_value(T x)
+    
+template<typename T>
+void HistogramKurtosis<T>::add_value(const T x)
     {
 
         if (x < min_value || x >= max_value) return;
@@ -200,8 +190,8 @@ public:
         n += 1;
         return;
     }
-
-    T get_kurtosis() //const
+template<typename T>
+T HistogramKurtosis<T>::get_kurtosis() //const
     {
 
         if (false)
@@ -266,18 +256,15 @@ public:
 
     }
 
-    const vector<int> &get_bins() const
+template<typename T>
+const vector<int> & HistogramKurtosis<T>::get_bins() const
+    
     {
         return bins;
     }
 
 
-    static void display_histogram(const float kurtosis,
-                                  const vector<int> &bins, const int bins_max_value, CImgDisplay &image_display);
-    // helper method that draws an histogram
-
-}
-; // end helper class HistogramKurtosis<>
+// end helper class HistogramKurtosis<> methods implementation
 
 
 // ~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=

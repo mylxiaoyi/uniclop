@@ -123,7 +123,7 @@ int FeaturesTrackingApplication::main_loop(args::variables_map &options)
         {
             boost::scoped_ptr< IFeaturesDetector<SimpleFAST::features_t, SimpleFAST::image_view_t> > features_detector_p;
             features_detector_p.reset( new SimpleFAST(options) );
-            return main_loop/*<SimpleFAST::features_t, SimpleFAST::image_view_t>*/(options, *features_detector_p, *gst_video_input_p);
+            return uniclop::main_loop<SimpleFAST::features_t, SimpleFAST::image_view_t>(options, *features_detector_p, *gst_video_input_p);
         }
         else if (features_detection_method == "Harris")
         {
@@ -349,14 +349,16 @@ int main_loop(args::variables_map &options, IFeaturesDetector<FeatureType, Image
 
     // get template image --
     rgb8_cimg_t current_image(video_input.get_image_dimensions());
+	gray8_image_t current_gray_image(current_image.view.dimensions());
     video_input.get_new_image(current_image.view); // copy the data
 
 	const rgb8_cimg_t template_image( current_image ); // copy
-   
+   	gray8_image_t template_gray_image(template_image.view.dimensions());
+   	copy_and_convert_pixels(template_image.view, view(template_gray_image));
 
     // obtain features to match with...
     const vector<FeatureType> template_features =
-        features_detector.detect_features(template_image); // copy the results
+        features_detector.detect_features( view(template_gray_image) ); // copy the results
 
     if (true)
     {
@@ -443,11 +445,14 @@ int main_loop(args::variables_map &options, IFeaturesDetector<FeatureType, Image
         // retrieve new image -
         video_input.get_new_image(current_image.view);
 
-        // compute features -
-        const vector<ScoredMatch> &current_features = features_detector.detect_features(current_image.view);
+		// convert to gray image -
+	   	copy_and_convert_pixels(current_image.view, view(current_gray_image));
+
+        // compute features -        
+        const vector<FeatureType> &current_features = features_detector.detect_features(view(current_gray_image));
 
         // obtain features matches candidates -
-        const vector< ScoredMatch > & matches =
+        vector< ScoredMatch > & matches =
             simple_features_matcher.match(template_features, current_features);
 
         sort(matches.begin(), matches.end());
@@ -497,7 +502,7 @@ int main_loop(args::variables_map &options, IFeaturesDetector<FeatureType, Image
                     t_color_image(x,y, 0, 1) =  template_image(x,y);
                     t_color_image(x,y, 0, 2) =  template_image(x,y);
                 }
-                matchings_image.draw_image(t_color_image, 0, 0);
+                matchings_image.draw_image(0, 0, t_color_image);
             }
 
             {
@@ -508,7 +513,7 @@ int main_loop(args::variables_map &options, IFeaturesDetector<FeatureType, Image
                     t_color_image(x,y, 0, 1) =  current_image(x,y);
                     t_color_image(x,y, 0, 2) =  current_image(x,y);
                 }
-                matchings_image.draw_image(t_color_image, 0, y_offset);
+                matchings_image.draw_image(0, y_offset, t_color_image);
             }
 
 
