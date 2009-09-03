@@ -53,9 +53,13 @@ using Eigen::Vector2f;
 #define Vz(v) (v)[z_i]
 
 
-void compute_nullspace_basis(const vector<Vector2d> &a, const vector<Vector2d> &b, Matrix<double, 9, 4> *basis) {
+void compute_nullspace_basis(const vector<Vector2d> &a, const vector<Vector2d> &b, Matrix<double, 9, 4> &basis) {
 	
     int i;
+
+	assert(a.size() == b.size());
+	
+	const int n = a.size();
 
     if (n < 5) {
         fprintf(stderr, "[compute_nullspace_basis] n must be >= 5\n");
@@ -99,7 +103,7 @@ void compute_nullspace_basis(const vector<Vector2d> &a, const vector<Vector2d> &
    return;
 }
 
-void compute_constraint_matrix(double *basis, poly3_t *constraints)
+void compute_constraint_matrix(const Matrix<double, 9, 4> &basis, poly3_t constraints[10])
 {
     /* Basis rows are X, Y, Z, W 
      * Essential matrix is or form x*X + y*Y + z*Z + W */
@@ -213,7 +217,7 @@ void compute_constraint_matrix(double *basis, poly3_t *constraints)
     constraints[9] = poly_det;
 }
 
-void eliminate_gauss_jordan(poly3_t *constraints)
+void eliminate_gauss_jordan(poly3_t constraints[10])
 {
     double A[200];
     int i, j;
