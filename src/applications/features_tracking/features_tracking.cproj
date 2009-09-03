@@ -30,6 +30,19 @@
         <Lib>boost_program_options</Lib>
         <Lib>boost_filesystem</Lib>
         <Lib>boost_thread</Lib>
+        <Lib>vpgl_algo</Lib>
+        <Lib>vpgl</Lib>
+        <Lib>rrel</Lib>
+        <Lib>vgl_algo</Lib>
+        <Lib>vnl_algo</Lib>
+        <Lib>vnl_io</Lib>
+        <Lib>vil_algo</Lib>
+        <Lib>v3p_netlib</Lib>
+        <Lib>vil</Lib>
+        <Lib>vnl</Lib>
+        <Lib>vgl</Lib>
+        <Lib>vcl</Lib>
+        <Lib>vsl</Lib>
       </Libs>
     </Libs>
     <DefineSymbols>DEBUG MONODEVELOP</DefineSymbols>

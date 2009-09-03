@@ -53,9 +53,6 @@
     </Includes>
     <WarningLevel>All</WarningLevel>
     <WarningsAsErrors>true</WarningsAsErrors>
-    <EnvironmentVariables>
-      <EnvironmentVariables />
-    </EnvironmentVariables>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\Release</OutputPath>

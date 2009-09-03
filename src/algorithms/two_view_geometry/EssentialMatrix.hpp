@@ -4,8 +4,9 @@
 
 namespace uniclop {
     
+#include <Eigen/Core>
     
-class EssentialMatrix // : public Eigen:Matrix<float, 4,4>
+class EssentialMatrix : public Eigen:Matrix<float, 3,3>
 {
 public:
     EssentialMatrix();

@@ -3,13 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
 Project("{2857B73E-F847-4B02-9238-064979017E93}") = "uniclop_base", "uniclop_base.cproj", "{268920A3-842A-405F-8593-8DAFD7E355C8}"
 EndProject
-Project("{2857B73E-F847-4B02-9238-064979017E93}") = "video_input", "src\applications\video_input\video_input.cproj", "{C35F52B7-2214-4A65-8129-390FE0248E49}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "applications", "applications", "{A8ABBEDB-B3D9-4D45-B6D6-FD46AC9367DB}"
 EndProject
 Project("{2857B73E-F847-4B02-9238-064979017E93}") = "features_detection", "src\applications\features_detection\features_detection.cproj", "{F0A9FE83-FD07-4492-AE8A-83840AD60032}"
 EndProject
 Project("{2857B73E-F847-4B02-9238-064979017E93}") = "features_tracking", "src\applications\features_tracking\features_tracking.cproj", "{18B9664D-AFD5-4019-94CB-606B5D7EA048}"
 EndProject
+Project("{2857B73E-F847-4B02-9238-064979017E93}") = "video_input", "src\applications\video_input\video_input.cproj", "{C35F52B7-2214-4A65-8129-390FE0248E49}"
+EndProject
 Project("{2857B73E-F847-4B02-9238-064979017E93}") = "visual_odometry", "src\applications\visual_odometry\visual_odometry.cproj", "{3F231BCB-9455-4CCA-8DF1-F7AFFC382133}"
+EndProject
+Project("{2857B73E-F847-4B02-9238-064979017E93}") = "5point_test", "src\applications\5point_test\5point_test.cproj", "{96E3FF9A-8434-414D-B37A-1EE179394A7F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,6 +33,10 @@ Global
 		{3F231BCB-9455-4CCA-8DF1-F7AFFC382133}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3F231BCB-9455-4CCA-8DF1-F7AFFC382133}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3F231BCB-9455-4CCA-8DF1-F7AFFC382133}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96E3FF9A-8434-414D-B37A-1EE179394A7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96E3FF9A-8434-414D-B37A-1EE179394A7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96E3FF9A-8434-414D-B37A-1EE179394A7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96E3FF9A-8434-414D-B37A-1EE179394A7F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C35F52B7-2214-4A65-8129-390FE0248E49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C35F52B7-2214-4A65-8129-390FE0248E49}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C35F52B7-2214-4A65-8129-390FE0248E49}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -38,9 +46,27 @@ Global
 		{F0A9FE83-FD07-4492-AE8A-83840AD60032}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F0A9FE83-FD07-4492-AE8A-83840AD60032}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F0A9FE83-FD07-4492-AE8A-83840AD60032} = {A8ABBEDB-B3D9-4D45-B6D6-FD46AC9367DB}
+		{18B9664D-AFD5-4019-94CB-606B5D7EA048} = {A8ABBEDB-B3D9-4D45-B6D6-FD46AC9367DB}
+		{C35F52B7-2214-4A65-8129-390FE0248E49} = {A8ABBEDB-B3D9-4D45-B6D6-FD46AC9367DB}
+		{3F231BCB-9455-4CCA-8DF1-F7AFFC382133} = {A8ABBEDB-B3D9-4D45-B6D6-FD46AC9367DB}
+		{96E3FF9A-8434-414D-B37A-1EE179394A7F} = {A8ABBEDB-B3D9-4D45-B6D6-FD46AC9367DB}
+	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		name = uniclop
 		version = 0.1
 		StartupItem = uniclop_base.cproj
+		Policies = $0
+		$0.StandardHeader = $1
+		$1.Text = 
+		$1.inheritsSet = MITX11License
+		$0.TextStylePolicy = $2
+		$2.FileWidth = 120
+		$2.TabWidth = 4
+		$2.TabsToSpaces = False
+		$2.NoTabsAfterNonTabs = False
+		$2.RemoveTrailingWhitespace = False
+		$2.EolMarker = Native
+		name = uniclop
 	EndGlobalSection
 EndGlobal

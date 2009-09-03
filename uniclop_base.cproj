@@ -40,6 +40,7 @@
         <Include>/usr/local/include/vxl/vcl</Include>
         <Include>/usr/local/include/vxl/contrib/rpl</Include>
         <Include>/usr/local/include/vxl/contrib/gel</Include>
+        <Include>/usr/include/eigen2</Include>
       </Includes>
     </Includes>
     <Libs>
@@ -49,9 +50,6 @@
         <Lib>boost_filesystem</Lib>
       </Libs>
     </Libs>
-    <EnvironmentVariables>
-      <EnvironmentVariables />
-    </EnvironmentVariables>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\Release</OutputPath>
@@ -80,6 +78,8 @@
     <Compile Include="src\algorithms\model_estimation\estimators\Ensemble.cpp" />
     <Compile Include="src\algorithms\features\FeaturesTracks.cpp" />
     <Compile Include="src\algorithms\two_view_geometry\EssentialMatrix.cpp" />
+    <Compile Include="src\algorithms\two_view_geometry\FundamentalMatrix.cpp" />
+    <Compile Include="src\algorithms\two_view_geometry\CalibrationMatrix.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\applications\AbstractApplication.hpp" />
@@ -109,12 +109,15 @@
     <None Include="src\algorithms\model_estimation\model_estimation.hpp" />
     <None Include="src\devices\video\IVideoInput.hpp" />
     <None Include="src\algorithms\two_view_geometry\EssentialMatrix.hpp" />
+    <None Include="src\algorithms\model_estimation\models\Calibrated5PointsEssentialMatrixModel.hpp" />
+    <None Include="src\algorithms\two_view_geometry\FundamentalMatrix.hpp" />
+    <None Include="src\algorithms\two_view_geometry\CalibrationMatrix.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="src\applications\video_input/" />
-    <Folder Include="src\algorithms\features\sift\jift/" />
-    <Folder Include="src\helpers/" />
-    <Folder Include="src\algorithms\model_estimation\models/" />
-    <Folder Include="src\algorithms\model_estimation\estimators/" />
+    <Folder Include="src\algorithms\features\sift\jift\" />
+    <Folder Include="src\helpers\" />
+    <Folder Include="src\algorithms\model_estimation\models\" />
+    <Folder Include="src\algorithms\model_estimation\estimators\" />
+    <Folder Include="src\algorithms\model_estimation\models\5point\" />
   </ItemGroup>
 </Project>

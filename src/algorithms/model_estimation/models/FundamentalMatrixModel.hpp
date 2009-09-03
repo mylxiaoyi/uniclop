@@ -11,7 +11,6 @@ namespace uniclop
 {
 class ScoredMatch;
 
-// need a model for fundamental matrix and for homography projections (at least)
 
 class FundamentalMatrixModel: public IParametricModel
 {
