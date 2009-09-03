@@ -21,6 +21,8 @@
 
 #include "poly3.hpp"
 
+namespace 5point {
+	
 poly3_t poly3_new(double x, double y, double z, double unit) {
 	poly3_t p;
 	int i;
@@ -277,4 +279,6 @@ double poly3_eval(poly3_t a, double x, double y, double z) {
 
 double poly3_get(poly3_t a, poly3_coeff_t idx) {
 	return a.v[idx];
+}
+
 }

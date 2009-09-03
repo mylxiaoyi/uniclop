@@ -17,8 +17,6 @@
 /* 5point.c */
 /* Solve the 5-point relative pose problem */
 
-
-
 #include "5point.hpp"
 
 #include "poly1.hpp"
@@ -39,14 +37,24 @@
 #include "triangulate.h"
 #include "vector.h"
 
+namespace 5point {
+	
 // import most common Eigen types 
 USING_PART_OF_NAMESPACE_EIGEN
 
 using Eigen::Vector2f;
 
-void compute_nullspace_basis(int n, v2_t *a, v2_t *b, double *basis) {
-    double *Q, *S, *U, VT[81];
-    int max_dim;
+#define x_i 0
+#define y_i 1
+#define z_i 2
+
+#define Vx(v) (x)[x_i]
+#define Vy(v) (v)[y_i]
+#define Vz(v) (v)[z_i]
+
+
+void compute_nullspace_basis(const vector<Vector2d> &a, const vector<Vector2d> &b, Matrix<double, 9, 4> *basis) {
+	
     int i;
 
     if (n < 5) {
@@ -54,38 +62,41 @@ void compute_nullspace_basis(int n, v2_t *a, v2_t *b, double *basis) {
         return;
     }
 
-    max_dim = MAX(9, n);
+    const int max_dim = MAX(9, n);
 
-    Q = malloc(sizeof(double) * max_dim * max_dim);
-    S = malloc(sizeof(double) * max_dim);
-    U = malloc(sizeof(double) * max_dim * max_dim);
-    
+    Matrix<double, max_dim, max_dim> Q;
 
     /* Create the 5x9 epipolar constraint matrix */
     for (i = 0; i < 5; i++) {
-	double *row = Q + i * 9;
+	    
+        Q.row(i)[0] = Vx(a[i]) * Vx(b[i]);
+        Q.row(i)[1] = Vy(a[i]) * Vx(b[i]);
+        Q.row(i)[2] = Vx(b[i]);
 
-        row[0] = a[i].p[0] * b[i].p[0];
-        row[1] = a[i].p[1] * b[i].p[0];
-        row[2] = b[i].p[0];
+        Q.row(i)[3] = Vx(a[i]) * Vy(b[i]);
+        Q.row(i)[4] = Vy(a[i]) * Vy(b[i]);
+        Q.row(i)[5] = Vy(b[i]);
 
-        row[3] = a[i].p[0] * b[i].p[1];
-        row[4] = a[i].p[1] * b[i].p[1];
-        row[5] = b[i].p[1];
-
-        row[6] = a[i].p[0];
-        row[7] = a[i].p[1];
-        row[8] = 1.0;
+        Q.row(i)[6] = Vx(a[i]);
+        Q.row(i)[7] = Vy(a[i]);
+        Q.row(i)[8] = 1.0;
     }
 
+	/* Apply SVD and from the V vector */
     /* Find four vectors that span the right nullspace of the matrix */
-    dgesvd_driver(n, 9, Q, U, S, VT);
 
-    memcpy(basis, VT + 5 * 9, 36 * sizeof(double));
+	  
+  // double VT[81];
+  // dgesvd_driver(n, 9, Q, U, S, VT);
+  // memcpy(basis, VT + 5 * 9, 36 * sizeof(double));
 
-    free(Q);
-    free(S);
-    free(U);
+	 const Matrix<double, 9, 9> V_transposed = Q.svd().matrixV().transpose();
+     basis.row(0) = V_transposed.row(5);
+     basis.row(1) = V_transposed.row(6);
+     basis.row(2) = V_transposed.row(7);
+     basis.row(3) = V_transposed.row(8);
+     
+   return;
 }
 
 void compute_constraint_matrix(double *basis, poly3_t *constraints)
@@ -525,9 +536,13 @@ void compute_Ematrices_Gb(double *At, double *basis, int *num_solns, double *E)
     *num_solns = real;
 }
 
-void generate_Ematrix_hypotheses(int n, v2_t *rt_pts, v2_t *left_pts, 
+void generate_Ematrix_hypotheses(const vector<Vector2d> &rt_pts, const vector<Vector2d> &left_pts, 
                                  int *num_poses, double *E) 
 {
+	
+	assert( rt_pts.size() == left_pts.size() );
+	const int n =  rt_pts.size();
+	
     double basis[36], Gbasis[100], At[100];
     poly3_t constraints[10];
     // poly1_t B[9], p1, p2, p3, det;
@@ -553,11 +568,14 @@ void generate_Ematrix_hypotheses(int n, v2_t *rt_pts, v2_t *left_pts,
     compute_action_matrix(Gbasis, At);
     compute_Ematrices_Gb(At, basis, num_poses, E);
 #endif
+
+return;
 }
 
-void choose(int n, int k, int *arr)
+void choose(const int n, vector<int> &arr)
 {
     int i;
+    const int k = arr.size();
     
     if (k > n) {
         fprintf(stderr, "[choose] Error: k > n\n");
@@ -582,6 +600,8 @@ void choose(int n, int k, int *arr)
             }
         }
     }
+    
+    return;
 }
 
 int evaluate_Ematrix(int n, v2_t *r_pts, v2_t *l_pts, double thresh_norm,
@@ -637,40 +657,43 @@ int compute_pose_ransac(int n, v2_t *r_pts, v2_t *l_pts,
                         double *R_out, double *t_out)
                         */
 {
-    const vector<Vector2f> r_pts_norm, l_pts_norm(data_points.size());
+    const vector<Vector2d> r_pts_norm, l_pts_norm;
     int i, round;
     double thresh_norm;
-   	Matrix3f K1_inv, K2_inv;
+   	Matrix3d K1_inv, K2_inv;
     int max_inliers = 0;
     double min_score = DBL_MAX;
     Matrix3f E_best[9];
-    Vector2f r_best, l_best;
+    Vector2d r_best, l_best;
 
-    r_pts_norm.reserve(data_points.size());
-    l_pts_norm.reserve(data_points.size());
+    r_pts_norm.resize(data_points.size());
+    l_pts_norm.resize(data_points.size());
 
-    matrix_invert(3, K1, K1_inv);
-    matrix_invert(3, K2, K2_inv);
+	K1_inv = K1.inverse();
+	K2_inv = K2.inverse();
 
     for (i = 0; i < n; i++) {
-        double r[3] = { Vx(r_pts[i]), Vy(r_pts[i]), 1.0 };
-        double l[3] = { Vx(l_pts[i]), Vy(l_pts[i]), 1.0 };
+        
+        Vector3d r( Vx(r_pts[i]), Vy(r_pts[i]), 1.0 );
+        Vector3d l( Vx(l_pts[i]), Vy(l_pts[i]), 1.0 );
 
-        double r_norm[3], l_norm[3];
-
-        matrix_product331(K1_inv, r, r_norm);
-        matrix_product331(K2_inv, l, l_norm);
-
-        r_pts_norm[i] = v2_new(-r_norm[0], -r_norm[1]);
-        l_pts_norm[i] = v2_new(-l_norm[0], -l_norm[1]);
+		const Vector3d r_norm = K1_inv*r;
+		const Vector3d l_norm = K2_inv*l;
+		
+        r_pts_norm[i][0] = -r_norm[0];
+        r_pts_norm[i][1] = -r_norm[1];
+        
+        l_pts_norm[i][0] = -l_norm[0];
+        l_pts_norm[i][1] = -l_norm[1];        
     }
 
     thresh_norm = ransac_threshold * ransac_threshold;
 
     for (round = 0; round < ransac_rounds; round++) {
         /* Pick 5 random points */
-        v2_t r_pts_inner[5], l_pts_inner[5];
-        int indices[5];
+        const int num_random_points = 5;
+        Vector2d r_pts_inner[num_random_points], l_pts_inner[num_random_points];
+        vector<int> indices(num_random_points);
         int num_hyp;
         double E[90];
         int inliers_hyp[10];
@@ -679,14 +702,14 @@ int compute_pose_ransac(int n, v2_t *r_pts, v2_t *l_pts,
         int num_ident = 0;
         int inliers = 0;
 
-        choose(n, 5, indices);
+        choose(data_points.size(), indices);
 
-        for (i = 0; i < 5; i++) {
+        for (i = 0; i < num_random_points; i++) {
             r_pts_inner[i] = r_pts_norm[indices[i]];
             l_pts_inner[i] = l_pts_norm[indices[i]];
 
             /* Check for degeneracy */
-            if (Vx(r_pts_inner[i]) == Vx(l_pts_inner[i]) &&
+            if (Vx(r_pts_inner[i] == Vx(l_pts_inner[i]) &&
                 Vy(r_pts_inner[i]) == Vy(l_pts_inner[i]))
                 num_ident++;
         }
@@ -694,7 +717,7 @@ int compute_pose_ransac(int n, v2_t *r_pts, v2_t *l_pts,
         if (num_ident >= 3)
             continue;  /* choose another 5 */
         
-        generate_Ematrix_hypotheses(5, r_pts_inner, l_pts_inner, &num_hyp, E);
+        generate_Ematrix_hypotheses(num_random_points, r_pts_inner, l_pts_inner, &num_hyp, E);
         
         for (i = 0; i < num_hyp; i++) {
             int best_inlier;
@@ -792,3 +815,5 @@ int compute_pose_ransac(int n, v2_t *r_pts, v2_t *l_pts,
     return max_inliers;
 }
 
+
+}

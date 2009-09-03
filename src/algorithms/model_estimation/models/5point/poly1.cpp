@@ -23,6 +23,8 @@
 
 #include "poly1.hpp"
 
+namespace 5point {
+	
 poly1_t poly1_new3(double a, double b, double c, double d) {
     return poly1_new4(0.0, a, b, c, d);
 }
@@ -156,4 +158,7 @@ double poly1_eval(poly1_t a, double x) {
     }
 
     return r;
+}
+
+
 }

@@ -21,6 +21,8 @@
 
 #define MAX_DEGREE 10
 
+namespace 5point {
+	
 typedef struct {
 	double v[MAX_DEGREE+1];
 } poly1_t;
@@ -35,5 +37,7 @@ poly1_t poly1_scale(poly1_t a, double scale);
 poly1_t poly1_normalize(poly1_t a);
 
 double poly1_eval(poly1_t a, double x);
+
+}
 
 #endif /* POLY1_HEADER */

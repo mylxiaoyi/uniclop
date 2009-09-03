@@ -19,6 +19,8 @@
 #ifndef POLY3_HEADER
 #define POLY3_HEADER
 
+namespace 5point {
+	
 typedef enum {
 	POLY3_UNIT,
 	POLY3_X, POLY3_Y, POLY3_Z, 
@@ -43,5 +45,7 @@ poly3_t poly3_mult21(poly3_t a, poly3_t b);
 poly3_t poly3_scale(poly3_t a, double scale);
 double poly3_eval(poly3_t a, double x, double y, double z);
 double poly3_get(poly3_t a, poly3_coeff_t idx);
+
+}
 
 #endif /* POLY3_HEADER */

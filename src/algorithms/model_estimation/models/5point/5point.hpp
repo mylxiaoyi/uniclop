@@ -22,6 +22,8 @@
 
 #include <Eigen/Core>
 
+namespace 5point {
+
 typedef Eigen:Matrix<float, 3,3> RotationMatrix;
 typedef Eigen:Matrix<float, 3,1> TranslationVector;
 
@@ -29,5 +31,7 @@ int compute_pose_ransac(const vector< ScoredMatch> &data_points,
                         const CalibrationMatrix &K1, const CalibrationMatrix &K2, 
                         double ransac_threshold, int ransac_rounds, 
                         RotationMatrix &R_out,  TranslationVector &t_out);
+
+}
 
 #endif /* 5POINT_HEADER */
