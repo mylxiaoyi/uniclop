@@ -21,7 +21,7 @@
 #include <assert.h>
 #include <math.h>
 
-#include "poly1.h"
+#include "poly1.hpp"
 
 poly1_t poly1_new3(double a, double b, double c, double d) {
     return poly1_new4(0.0, a, b, c, d);

@@ -14,11 +14,10 @@
  *
  */
 
-/* poly1.h */
 /* 10-degree polynomial in one variable */
 
-#ifndef __POLY1_H__
-#define __POLY1_H__
+#ifndef POLY1_HEADER
+#define POLY1_HEADER
 
 #define MAX_DEGREE 10
 
@@ -37,4 +36,4 @@ poly1_t poly1_normalize(poly1_t a);
 
 double poly1_eval(poly1_t a, double x);
 
-#endif /* __POLY1_H__ */
+#endif /* POLY1_HEADER */

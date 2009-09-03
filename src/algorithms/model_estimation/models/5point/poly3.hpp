@@ -14,11 +14,10 @@
  *
  */
 
-/* poly3.h */
 /* 3-variable polynomial functions */
 
-#ifndef __POLY3_H__
-#define __POLY3_H__
+#ifndef POLY3_HEADER
+#define POLY3_HEADER
 
 typedef enum {
 	POLY3_UNIT,
@@ -45,4 +44,4 @@ poly3_t poly3_scale(poly3_t a, double scale);
 double poly3_eval(poly3_t a, double x, double y, double z);
 double poly3_get(poly3_t a, poly3_coeff_t idx);
 
-#endif /* __POLY3_H__ */
+#endif /* POLY3_HEADER */

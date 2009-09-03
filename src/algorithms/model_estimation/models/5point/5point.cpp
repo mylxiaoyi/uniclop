@@ -17,6 +17,13 @@
 /* 5point.c */
 /* Solve the 5-point relative pose problem */
 
+
+
+#include "5point.hpp"
+
+#include "poly1.hpp"
+#include "poly3.hpp"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -25,13 +32,17 @@
 
 #include "defines.h"
 #include "fmatrix.h"
-#include "poly1.h"
-#include "poly3.h"
+
 #include "matrix.h"
 #include "qsort.h"
 #include "svd.h"
 #include "triangulate.h"
 #include "vector.h"
+
+// import most common Eigen types 
+USING_PART_OF_NAMESPACE_EIGEN
+
+using Eigen::Vector2f;
 
 void compute_nullspace_basis(int n, v2_t *a, v2_t *b, double *basis) {
     double *Q, *S, *U, VT[81];
@@ -614,22 +625,29 @@ int evaluate_Ematrix(int n, v2_t *r_pts, v2_t *l_pts, double thresh_norm,
     return num_inliers;
 }
 
+
+int compute_pose_ransac(const vector<ScoredMatch> &data_points, 
+                        const CalibrationMatrix &K1, const CalibrationMatrix &K2, 
+                        double ransac_threshold, int ransac_rounds, 
+                        RotationMatrix &R_out,  TranslationVector &t_out)
+/*                        
 int compute_pose_ransac(int n, v2_t *r_pts, v2_t *l_pts, 
                         double *K1, double *K2, 
                         double ransac_threshold, int ransac_rounds, 
                         double *R_out, double *t_out)
+                        */
 {
-    v2_t *r_pts_norm, *l_pts_norm;
+    const vector<Vector2f> r_pts_norm, l_pts_norm(data_points.size());
     int i, round;
     double thresh_norm;
-    double K1_inv[9], K2_inv[9];
+   	Matrix3f K1_inv, K2_inv;
     int max_inliers = 0;
     double min_score = DBL_MAX;
-    double E_best[9];
-    v2_t r_best, l_best;
+    Matrix3f E_best[9];
+    Vector2f r_best, l_best;
 
-    r_pts_norm = malloc(sizeof(v2_t) * n);
-    l_pts_norm = malloc(sizeof(v2_t) * n);
+    r_pts_norm.reserve(data_points.size());
+    l_pts_norm.reserve(data_points.size());
 
     matrix_invert(3, K1, K1_inv);
     matrix_invert(3, K2, K2_inv);

@@ -80,6 +80,14 @@
     <Compile Include="src\algorithms\two_view_geometry\EssentialMatrix.cpp" />
     <Compile Include="src\algorithms\two_view_geometry\FundamentalMatrix.cpp" />
     <Compile Include="src\algorithms\two_view_geometry\CalibrationMatrix.cpp" />
+    <Compile Include="src\algorithms\model_estimation\models\5point\5point.cpp" />
+    <Compile Include="src\algorithms\model_estimation\models\5point\poly3.cpp" />
+    <Compile Include="src\algorithms\model_estimation\models\5point\poly1.cpp" />
+    <Compile Include="src\algorithms\stereo_matching\openvis3d\OpencvExample.cpp" />
+    <Compile Include="src\algorithms\stereo_matching\openvis3d\OpenCVImageAdapter.cpp" />
+    <Compile Include="src\algorithms\stereo_matching\openvis3d\ProbabilisticEgomotion.cpp" />
+    <Compile Include="src\algorithms\stereo_matching\openvis3d\ImageAdapter.cpp" />
+    <Compile Include="src\algorithms\stereo_matching\StereoMatcher.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\applications\AbstractApplication.hpp" />
@@ -112,6 +120,28 @@
     <None Include="src\algorithms\model_estimation\models\Calibrated5PointsEssentialMatrixModel.hpp" />
     <None Include="src\algorithms\two_view_geometry\FundamentalMatrix.hpp" />
     <None Include="src\algorithms\two_view_geometry\CalibrationMatrix.hpp" />
+    <None Include="src\algorithms\model_estimation\models\5point\5point.hpp" />
+    <None Include="src\algorithms\model_estimation\models\5point\poly1.hpp" />
+    <None Include="src\algorithms\model_estimation\models\5point\poly3.hpp" />
+    <None Include="src\algorithms\stereo_matching\openvis3d\BTLocalMatcherT.hpp" />
+    <None Include="src\algorithms\stereo_matching\openvis3d\Openvis3d.hpp" />
+    <None Include="src\algorithms\stereo_matching\openvis3d\OpenCVImageAdapter.hpp" />
+    <None Include="src\algorithms\stereo_matching\openvis3d\ProbabilisticEgomotion.hpp" />
+    <None Include="src\algorithms\stereo_matching\openvis3d\README.txt" />
+    <None Include="src\algorithms\stereo_matching\openvis3d\StereoT.hpp" />
+    <None Include="src\algorithms\stereo_matching\openvis3d\StereoGlobalMatcherT.hpp" />
+    <None Include="src\algorithms\stereo_matching\openvis3d\StereoDiffuseMatcherT.hpp" />
+    <None Include="src\algorithms\stereo_matching\openvis3d\LocalMatcherT.hpp" />
+    <None Include="src\algorithms\stereo_matching\openvis3d\FlowGlobalMatcherT.hpp" />
+    <None Include="src\algorithms\stereo_matching\openvis3d\FlowDiffuseMatcherT.hpp" />
+    <None Include="src\algorithms\stereo_matching\openvis3d\DisparityPostprocessor.hpp" />
+    <None Include="src\algorithms\stereo_matching\openvis3d\CImgAdapter.hpp" />
+    <None Include="src\algorithms\stereo_matching\openvis3d\FlowPostprocessor.hpp" />
+    <None Include="src\algorithms\stereo_matching\openvis3d\FlowT.hpp" />
+    <None Include="src\algorithms\stereo_matching\openvis3d\ImageT.hpp" />
+    <None Include="src\algorithms\stereo_matching\openvis3d\ImagePairPreprocessorT.hpp" />
+    <None Include="src\algorithms\stereo_matching\openvis3d\ImageAdapter.hpp" />
+    <None Include="src\algorithms\stereo_matching\openvis3d\mainpage.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="src\algorithms\features\sift\jift\" />
