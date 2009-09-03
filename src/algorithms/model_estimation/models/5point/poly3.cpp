@@ -14,13 +14,12 @@
  *
  */
 
-/* poly3.c */
 /* 3-variable polynomial functions */
 
 #include <stdio.h>
 #include <math.h>
 
-#include "poly3.h"
+#include "poly3.hpp"
 
 poly3_t poly3_new(double x, double y, double z, double unit) {
 	poly3_t p;
